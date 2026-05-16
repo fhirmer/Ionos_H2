@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontakt – H2 Insektenschutz</title>
+  <meta name="description" content="Kontaktieren Sie H2 Insektenschutz – per Anfrageformular, telefonisch unter 0151 24005954, per E-Mail oder WhatsApp. Wir melden uns schnell zurück." />
+  <meta name="theme-color" content="#008080" />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="site-logo" aria-label="H2 Insektenschutz Startseite">
+        <img src="images/h2logo.png" alt="H2 Insektenschutz Logo" />
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Menü öffnen">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav" id="main-nav" aria-hidden="true">
+        <a href="index.html">Start</a>
+        <a href="leistungen.html">Leistungen</a>
+        <a href="ueber-uns.html">Über uns</a>
+        <a href="kontakt.html">Kontakt</a>
+        <a href="kontakt.html#anfrage" class="btn-cta">Angebot anfragen</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Kontakt</h1>
+      <p>Sie haben eine Frage oder möchten ein Angebot? Wir freuen uns auf Ihre Nachricht und melden uns schnellstmöglich zurück.</p>
+    </div>
+  </section>
+
+  <!-- KONTAKT-OPTIONEN -->
+  <section>
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-card fade-in">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <h3>Telefon</h3>
+          <a href="tel:+4915124005954">0151 24005954</a>
+          <p class="small">Mo – Fr, 8:00 – 18:00 Uhr</p>
+        </div>
+
+        <div class="contact-card fade-in">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <h3>E-Mail</h3>
+          <a href="mailto:h2insektenschutz@gmail.com">h2insektenschutz@gmail.com</a>
+          <p class="small">Antwort meist innerhalb eines Tages</p>
+        </div>
+
+        <div class="contact-card fade-in">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          </div>
+          <h3>WhatsApp</h3>
+          <a href="https://wa.me/4915124005954" target="_blank" rel="noopener">Nachricht senden</a>
+          <p class="small">Auch für schnelle Rückfragen</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANFRAGEFORMULAR -->
+  <section id="anfrage" class="section-soft">
+    <div class="container">
+      <div class="section-heading fade-in">
+        <span class="eyebrow">Angebot anfragen</span>
+        <h2>Erzählen Sie uns von Ihrem Vorhaben</h2>
+        <p>Beschreiben Sie kurz, was Sie suchen – wir melden uns schnellstmöglich mit einem Vorschlag oder einem Termin für ein unverbindliches Aufmaß.</p>
+      </div>
+
+      <form
+        name="kontakt"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        action="/danke.html"
+        style="background:#ffffff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:2rem;max-width:780px;margin:0 auto;box-shadow:var(--shadow-sm);"
+      >
+        <input type="hidden" name="form-name" value="kontakt" />
+        <p style="display:none;">
+          <label>Bitte nicht ausfüllen: <input name="bot-field" /></label>
+        </p>
+
+        <div class="form-grid">
+          <div class="form-grid form-row-2">
+            <div class="form-field">
+              <label for="vorname">Vorname *</label>
+              <input id="vorname" name="vorname" type="text" required autocomplete="given-name" />
+            </div>
+            <div class="form-field">
+              <label for="nachname">Nachname *</label>
+              <input id="nachname" name="nachname" type="text" required autocomplete="family-name" />
+            </div>
+          </div>
+
+          <div class="form-grid form-row-2">
+            <div class="form-field">
+              <label for="email">E-Mail *</label>
+              <input id="email" name="email" type="email" required autocomplete="email" />
+            </div>
+            <div class="form-field">
+              <label for="telefon">Telefon</label>
+              <input id="telefon" name="telefon" type="tel" autocomplete="tel" />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="plz_ort">PLZ &amp; Ort</label>
+            <input id="plz_ort" name="plz_ort" type="text" placeholder="z. B. 80331 München" autocomplete="postal-code" />
+          </div>
+
+          <div class="form-field">
+            <label for="anliegen">Worum geht es?</label>
+            <select id="anliegen" name="anliegen">
+              <option value="">Bitte wählen</option>
+              <option value="Fenster">Insektenschutz für Fenster</option>
+              <option value="Türen">Insektenschutz für Türen</option>
+              <option value="Dachfenster">Insektenschutz für Dachfenster</option>
+              <option value="Lichtschacht">Lichtschachtabdeckung</option>
+              <option value="Mehreres">Kombination / Mehreres</option>
+              <option value="Beratung">Allgemeine Beratung</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="nachricht">Ihre Nachricht *</label>
+            <textarea id="nachricht" name="nachricht" required placeholder="Beschreiben Sie kurz, worum es geht: ungefähre Anzahl Fenster/Türen, Wünsche, Zeitrahmen ..."></textarea>
+          </div>
+
+          <label class="form-checkbox">
+            <input type="checkbox" name="datenschutz" required />
+            <span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und bin mit der Verarbeitung meiner Angaben zur Bearbeitung meiner Anfrage einverstanden. *</span>
+          </label>
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-large">Anfrage absenden</button>
+          </div>
+          <p class="text-center" style="font-size:.85rem;color:var(--color-text-soft);margin:0;">Pflichtfelder sind mit * markiert.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section>
+    <div class="container">
+      <div class="section-heading fade-in">
+        <span class="eyebrow">Lieber direkt sprechen?</span>
+        <h2>Wir sind nur einen Anruf entfernt.</h2>
+        <p>Manchmal geht es per Telefon einfach schneller – rufen Sie uns gerne direkt an.</p>
+      </div>
+      <div class="text-center">
+        <a href="tel:+4915124005954" class="btn btn-primary btn-large">0151 24005954 anrufen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">
+            <img src="images/h2logo.png" alt="H2 Insektenschutz" />
+          </div>
+          <p>H2 Insektenschutz – Ihr regionaler Montagebetrieb für hochwertigen Insektenschutz von Neher. Beratung, Aufmaß und fachgerechte Montage an Fenstern, Türen, Dachfenstern und Lichtschächten.</p>
+        </div>
+        <div>
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="index.html">Start</a></li>
+            <li><a href="leistungen.html">Leistungen</a></li>
+            <li><a href="ueber-uns.html">Über uns</a></li>
+            <li><a href="kontakt.html">Kontakt</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Kontakt</h4>
+          <ul>
+            <li><a href="tel:+4915124005954">0151 24005954</a></li>
+            <li><a href="mailto:h2insektenschutz@gmail.com">h2insektenschutz@gmail.com</a></li>
+            <li><a href="https://wa.me/4915124005954" target="_blank" rel="noopener">WhatsApp</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span data-current-year>2026</span> H2 Insektenschutz – Rudolf Hügel &amp; Florian Hirmer GbR</span>
+        <span><a href="impressum.html">Impressum</a> &nbsp;·&nbsp; <a href="datenschutz.html">Datenschutz</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/4915124005954" target="_blank" rel="noopener" class="whatsapp-float" aria-label="WhatsApp Nachricht senden">
+    <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.001 2.667C8.638 2.667 2.667 8.637 2.667 16c0 2.353.616 4.658 1.788 6.69L2.667 29.333l6.83-1.778A13.275 13.275 0 0016.001 29.333C23.364 29.333 29.334 23.363 29.334 16S23.364 2.667 16.001 2.667zm0 24.222a10.86 10.86 0 01-5.531-1.514l-.397-.236-4.05 1.054 1.08-3.95-.258-.408a10.892 10.892 0 01-1.668-5.835c0-6.022 4.901-10.923 10.924-10.923 6.022 0 10.923 4.901 10.923 10.923 0 6.023-4.901 10.889-10.923 10.889zm6.21-8.157c-.34-.17-2.013-.99-2.325-1.103-.312-.114-.539-.17-.766.17s-.879 1.103-1.078 1.33c-.198.227-.397.255-.737.085-.34-.17-1.434-.529-2.732-1.685-1.01-.9-1.692-2.013-1.89-2.353-.198-.34-.021-.523.149-.692.153-.152.34-.397.51-.595.17-.198.227-.34.34-.567.114-.227.057-.425-.028-.595-.085-.17-.766-1.846-1.05-2.527-.276-.663-.557-.573-.766-.583l-.652-.012c-.227 0-.595.085-.907.425-.312.34-1.19 1.163-1.19 2.838s1.219 3.293 1.388 3.521c.17.227 2.396 3.66 5.806 5.133.81.35 1.443.559 1.937.715.813.258 1.554.222 2.139.135.652-.097 2.013-.823 2.296-1.617.283-.795.283-1.476.198-1.617-.085-.142-.312-.227-.652-.397z"/></svg>
+  </a>
+
+  <script src="js/script.js" defer></script>
+</body>
+</html>
