@@ -1440,11 +1440,11 @@ section {
   flex: 0 0 100%;
   width: 100%;
   min-width: 100%;
-  min-height: 360px;
-  padding: 2rem 2rem 5.25rem;
+  min-height: 0;
+  padding: 1rem 1rem 3.5rem;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
-  gap: 2rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
   align-items: center;
   background: #ffffff;
   border: 1px solid var(--color-border);
@@ -1455,7 +1455,8 @@ section {
 }
 
 .gewebe-figure {
-  height: 250px;
+  height: 100%;
+  min-height: 200px;
   margin: 0;
   display: flex;
   align-items: center;
@@ -1463,10 +1464,9 @@ section {
 }
 
 .gewebe-figure img {
-  width: auto;
+  width: 100%;
   height: auto;
   max-width: 100%;
-  max-height: 100%;
   object-fit: contain;
 }
 
