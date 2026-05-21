@@ -1468,7 +1468,6 @@ section {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  filter: contrast(1.6) brightness(0.78);
 }
 
 .gewebe-copy {
