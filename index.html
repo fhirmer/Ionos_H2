@@ -18,7 +18,7 @@
     @keyframes hero-fade{from{opacity:0}to{opacity:1}}
     @keyframes hero-bg-zoom{from{transform:scale(1)}to{transform:scale(1.10)}}
     .hero{background:none!important;overflow:hidden;padding-top:7rem!important;padding-bottom:7rem!important}
-    .hero::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,rgba(0,70,70,.85),rgba(0,100,100,.7)),url('images/stimmung/hero_v20260516.jpg') center top/cover no-repeat;animation:hero-bg-zoom 14s linear forwards;will-change:transform}
+    .hero::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,rgba(0,70,70,.68),rgba(0,100,100,.53)),url('images/stimmung/hero_v20260516.jpg') center top/cover no-repeat;animation:hero-bg-zoom 14s linear forwards;will-change:transform}
     .hero .container{position:relative;z-index:1}
     .hero h1{margin-bottom:1.25rem;animation:hero-fade-up .65s cubic-bezier(.22,1,.36,1) both}
     .hero p.lead{margin-top:0;animation:hero-fade-up .55s cubic-bezier(.22,1,.36,1) .15s both}
@@ -26,6 +26,12 @@
     .hero-actions{animation:hero-fade .50s cubic-bezier(.22,1,.36,1) .40s both}
     @media(prefers-reduced-motion:reduce){.hero::before,.hero h1,.hero p.lead,.hero ul,.hero-actions{animation:none}}
     @media(max-width:599px){.hero::before{animation:none}}
+    .video-modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.82);align-items:center;justify-content:center}
+    .video-modal-overlay.is-open{display:flex}
+    .video-modal{position:relative;width:90%;max-width:860px;aspect-ratio:16/9}
+    .video-modal iframe{width:100%;height:100%;border:0;border-radius:10px}
+    .video-modal-close{position:absolute;top:-2.5rem;right:0;background:none;border:none;color:#fff;font-size:2rem;line-height:1;cursor:pointer;padding:.25rem .5rem;opacity:.8}
+    .video-modal-close:hover{opacity:1}
   </style>
   <meta property="og:title" content="H2 Insektenschutz – Passgenauer Insektenschutz" />
   <meta property="og:description" content="Wir montieren hochwertigen Insektenschutz von Neher – millimetergenau aufgemessen, sauber angebracht und in jedem gewünschten Farbton. Persönlich und regional." />
@@ -47,7 +53,7 @@
       </button>
       <nav class="site-nav" id="main-nav" aria-hidden="true">
         <a href="index.html">Start</a>
-        <a href="leistungen.html">Leistungen</a>
+        <a href="leistungen.html">Produkte</a>
         <a href="ueber-uns.html">Über uns</a>
         <a href="kontakt.html">Kontakt</a>
         <a href="kontakt.html#anfrage" class="btn-cta">Angebot anfragen</a>
@@ -76,7 +82,11 @@
       </ul>
       <div class="hero-actions">
         <a href="kontakt.html#anfrage" class="btn btn-light btn-large">Kostenloses Angebot anfragen</a>
-        <a href="leistungen.html" class="btn btn-secondary btn-large" style="background:transparent;color:#ffffff;border-color:#ffffff;">Unsere Leistungen</a>
+        <a href="leistungen.html" class="btn btn-secondary btn-large" style="background:transparent;color:#ffffff;border-color:#ffffff;">Unsere Produkte</a>
+        <button class="btn btn-secondary btn-large" style="background:transparent;color:#ffffff;border-color:rgba(255,255,255,.6);display:inline-flex;align-items:center;gap:.5rem;font-family:inherit;cursor:pointer;" data-video="307045637" aria-label="Video ansehen">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          Video ansehen
+        </button>
       </div>
     </div>
   </section>
@@ -154,7 +164,7 @@
           </div>
           <div class="content">
             <h3>Fenster</h3>
-            <p>Spannrahmen, Drehrahmen, Pendelfenster, Rollos und Schiebelösungen – passgenau für jedes Fenster.</p>
+            <p>Spannrahmen, Drehrahmen, Pendelfenster und Rollos – passgenau für jedes Fenster.</p>
             <span class="link">Mehr erfahren</span>
           </div>
         </a>
@@ -244,7 +254,7 @@
               <div class="gewebe-copy">
                 <span class="gewebe-kicker">Hochwertiges Highlight</span>
                 <h3>Transpatec</h3>
-                <p>Das robuste Transpatec-Gewebe von Neher überzeugt durch seine hohe Durchsichtigkeit, angenehmen Luftdurchlass und wird nur von diesem Hersteller angeboten. Mit 80 % Luftdurchlässigkeit bei bis zu 60 % Pollenschutz setzt Neher damit Maßstäbe.</p>
+                <p>Das robuste Transpatec-Gewebe vom Marktführer Neher überzeugt durch seine hohe Durchsichtigkeit, angenehmen Luftdurchlass und wird nur von diesem Hersteller angeboten. Mit 80 % Luftdurchlässigkeit bei bis zu 60 % Pollenschutz setzt der Marktführer Neher damit Maßstäbe.</p>
               </div>
             </article>
 
@@ -342,9 +352,6 @@
           <button type="button" data-gewebe-dot="7" aria-label="Weitere Gewebe anzeigen"></button>
         </div>
 
-        <div class="text-center mt-2">
-          <a href="leistungen.html#gewebe" class="btn btn-primary">Mehr zur Gewebe-Auswahl</a>
-        </div>
       </div>
     </div>
   </section>
@@ -396,7 +403,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
           </div>
           <h3>Premium Markenqualität</h3>
-          <p>Wir arbeiten mit Produkten von Neher – Made in Germany, langlebig, stabil und in vielen Farben verfügbar.</p>
+          <p>Wir arbeiten mit Produkten vom Marktführer Neher – Made in Germany, langlebig, stabil und in vielen Farben verfügbar.</p>
         </div>
 
         <div class="feature-card fade-in">
@@ -430,7 +437,7 @@
             <li>Leichtgängige Bedienung im Alltag</li>
             <li>Fachgerechte Montage ohne unnötigen Aufwand</li>
           </ul>
-          <p style="margin-top:1.5rem;"><a href="leistungen.html" class="btn btn-primary">Alle Leistungen ansehen</a></p>
+          <p style="margin-top:1.5rem;"><a href="leistungen.html" class="btn btn-primary">Alle Produkte ansehen</a></p>
         </div>
       </div>
     </div>
@@ -494,6 +501,7 @@
           </div>
           <h3>Telefon</h3>
           <a href="tel:+4915124005954">0151 24005954</a>
+          <a href="tel:+4915115508412">0151 15508412</a>
           <p class="small">Mo – Fr, 8:00 – 18:00 Uhr</p>
         </div>
 
@@ -502,7 +510,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </div>
           <h3>E-Mail</h3>
-          <a href="mailto:h2insektenschutz@gmail.com">h2insektenschutz@gmail.com</a>
+          <a href="mailto:kontakt@h2insektenschutz.de">kontakt@h2insektenschutz.de</a>
           <p class="small">Wir antworten meist am selben Tag</p>
         </div>
 
@@ -537,7 +545,7 @@
           <h4>Navigation</h4>
           <ul>
             <li><a href="index.html">Start</a></li>
-            <li><a href="leistungen.html">Leistungen</a></li>
+            <li><a href="leistungen.html">Produkte</a></li>
             <li><a href="ueber-uns.html">Über uns</a></li>
             <li><a href="kontakt.html">Kontakt</a></li>
           </ul>
@@ -546,8 +554,8 @@
         <div>
           <h4>Kontakt</h4>
           <ul>
-            <li><a href="tel:+4915124005954">0151 24005954</a></li>
-            <li><a href="mailto:h2insektenschutz@gmail.com">h2insektenschutz@gmail.com</a></li>
+            <li><a href="tel:+4915115508412">0151 15508412</a></li>
+            <li><a href="mailto:kontakt@h2insektenschutz.de">kontakt@h2insektenschutz.de</a></li>
             <li><a href="https://wa.me/4915124005954" target="_blank" rel="noopener">WhatsApp</a></li>
           </ul>
         </div>
@@ -567,6 +575,35 @@
     <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.001 2.667C8.638 2.667 2.667 8.637 2.667 16c0 2.353.616 4.658 1.788 6.69L2.667 29.333l6.83-1.778A13.275 13.275 0 0016.001 29.333C23.364 29.333 29.334 23.363 29.334 16S23.364 2.667 16.001 2.667zm0 24.222a10.86 10.86 0 01-5.531-1.514l-.397-.236-4.05 1.054 1.08-3.95-.258-.408a10.892 10.892 0 01-1.668-5.835c0-6.022 4.901-10.923 10.924-10.923 6.022 0 10.923 4.901 10.923 10.923 0 6.023-4.901 10.889-10.923 10.889zm6.21-8.157c-.34-.17-2.013-.99-2.325-1.103-.312-.114-.539-.17-.766.17s-.879 1.103-1.078 1.33c-.198.227-.397.255-.737.085-.34-.17-1.434-.529-2.732-1.685-1.01-.9-1.692-2.013-1.89-2.353-.198-.34-.021-.523.149-.692.153-.152.34-.397.51-.595.17-.198.227-.34.34-.567.114-.227.057-.425-.028-.595-.085-.17-.766-1.846-1.05-2.527-.276-.663-.557-.573-.766-.583l-.652-.012c-.227 0-.595.085-.907.425-.312.34-1.19 1.163-1.19 2.838s1.219 3.293 1.388 3.521c.17.227 2.396 3.66 5.806 5.133.81.35 1.443.559 1.937.715.813.258 1.554.222 2.139.135.652-.097 2.013-.823 2.296-1.617.283-.795.283-1.476.198-1.617-.085-.142-.312-.227-.652-.397z"/></svg>
   </a>
 
+  <div class="video-modal-overlay" id="videoModal" role="dialog" aria-modal="true" aria-label="Video">
+    <div class="video-modal">
+      <button class="video-modal-close" id="videoModalClose" aria-label="Video schließen">×</button>
+      <iframe id="videoModalFrame" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+    </div>
+  </div>
+
   <script src="js/script.js?v=20260427-v4" defer></script>
+  <script>
+    (function(){
+      var overlay = document.getElementById('videoModal');
+      var frame   = document.getElementById('videoModalFrame');
+      var closeBtn= document.getElementById('videoModalClose');
+      function openModal(id){
+        frame.src = 'https://player.vimeo.com/video/' + id + '?autoplay=1&color=008080&title=0&byline=0&portrait=0';
+        overlay.classList.add('is-open');
+        closeBtn.focus();
+      }
+      function closeModal(){
+        overlay.classList.remove('is-open');
+        frame.src = '';
+      }
+      document.querySelectorAll('[data-video]').forEach(function(btn){
+        btn.addEventListener('click', function(){ openModal(this.dataset.video); });
+      });
+      closeBtn.addEventListener('click', closeModal);
+      overlay.addEventListener('click', function(e){ if(e.target===overlay) closeModal(); });
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+    })();
+  </script>
 </body>
 </html>

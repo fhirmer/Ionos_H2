@@ -40,8 +40,8 @@ Uploaddatei/
 
 1. **Impressum**: Anschrift und ggf. USt-IdNr. in `impressum.html` ergänzen.
 2. **Datenschutz**: Vorlage von einer fachkundigen Person prüfen lassen (`datenschutz.html`).
-3. **Telefon / E-Mail**: aktuell hinterlegt sind `0151 24005954` und `h2insektenschutz@gmail.com` – bei Änderungen seitenweit anpassen.
-4. **Netlify Forms**: Nach dem Deploy einmal die "Form notifications" einrichten, damit Anfragen direkt an `h2insektenschutz@gmail.com` weitergeleitet werden (Netlify-Dashboard → Forms → Settings &amp; usage → Form notifications).
+3. **Telefon / E-Mail**: aktuell hinterlegt sind `0151 24005954` und `kontakt@h2insektenschutz.de` – bei Änderungen seitenweit anpassen.
+4. **Netlify Forms**: Nach dem Deploy einmal die "Form notifications" einrichten, damit Anfragen direkt an `kontakt@h2insektenschutz.de` weitergeleitet werden (Netlify-Dashboard → Forms → Settings &amp; usage → Form notifications).
 5. **Domain**: eigene Wunschdomain im Netlify-Dashboard verknüpfen.
 
 ## Technik
