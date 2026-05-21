@@ -348,54 +348,122 @@
   }
 
   /* --------------------------------------------------------------
-     Gewebe-Slider
+     Gewebe-Slider (infinite loop via clones)
      -------------------------------------------------------------- */
   const gewebeSlider = document.querySelector('[data-gewebe-slider]');
   if (gewebeSlider) {
     const track = gewebeSlider.querySelector('[data-gewebe-track]');
-    const slides = Array.from(gewebeSlider.querySelectorAll('.gewebe-slide'));
+    const realSlides = Array.from(gewebeSlider.querySelectorAll('.gewebe-slide'));
     const prevButton = gewebeSlider.querySelector('[data-gewebe-prev]');
     const nextButton = gewebeSlider.querySelector('[data-gewebe-next]');
     const dots = Array.from(gewebeSlider.querySelectorAll('[data-gewebe-dot]'));
+    const n = realSlides.length;
     let activeIndex = 0;
+    let jumping = false;
 
-    const getLoopedIndex = function (index) {
-      return (index + slides.length) % slides.length;
+    const slotLeft = function (el) { return el.offsetLeft - track.offsetLeft; };
+
+    const silentJump = function (left) {
+      track.style.scrollBehavior = 'auto';
+      track.scrollLeft = left;
+      track.getBoundingClientRect();
+      track.style.scrollBehavior = '';
     };
 
-    const updateSlider = function (index) {
-      activeIndex = Math.max(0, Math.min(index, slides.length - 1));
-
-      dots.forEach(function (dot, dotIndex) {
-        if (dotIndex === activeIndex) {
-          dot.setAttribute('aria-current', 'true');
-        } else {
-          dot.removeAttribute('aria-current');
-        }
+    const updateDots = function (index) {
+      dots.forEach(function (dot, i) {
+        if (i === index) dot.setAttribute('aria-current', 'true');
+        else dot.removeAttribute('aria-current');
       });
     };
+
+    const afterScroll = function (cb) {
+      const fallback = setTimeout(function () {
+        track.removeEventListener('scrollend', handler);
+        cb();
+      }, 600);
+      const handler = function () {
+        clearTimeout(fallback);
+        cb();
+      };
+      track.addEventListener('scrollend', handler, { once: true });
+    };
+
+    // Insert clones for infinite looping
+    let firstClone = null;
+    let lastClone = null;
+    if (track && n > 1) {
+      lastClone = realSlides[n - 1].cloneNode(true);
+      firstClone = realSlides[0].cloneNode(true);
+      lastClone.setAttribute('aria-hidden', 'true');
+      firstClone.setAttribute('aria-hidden', 'true');
+      lastClone.style.scrollSnapAlign = 'none';
+      firstClone.style.scrollSnapAlign = 'none';
+      track.insertBefore(lastClone, realSlides[0]);
+      track.appendChild(firstClone);
+      window.requestAnimationFrame(function () {
+        silentJump(slotLeft(realSlides[0]));
+      });
+    }
 
     const scrollToSlide = function (index) {
-      if (!track || !slides.length) return;
-      const targetIndex = getLoopedIndex(index);
-      track.scrollTo({
-        left: slides[targetIndex].offsetLeft - track.offsetLeft,
-        behavior: 'smooth',
-      });
-      updateSlider(targetIndex);
+      if (jumping || !track || !n) return;
+      const target = ((index % n) + n) % n;
+      activeIndex = target;
+      updateDots(activeIndex);
+      track.scrollTo({ left: slotLeft(realSlides[target]), behavior: 'smooth' });
     };
 
-    if (track && slides.length) {
+    const advance = function (delta) {
+      if (jumping || !track || !n) return;
+      const next = activeIndex + delta;
+
+      if (next >= n && firstClone) {
+        jumping = true;
+        track.style.scrollSnapType = 'none';
+        track.scrollTo({ left: slotLeft(firstClone), behavior: 'smooth' });
+        afterScroll(function () {
+          silentJump(slotLeft(realSlides[0]));
+          activeIndex = 0;
+          updateDots(0);
+          track.style.scrollSnapType = '';
+          jumping = false;
+        });
+        return;
+      }
+
+      if (next < 0 && lastClone) {
+        jumping = true;
+        track.style.scrollSnapType = 'none';
+        track.scrollTo({ left: slotLeft(lastClone), behavior: 'smooth' });
+        afterScroll(function () {
+          silentJump(slotLeft(realSlides[n - 1]));
+          activeIndex = n - 1;
+          updateDots(n - 1);
+          track.style.scrollSnapType = '';
+          jumping = false;
+        });
+        return;
+      }
+
+      scrollToSlide(next);
+    };
+
+    if (track && n) {
       let isDragging = false;
       let startX = 0;
       let startScrollLeft = 0;
 
-      const snapToNearestSlide = function () {
-        const slideWidth = slides[1]
-          ? slides[1].offsetLeft - slides[0].offsetLeft
-          : slides[0].offsetWidth;
-        const nearestIndex = Math.round(track.scrollLeft / slideWidth);
-        scrollToSlide(nearestIndex);
+      const snapToNearest = function () {
+        if (jumping) return;
+        const viewCenter = track.scrollLeft + track.clientWidth / 2;
+        let nearest = activeIndex;
+        let nearestDist = Infinity;
+        realSlides.forEach(function (slide, i) {
+          const dist = Math.abs((slotLeft(slide) + slide.offsetWidth / 2) - viewCenter);
+          if (dist < nearestDist) { nearestDist = dist; nearest = i; }
+        });
+        scrollToSlide(nearest);
       };
 
       track.addEventListener('pointerdown', function (event) {
@@ -418,64 +486,27 @@
         isDragging = false;
         track.classList.remove('is-dragging');
         track.releasePointerCapture(event.pointerId);
-        snapToNearestSlide();
+        snapToNearest();
       });
 
       track.addEventListener('pointercancel', function () {
         isDragging = false;
         track.classList.remove('is-dragging');
-        snapToNearestSlide();
+        snapToNearest();
       });
 
-      track.addEventListener(
-        'touchend',
-        function () {
-          window.setTimeout(snapToNearestSlide, 80);
-        },
-        { passive: true }
-      );
-
-      track.addEventListener(
-        'scroll',
-        function () {
-          const trackCenter = track.scrollLeft + track.clientWidth / 2;
-          const nearestIndex = slides.reduce(function (nearest, slide, index) {
-            const slideCenter = slide.offsetLeft + slide.clientWidth / 2;
-            const nearestCenter =
-              slides[nearest].offsetLeft + slides[nearest].clientWidth / 2;
-            return Math.abs(slideCenter - trackCenter) <
-              Math.abs(nearestCenter - trackCenter)
-              ? index
-              : nearest;
-          }, 0);
-          updateSlider(nearestIndex);
-        },
-        { passive: true }
-      );
+      track.addEventListener('touchend', function () {
+        window.setTimeout(snapToNearest, 80);
+      }, { passive: true });
 
       track.addEventListener('keydown', function (event) {
-        if (event.key === 'ArrowLeft') {
-          event.preventDefault();
-          scrollToSlide(activeIndex - 1);
-        }
-        if (event.key === 'ArrowRight') {
-          event.preventDefault();
-          scrollToSlide(activeIndex + 1);
-        }
+        if (event.key === 'ArrowLeft') { event.preventDefault(); advance(-1); }
+        if (event.key === 'ArrowRight') { event.preventDefault(); advance(1); }
       });
     }
 
-    if (prevButton) {
-      prevButton.addEventListener('click', function () {
-        scrollToSlide(activeIndex - 1);
-      });
-    }
-
-    if (nextButton) {
-      nextButton.addEventListener('click', function () {
-        scrollToSlide(activeIndex + 1);
-      });
-    }
+    if (prevButton) prevButton.addEventListener('click', function () { advance(-1); });
+    if (nextButton) nextButton.addEventListener('click', function () { advance(1); });
 
     dots.forEach(function (dot) {
       dot.addEventListener('click', function () {
@@ -483,7 +514,7 @@
       });
     });
 
-    updateSlider(0);
+    updateDots(0);
   }
 
   /* --------------------------------------------------------------
