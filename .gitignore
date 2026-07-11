@@ -1,3 +1,23 @@
 .DS_Store
 Archiv.zip
 __MACOSX/
+
+# Environment / Secrets
+.env
+.env.*
+*.pem
+*.key
+*.p12
+credentials.json
+secrets.json
+
+# Internal project files
+.claude/
+Orga_Page_*/
+*_intern*
+*_private*
+*_backup*
+
+# Dependencies / local build caches
+node_modules/
+.cache/
