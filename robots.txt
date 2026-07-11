@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /danke.html
 
-Sitemap: /sitemap.xml
+Sitemap: https://h2insektenschutz.de/sitemap.xml
