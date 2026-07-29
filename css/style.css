@@ -1201,6 +1201,61 @@ section {
 }
 
 /* ============================================
+   Service area
+   ============================================ */
+.service-area-section {
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+}
+
+.service-area-box {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.service-area-box h2 {
+  margin-top: 0.35rem;
+}
+
+.service-area-box p {
+  max-width: 760px;
+}
+
+.service-area-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service-area-list li {
+  padding: 0.6rem 0.9rem;
+  color: var(--color-primary-dark);
+  background: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+@media (min-width: 850px) {
+  .service-area-box {
+    grid-template-columns: minmax(0, 1.6fr) minmax(240px, 0.7fr);
+  }
+
+  .service-area-list {
+    align-content: center;
+  }
+}
+
+/* ============================================
    Footer
    ============================================ */
 .site-footer {

@@ -1,14 +1,19 @@
-# H2 Insektenschutz – Website (Netlify)
+# H2 Insektenschutz – Website (GitHub Pages)
 
-Statische, responsive Website für H2 Insektenschutz – fertig zum Upload bei Netlify.
+Statische, responsive Website für H2 Insektenschutz. Die Live-Domain
+`https://h2insektenschutz.de` wird über GitHub Pages ausgeliefert.
 
-## Upload bei Netlify (drag &amp; drop)
+## Veröffentlichung über GitHub Pages
 
-1. Auf [https://app.netlify.com/drop](https://app.netlify.com/drop) gehen.
-2. Den **entpackten Ordner `Push_Page_H2`** in das Drop-Feld ziehen, nicht eine ZIP-Datei.
-3. Bei einer bestehenden Netlify-Seite den Ordner unten auf der Seite **Deploys** in die Deploy-Dropzone ziehen, damit der neue Stand veröffentlicht wird.
-4. Netlify erstellt automatisch eine Live-URL bzw. einen neuen Deploy.
-5. Optional: eigene Domain (z. B. `h2-insektenschutz.de`) im Netlify-Dashboard verknüpfen.
+1. Änderungen im Ordner `Push_Page_H2` prüfen.
+2. Beabsichtigte Dateien committen.
+3. Den Branch `main` in das Repository `fhirmer/Ionos_H2` pushen.
+4. GitHub Pages veröffentlicht den neuen Stand.
+5. Anschließend die Live-Domain, `robots.txt` und `sitemap.xml` kontrollieren.
+
+Die Datei `CNAME` verbindet die Veröffentlichung mit
+`h2insektenschutz.de`. `netlify.toml` ist eine ältere bzw. optionale
+Konfiguration und derzeit nicht der aktive Veröffentlichungsweg.
 
 ## Datei- und Ordnerstruktur
 
