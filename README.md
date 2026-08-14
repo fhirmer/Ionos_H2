@@ -20,7 +20,14 @@ Konfiguration und derzeit nicht der aktive Veröffentlichungsweg.
 ```
 Push_Page_H2/
 ├── index.html              Startseite
-├── leistungen.html         Alle Produkte (Fenster, Türen, Dachfenster, Lichtschacht, Gewebe, Zubehör)
+├── leistungen.html         Alle Produkte (Fenster, Türen, Dachfenster, Lichtschacht, Zubehör, Farben)
+├── fliegengitter-fenster.html
+│                            Fokussierte Landingpage für Fensterlösungen
+├── insektenschutztueren.html
+│                            Fokussierte Landingpage für Türenlösungen
+├── lichtschachtabdeckungen.html
+│                            Fokussierte Landingpage für Lichtschächte
+├── gewebearten.html         Fokussierte Landingpage für Gewebearten
 ├── ueber-uns.html          Team (Rudolf Hügel zuerst, dann Florian Hirmer) und Werte
 ├── kontakt.html            Kontakt + Anfrageformular (Netlify Forms)
 ├── danke.html              Bestätigungsseite nach Formularabsendung
@@ -60,5 +67,12 @@ Push_Page_H2/
 ## Pflege &amp; Erweiterung
 
 - Texte/Inhalte direkt in den HTML-Dateien anpassen.
+- Die vier Landingpages werden intern und in der Sitemap extensionlos verlinkt,
+  obwohl ihre statischen Quelldateien auf `.html` enden. Canonical, Open Graph,
+  strukturierte Daten und Sitemap müssen dabei dieselbe extensionlose URL
+  verwenden.
+- Produkttexte der Landingpages stammen aus `leistungen.html`; die
+  Gewebetexte stammen aus `index.html`. Bei Inhaltsänderungen immer Quellseite
+  und zugehörige Landingpage gemeinsam prüfen.
 - Bilder austauschen: gleiche Dateinamen unter `images/...` ablegen.
 - Farben &amp; Look: über CSS-Variablen am Anfang von `css/style.css` zentral steuerbar.
