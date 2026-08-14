@@ -589,7 +589,7 @@ section {
 }
 
 .process-slider {
-  max-width: 780px;
+  max-width: 920px;
   margin: 0 auto;
 }
 
@@ -689,19 +689,58 @@ section {
 }
 
 .process-slide.step-card {
-  min-height: 560px;
-  justify-content: flex-start;
+  min-height: 430px;
+  padding: 1rem 1rem 3.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  grid-template-rows: auto auto 1fr;
+  column-gap: 2rem;
+  align-items: center;
+  text-align: left;
+  justify-content: initial;
+  border: 1px solid rgba(15, 71, 71, 0.08);
+  border-radius: 28px;
+  background: linear-gradient(145deg, #ffffff 0%, #fbfdfd 100%);
+  box-shadow: 0 24px 70px rgba(20, 54, 54, 0.1);
   overflow: hidden;
 }
 
 .process-slide.step-card .number {
   position: static;
   transform: none;
-  margin: 0 auto 0.7rem;
+  margin: 0 0 0.8rem;
+  justify-self: start;
+  background: #edf8f7;
+  color: #007b7b;
+  box-shadow: none;
 }
 
 .process-slide.step-card h3 {
   margin: 0 0 0.6rem;
+}
+
+.process-slide.step-card p {
+  max-width: none;
+  margin: 0;
+  align-self: start;
+}
+
+.process-slide.step-card .step-image {
+  grid-column: 1;
+  grid-row: 1 / 4;
+  width: 100%;
+  height: 340px;
+  margin: 0;
+  align-items: stretch;
+}
+
+.process-slide.step-card .step-image img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  border-radius: 20px;
 }
 
 .process-dots {
@@ -727,7 +766,7 @@ section {
   transform: scale(1.25);
 }
 
-@media (max-width: 599px) {
+@media (max-width: 768px) {
   .process-slider-section {
     padding: 2.75rem 0 3.5rem;
   }
@@ -738,12 +777,29 @@ section {
   }
 
   .process-slide.step-card {
-    min-height: 500px;
+    min-height: 530px;
+    padding: 1rem 1rem 4rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 0;
+    text-align: center;
+    border-radius: 24px;
   }
 
-  .step-card .step-image {
-    height: 225px;
-    margin: -0.75rem 0 1rem;
+  .process-slide.step-card .step-image {
+    grid-column: 1;
+    grid-row: auto;
+    height: 265px;
+    margin: 0 0 1.25rem;
+  }
+
+  .process-slide.step-card .number {
+    justify-self: center;
+    margin-bottom: 0.7rem;
+  }
+
+  .process-slide.step-card p {
+    margin: 0 auto;
   }
 
   .process-slider-controls {
@@ -755,6 +811,16 @@ section {
     width: 38px;
     height: 38px;
     font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 599px) {
+  .process-slide.step-card {
+    min-height: 500px;
+  }
+
+  .process-slide.step-card .step-image {
+    height: 220px;
   }
 }
 
