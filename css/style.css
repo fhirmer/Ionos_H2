@@ -589,7 +589,7 @@ section {
 }
 
 .process-slider {
-  max-width: 920px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -673,7 +673,7 @@ section {
   min-height: 240px;
   scroll-snap-align: center;
   scroll-snap-stop: always;
-  box-shadow: var(--shadow-md);
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -689,27 +689,27 @@ section {
 }
 
 .process-slide.step-card {
-  min-height: 430px;
-  padding: 1rem 1rem 3.5rem;
+  min-height: 530px;
+  padding: 1rem 1rem 4rem;
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  grid-template-rows: auto auto 1fr;
-  column-gap: 2rem;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto auto;
+  gap: 0;
   align-items: center;
-  text-align: left;
+  text-align: center;
   justify-content: initial;
   border: 1px solid rgba(15, 71, 71, 0.08);
   border-radius: 28px;
   background: linear-gradient(145deg, #ffffff 0%, #fbfdfd 100%);
-  box-shadow: 0 24px 70px rgba(20, 54, 54, 0.1);
+  box-shadow: none;
   overflow: hidden;
 }
 
 .process-slide.step-card .number {
   position: static;
   transform: none;
-  margin: 0 0 0.8rem;
-  justify-self: start;
+  margin: 0 0 0.7rem;
+  justify-self: center;
   background: #edf8f7;
   color: #007b7b;
   box-shadow: none;
@@ -720,17 +720,17 @@ section {
 }
 
 .process-slide.step-card p {
-  max-width: none;
-  margin: 0;
+  max-width: 560px;
+  margin: 0 auto;
   align-self: start;
 }
 
 .process-slide.step-card .step-image {
   grid-column: 1;
-  grid-row: 1 / 4;
-  width: 100%;
-  height: 340px;
-  margin: 0;
+  grid-row: auto;
+  width: min(100%, 620px);
+  height: 300px;
+  margin: 0 auto 1.25rem;
   align-items: stretch;
 }
 
@@ -777,7 +777,7 @@ section {
   }
 
   .process-slide.step-card {
-    min-height: 530px;
+    min-height: 500px;
     padding: 1rem 1rem 4rem;
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto;
@@ -789,8 +789,9 @@ section {
   .process-slide.step-card .step-image {
     grid-column: 1;
     grid-row: auto;
-    height: 265px;
-    margin: 0 0 1.25rem;
+    width: min(100%, 560px);
+    height: 250px;
+    margin: 0 auto 1.25rem;
   }
 
   .process-slide.step-card .number {
@@ -816,11 +817,11 @@ section {
 
 @media (max-width: 599px) {
   .process-slide.step-card {
-    min-height: 500px;
+    min-height: 465px;
   }
 
   .process-slide.step-card .step-image {
-    height: 220px;
+    height: 205px;
   }
 }
 
@@ -1570,7 +1571,7 @@ section {
   background: #ffffff;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: none;
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
