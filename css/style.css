@@ -1294,6 +1294,10 @@ section {
   max-width: 760px;
 }
 
+.service-area-box > div > .btn {
+  margin-top: 0.75rem;
+}
+
 .service-area-list {
   display: flex;
   flex-wrap: wrap;
