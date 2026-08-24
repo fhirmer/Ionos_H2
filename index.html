@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" />
-  <link rel="stylesheet" href="css/style.css?v=20260814-service1" />
+  <link rel="stylesheet" href="css/style.css?v=20260824-nav1" />
   <style>
     @keyframes gallery-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}.gallery-ticker-wrap{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(to right,transparent,black 6%,black 94%,transparent);mask-image:linear-gradient(to right,transparent,black 6%,black 94%,transparent)}.gallery-ticker{display:flex;gap:1rem;width:max-content;animation:gallery-scroll 32s linear infinite}.gallery-ticker:hover{animation-play-state:paused}.gallery-ticker img{width:300px;height:225px;object-fit:cover;border-radius:var(--radius,8px);flex-shrink:0}@media(max-width:599px){.gallery-ticker img{width:220px;height:165px}}
     @keyframes hero-fade-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -109,7 +109,20 @@
       </button>
       <nav class="site-nav" id="main-nav" aria-hidden="true">
         <a href="index.html">Start</a>
-        <a href="leistungen.html">Produkte</a>
+        <div class="nav-has-sub">
+          <a href="leistungen.html">Produkte</a>
+          <button type="button" class="nav-sub-toggle"
+                  aria-expanded="false" aria-controls="nav-sub-produkte"
+                  aria-label="Untermenü Produkte">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.3 7.3a1 1 0 011.4 0L10 10.6l3.3-3.3a1 1 0 111.4 1.4l-4 4a1 1 0 01-1.4 0l-4-4a1 1 0 010-1.4z"/></svg>
+          </button>
+          <div class="nav-sub" id="nav-sub-produkte">
+            <a href="/fliegengitter-fenster">Fliegengitter für Fenster</a>
+            <a href="/insektenschutztueren">Insektenschutztüren</a>
+            <a href="/lichtschachtabdeckungen">Lichtschachtabdeckungen</a>
+            <a href="/gewebearten">Gewebearten</a>
+          </div>
+        </div>
         <a href="ueber-uns.html">Über uns</a>
         <a href="kontakt.html">Kontakt</a>
         <a href="kontakt.html#anfrage" class="btn-cta">Angebot anfragen</a>
@@ -661,7 +674,7 @@
     </div>
   </div>
 
-  <script src="js/script.js?v=20260427-v4" defer></script>
+  <script src="js/script.js?v=20260824-nav1" defer></script>
   <script>
     (function(){
       var overlay = document.getElementById('videoModal');

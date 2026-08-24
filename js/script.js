@@ -43,6 +43,65 @@
   }
 
   /* --------------------------------------------------------------
+     Produkte-Untermenü in der Hauptnavigation
+     -------------------------------------------------------------- */
+  const subToggle = document.querySelector('.nav-sub-toggle');
+  const subWrap = subToggle ? subToggle.closest('.nav-has-sub') : null;
+
+  if (navToggle && siteNav && subToggle && subWrap) {
+    // Erst mit aktivem JavaScript wird das Untermenü einklappbar.
+    siteNav.classList.add('has-sub-js');
+
+    subToggle.addEventListener('click', function () {
+      const isOpen = subToggle.getAttribute('aria-expanded') === 'true';
+      subToggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // Wird das Hauptmenü geschlossen, klappt auch das Untermenü zu.
+    navToggle.addEventListener('click', function () {
+      if (navToggle.getAttribute('aria-expanded') === 'false') {
+        subToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Escape schließt das Untermenü und gibt den Fokus zurück.
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && subToggle.getAttribute('aria-expanded') === 'true') {
+        subToggle.setAttribute('aria-expanded', 'false');
+        subToggle.focus();
+      }
+    });
+
+    // Klick außerhalb schließt das per Klick geöffnete Untermenü.
+    document.addEventListener('click', function (event) {
+      if (
+        subToggle.getAttribute('aria-expanded') === 'true' &&
+        !subWrap.contains(event.target)
+      ) {
+        subToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // Ab 900 px ist die Navigation dauerhaft sichtbar und darf für
+  // Screenreader nicht ausgeblendet sein.
+  if (navToggle && siteNav) {
+    const desktopNav = window.matchMedia('(min-width: 900px)');
+    const syncNavHidden = function () {
+      if (desktopNav.matches) {
+        siteNav.setAttribute('aria-hidden', 'false');
+      } else if (navToggle.getAttribute('aria-expanded') !== 'true') {
+        siteNav.setAttribute('aria-hidden', 'true');
+      }
+    };
+    syncNavHidden();
+    desktopNav.addEventListener('change', syncNavHidden);
+    // Der bestehende Toggle-Handler setzt aria-hidden unbedingt; ab 900 px
+    // wird der Wert danach wieder korrigiert.
+    navToggle.addEventListener('click', syncNavHidden);
+  }
+
+  /* --------------------------------------------------------------
      Header-Schatten beim Scrollen
      -------------------------------------------------------------- */
   const siteHeader = document.querySelector('.site-header');
