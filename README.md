@@ -67,10 +67,6 @@ Push_Page_H2/
 ## Pflege &amp; Erweiterung
 
 - Texte/Inhalte direkt in den HTML-Dateien anpassen.
-- Der Menüpunkt „Produkte" hat ein Untermenü (Fenster, Türen, Lichtschächte,
-  Gewebearten). Es steckt in `css/style.css` (Block „Produkte-Untermenü") und
-  `js/script.js`; auf dem Computer öffnet es per Hover oder Tastaturfokus, auf
-  dem Handy über den Pfeil-Button.
 - **Der Header ist in allen 11 HTML-Dateien einzeln ausgeschrieben.** Es gibt
   kein Template. Jede Navigationsänderung muss in allen elf Dateien identisch
   nachgezogen werden; der Menüpunkt „Produkte" kommt zusätzlich im Footer vor
