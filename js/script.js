@@ -10,6 +10,7 @@
      -------------------------------------------------------------- */
   const navToggle = document.querySelector('.nav-toggle');
   const siteNav = document.querySelector('.site-nav');
+  const produkteOverlay = document.getElementById('produkte-overlay');
 
   if (navToggle && siteNav) {
     navToggle.addEventListener('click', function () {
@@ -19,8 +20,10 @@
       document.body.classList.toggle('nav-open', !isOpen);
     });
 
-    // Schließe Menü, wenn ein Link geklickt wird
-    siteNav.querySelectorAll('a').forEach(function (link) {
+    // Schließe Menü, wenn ein Link geklickt wird.
+    // Ausnahme: „Produkte" öffnet nur das Overlay; das Menü bleibt darunter
+    // offen, damit man nach dem Schließen wieder im Menü landet.
+    siteNav.querySelectorAll('a:not(.nav-produkte)').forEach(function (link) {
       link.addEventListener('click', function () {
         navToggle.setAttribute('aria-expanded', 'false');
         siteNav.setAttribute('aria-hidden', 'true');
@@ -33,7 +36,10 @@
       if (
         navToggle.getAttribute('aria-expanded') === 'true' &&
         !siteNav.contains(event.target) &&
-        !navToggle.contains(event.target)
+        !navToggle.contains(event.target) &&
+        // Das Overlay liegt außerhalb von .site-nav. Ohne diese Zeile würde
+        // ein Klick darin das Handy-Menü darunter schließen.
+        !(produkteOverlay && produkteOverlay.contains(event.target))
       ) {
         navToggle.setAttribute('aria-expanded', 'false');
         siteNav.setAttribute('aria-hidden', 'true');
@@ -553,4 +559,116 @@
       link.classList.add('is-active');
     }
   });
+
+  /* --------------------------------------------------------------
+     Produkte-Overlay
+
+     „Produkte" bleibt im HTML ein echter Link auf leistungen.html.
+     Mit JavaScript öffnet ein Klick stattdessen das Overlay; ohne
+     JavaScript führt derselbe Link ganz normal auf die Produktseite.
+     Modifier-Klicks („in neuem Tab öffnen") werden durchgelassen.
+     -------------------------------------------------------------- */
+  const produkteLink = document.querySelector('.nav-produkte');
+
+  if (produkteLink && produkteOverlay) {
+    const produktePanel = produkteOverlay.querySelector('.produkte-panel');
+    const produkteClose = produkteOverlay.querySelector('.produkte-close');
+    const desktop = window.matchMedia('(min-width: 900px)');
+
+    const istOffen = function () {
+      return !produkteOverlay.hidden;
+    };
+
+    const oeffnen = function () {
+      produkteOverlay.hidden = false;
+      // Erzwingt einen Reflow, damit der Übergang von opacity 0 startet.
+      void produkteOverlay.offsetWidth;
+      produkteOverlay.classList.add('is-open');
+      produkteLink.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('produkte-open');
+      if (produkteClose) produkteClose.focus();
+    };
+
+    const schliessen = function (fokusZurueck) {
+      produkteOverlay.classList.remove('is-open');
+      produkteOverlay.hidden = true;
+      produkteLink.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('produkte-open');
+      if (fokusZurueck) produkteLink.focus();
+    };
+
+    produkteLink.addEventListener('click', function (event) {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+      event.preventDefault();
+      if (istOffen()) {
+        schliessen(true);
+      } else {
+        oeffnen();
+      }
+    });
+
+    if (produkteClose) {
+      produkteClose.addEventListener('click', function () {
+        schliessen(true);
+      });
+    }
+
+    // Klick auf den Hintergrund schließt, Klick ins Panel nicht.
+    produkteOverlay.addEventListener('click', function (event) {
+      if (produktePanel && !produktePanel.contains(event.target)) {
+        schliessen(true);
+      }
+    });
+
+    // Ein Produktlink schließt Overlay und Handy-Menü und navigiert dann.
+    produkteOverlay.querySelectorAll('a[href]').forEach(function (link) {
+      link.addEventListener('click', function () {
+        schliessen(false);
+        if (navToggle && siteNav) {
+          navToggle.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('nav-open');
+          if (!desktop.matches) {
+            siteNav.setAttribute('aria-hidden', 'true');
+          }
+        }
+      });
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (!istOffen()) return;
+
+      if (event.key === 'Escape') {
+        schliessen(true);
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      // Fokusfalle: Solange das Overlay offen ist, läuft Tab darin im Kreis.
+      const elemente = produkteOverlay.querySelectorAll(
+        'a[href], button:not([disabled])'
+      );
+      if (!elemente.length) return;
+
+      const erstes = elemente[0];
+      const letztes = elemente[elemente.length - 1];
+
+      if (event.shiftKey && document.activeElement === erstes) {
+        event.preventDefault();
+        letztes.focus();
+      } else if (!event.shiftKey && document.activeElement === letztes) {
+        event.preventDefault();
+        erstes.focus();
+      }
+    });
+
+    // Beim Wechsel zwischen Handy- und Computerbreite entsteht sonst ein
+    // halboffener Mischzustand.
+    desktop.addEventListener('change', function () {
+      if (istOffen()) schliessen(false);
+    });
+  }
+
 })();

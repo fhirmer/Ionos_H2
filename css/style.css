@@ -255,6 +255,225 @@ section {
 }
 
 /* ============================================
+   Produkte-Overlay
+   Öffnet sich beim Klick auf „Produkte" in der Hauptnavigation.
+   Markup: in allen 11 HTML-Dateien direkt hinter </nav> im Header.
+   Logik:  js/script.js, Block „Produkte-Overlay".
+   Der Block ist bewusst in sich geschlossen und in einem Stück
+   entfernbar; es wird keine bestehende Regel verändert.
+   ============================================ */
+.produkte-overlay {
+  position: fixed;
+  inset: var(--header-height) 0 0 0;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+/* Das hidden-Attribut hat weniger Gewicht als display: flex und muss
+   deshalb ausdrücklich gewinnen. */
+.produkte-overlay[hidden] {
+  display: none;
+}
+
+.produkte-overlay.is-open {
+  opacity: 1;
+}
+
+.produkte-panel {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 2.5rem;
+}
+
+.produkte-panel-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.produkte-panel-kopf h2 {
+  font-size: 1.3rem;
+}
+
+.produkte-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  margin-right: -0.6rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: var(--color-text-soft);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+@media (hover: hover) {
+  .produkte-close:hover {
+    background: var(--color-bg-soft);
+    color: var(--color-primary);
+  }
+}
+
+/* Einträge: „Alle Produkte" und die einzelnen Produktarten teilen sich
+   dieselbe Grundform. Die Mindesthöhe von 56 px ist die Touch-Regel. */
+.produkte-alle,
+.produkte-grid a {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 56px;
+  padding: 0.8rem 1rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.produkte-alle {
+  margin-bottom: 1rem;
+  background: var(--color-bg-soft);
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+@media (hover: hover) {
+  .produkte-alle:hover,
+  .produkte-grid a:hover {
+    background: var(--color-bg-soft);
+    border-color: var(--color-primary-light);
+    color: var(--color-text);
+  }
+
+  .produkte-alle:hover {
+    border-color: var(--color-primary);
+  }
+}
+
+/* Die Seite, auf der man gerade ist. */
+.produkte-alle[aria-current="page"],
+.produkte-grid a[aria-current="page"] {
+  background: var(--color-bg-soft);
+  border-color: var(--color-primary);
+}
+
+.produkte-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+
+.produkte-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  background: rgba(0, 128, 128, 0.09);
+  border-radius: 50%;
+  color: var(--color-primary);
+}
+
+.produkte-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.produkte-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.produkte-label {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.produkte-sub {
+  font-size: 0.85rem;
+  color: var(--color-text-soft);
+  line-height: 1.35;
+}
+
+/* Solange das Overlay offen ist, scrollt die Seite darunter nicht mit.
+   Bewusst eine eigene Klasse neben nav-open, damit Handy-Menü und
+   Overlay sich nicht gegenseitig die Klasse wegnehmen. */
+body.produkte-open {
+  overflow: hidden;
+}
+
+/* Der Burger zeigt bei geöffnetem Menü selbst ein X. Solange das Overlay
+   darüber liegt, stünden zwei X nebeneinander. Sichtbarkeit statt display,
+   damit die Kopfleiste nicht springt. */
+body.produkte-open .nav-toggle {
+  visibility: hidden;
+}
+
+.produkte-alle:focus-visible,
+.produkte-grid a:focus-visible,
+.produkte-close:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (min-width: 600px) {
+  .produkte-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 900px) {
+  /* Ab hier liegt das Panel als abgesetzte Karte auf einem
+     abgedunkelten Hintergrund. */
+  .produkte-overlay {
+    background: rgba(0, 50, 50, 0.45);
+    padding: 0.75rem 1.25rem 2rem;
+  }
+
+  .produkte-panel {
+    background: var(--color-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 1.35rem 1.5rem 1.5rem;
+    transform: translateY(-10px);
+    transition: transform var(--transition);
+  }
+
+  .produkte-overlay.is-open .produkte-panel {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .produkte-overlay,
+  .produkte-panel,
+  .produkte-alle,
+  .produkte-grid a,
+  .produkte-close {
+    transition: none;
+  }
+
+  .produkte-panel {
+    transform: none;
+  }
+}
+
+/* ============================================
    Buttons
    ============================================ */
 .btn {

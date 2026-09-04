@@ -71,6 +71,20 @@ Push_Page_H2/
   kein Template. Jede Navigationsänderung muss in allen elf Dateien identisch
   nachgezogen werden; der Menüpunkt „Produkte" kommt zusätzlich im Footer vor
   und darf dort nicht mitgeändert werden.
+- **Produkte-Overlay:** Der Menüpunkt „Produkte" öffnet ein Overlay mit
+  „Alle Produkte" und fünf Produktarten. Es steckt an drei Stellen:
+  `css/style.css` (Block „Produkte-Overlay"), `js/script.js` (Block
+  „Produkte-Overlay") und als Markup in allen 11 HTML-Dateien direkt hinter
+  `</nav>`. Der Markup-Block ist überall identisch, bis auf ein einzelnes
+  `aria-current="page"` auf den fünf Produktseiten.
+  - „Produkte" bleibt im HTML ein echter `<a href="leistungen.html">`. Ohne
+    JavaScript führt der Link ganz normal auf die Produktseite; erst das
+    Skript fängt den Klick ab und öffnet stattdessen das Overlay.
+  - Die sechs Ziele im Overlay müssen die kanonische Schreibweise der
+    Zielseite verwenden: `leistungen.html` **mit** Endung, die vier
+    Landingpages **ohne**.
+  - Neue Produktseite ergänzen: Eintrag im Overlay in allen 11 Dateien,
+    passendes `aria-current` auf der neuen Seite, Eintrag in `sitemap.xml`.
 - Die vier Landingpages werden intern und in der Sitemap extensionlos verlinkt,
   obwohl ihre statischen Quelldateien auf `.html` enden. Canonical, Open Graph,
   strukturierte Daten und Sitemap müssen dabei dieselbe extensionlose URL
