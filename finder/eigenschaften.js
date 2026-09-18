@@ -29,12 +29,9 @@ const GRUPPEN = [
     {
         titel: 'Montageart',
         labels: [
-            ['mounting.on_frame_front', 'liegt vorn auf dem Blendrahmen auf'],
             ['mounting_frame.position_amb_exterior_on_frame', 'Montagerahmen außen auf dem Blendrahmen (AMB)'],
             ['mounting_frame.position_lmb_in_clear_opening', 'Montagerahmen im Blendrahmen (LMB)'],
             ['mounting_frame.position_lmm_in_clear_wall_reveal', 'Montagerahmen in der Mauerleibung (LMM)'],
-            ['mounting.in_frame_opening', 'sitzt in der Blendrahmenöffnung'],
-            ['mounting.in_wall_reveal', 'sitzt in der Mauerleibung'],
             ['mounting.on_house_wall', 'wird an der Hauswand befestigt'],
             ['mounting.on_grating', 'liegt auf dem Gitterrost'],
             ['mounting.in_light_well_rebate', 'sitzt im Falz des Lichtschachts'],
@@ -186,6 +183,17 @@ function montageseite(v) {
     return {text: 'beim Aufmaß festlegen', quelle: null};
 }
 
+// Einbaulage aus dem Bezugsmaß des Bestellmaßes (erzeugt, Beleg steht in `lageBeleg`)
+const LAGE_TEXT = {
+    auf_blendrahmen: 'liegt außen auf dem Blendrahmen auf',
+    im_blendrahmen: 'wird in den Blendrahmen eingesetzt (Rahmenöffnung)',
+    mauerleibung: 'sitzt in der Mauerleibung',
+    fuehrungsschienen: 'sitzt zwischen den Rollladenführungsschienen',
+    innenfutter: 'sitzt im Innenfutter des Dachfensters',
+    aussenkante: 'sitzt auf der Außenkante des Blendrahmens',
+    lichtschacht: 'liegt auf dem Lichtschacht',
+};
+
 const ZEICHEN = {gte: '≥', gt: '>', lte: '≤', lt: '<'};
 const zahl = (wert) => String(wert).replace('.', ',');
 // Manche Grenzwerttexte enthalten „mindestens“ oder „höchstens“ schon selbst
@@ -199,12 +207,12 @@ function eigenschaften(v) {
     const seite = montageseite(v);
     for (const gruppe of GRUPPEN) {
         const treffer = gruppe.labels.filter(([label]) => v.wahr.has(label));
-        if (!treffer.length) continue;
-        zeilen.push({
-            titel: gruppe.titel,
-            text: treffer.map(([, text]) => text).join(', '),
-            labels: treffer.map(([label]) => label),
-        });
+        const istMontage = gruppe.titel === 'Montageart';
+        if (!treffer.length && !(istMontage && v.lage)) continue;
+        const texte = treffer.map(([, text]) => text);
+        // Die Einbaulage steht zuerst: Sie ist über das Bestellmaß des Hauptkatalogs belegt.
+        if (istMontage && v.lage && LAGE_TEXT[v.lage]) texte.unshift(LAGE_TEXT[v.lage]);
+        zeilen.push({titel: gruppe.titel, text: texte.join(', '), labels: treffer.map(([label]) => label)});
         // Die Montageseite steht direkt hinter der Bedienart
         if (gruppe.titel === 'Bedienart') zeilen.push({titel: 'Montageseite', text: seite.text, quelle: seite.quelle, labels: []});
     }

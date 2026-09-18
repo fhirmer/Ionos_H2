@@ -9,13 +9,13 @@ globalThis.H2Finder = {finder};
 if (typeof document === 'undefined') return;
 
 const SPEICHER = 'h2-produktfinder-3';
-const VERSION = '3.1';
+const VERSION = '3.2';
 const ART = {
     A1: 'Praxis-Ausschluss (Rudi)',
     A2: 'laut Katalog nicht geeignet',
     A3: 'Grenzwert verletzt',
     A4: 'Voraussetzung fehlt',
-    A5: 'anderer Bedienwunsch',
+    A5: 'anderer Bedien- oder Montagewunsch',
 };
 const STUFE = {
     1: 'Rudis Lösung für diese Situation',
@@ -170,8 +170,7 @@ function frageHtml(eintrag, erste) {
               <input name="wert" type="number" inputmode="decimal" min="0" max="10000" step="0.5" value="${typeof alt === 'number' ? alt : ''}" aria-describedby="mass-einheit-${frage.id}">
               <span id="mass-einheit-${frage.id}">${esc(frage.einheit)}</span>
             </label>
-            <p class="unterzeile">Ein eingetragenes Maß kann eine Lösung ausschließen, eine Schätzung nie.</p>
-            <button type="submit" class="haupt">Maß übernehmen</button></div></details>`;
+            <p class="unterzeile">Ein eingetragenes Maß kann eine Lösung ausschließen, eine Schätzung nie.</p></div></details>`;
         return `${kopf}<form class="frage ${eintrag.beantwortet ? 'beantwortet' : ''}" id="frage-${frage.id}" data-frage="${frage.id}" data-typ="mass" novalidate>
           <fieldset>${legende}${blick}${sortierhinweis}${hilfe}
             <div class="karten">${klassen}<label class="karte karte-unbekannt ${alt === SPAETER ? 'aktiv' : ''}">
@@ -191,7 +190,6 @@ function frageHtml(eintrag, erste) {
         return `${kopf}<form class="frage ${eintrag.beantwortet ? 'beantwortet' : ''}" id="frage-${frage.id}" data-frage="${frage.id}" data-typ="mehrfach">
           <fieldset>${legende}${blick}<p class="unterzeile">Mehrfachauswahl möglich. Das ändert nur die Hinweise zum Gewebe.</p>${hilfe}
             <div class="karten">${karten}</div>
-            <div class="knoepfe"><button type="submit" class="haupt">Weiter</button></div>
           </fieldset></form>`;
     }
 
@@ -216,7 +214,6 @@ function frageHtml(eintrag, erste) {
     return `${kopf}<form class="frage ${eintrag.beantwortet ? 'beantwortet' : ''}" id="frage-${frage.id}" data-frage="${frage.id}" data-typ="eins">
       <fieldset>${legende}${blick}${sortierhinweis}${hilfe}
         <div class="karten">${karten}${unbekannt}</div>
-        ${eintrag.beantwortet ? '' : '<div class="knoepfe tastatur"><button type="submit" class="haupt">Weiter</button></div>'}
       </fieldset></form>`;
 }
 
@@ -242,7 +239,7 @@ function verlaufHtml() {
               ${abschnitt.hinweis ? `<p class="unterzeile">${esc(abschnitt.hinweis)}</p>` : ''}
             </div>
             ${fragen}
-            ${rest > 1 ? `<button type="button" class="neben ueberspringen" data-aktion="ueberspringen" data-abschnitt="${abschnitt.nr}">Rest überspringen – kommt auf die Prüfliste</button>` : ''}
+            ${rest >= 1 ? `<button type="button" class="neben ueberspringen" data-aktion="ueberspringen" data-abschnitt="${abschnitt.nr}">Rest überspringen – kommt auf die Prüfliste</button>` : ''}
           </section>`;
     }).join('');
     const naechster = abschnitte.find((x) => !x.bereit);
@@ -251,11 +248,6 @@ function verlaufHtml() {
         : '';
     return `<div class="balken" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${prozent}" aria-label="Fortschritt"><span style="width:${prozent}%"></span></div>
       ${stuecke}${ausblick}`;
-}
-
-// „Ja“ oder „Nein“ allein sagt nichts: dann die Frage voranstellen
-function mitFrage(id, text) {
-    return /^(ja|nein)\b/i.test(text) ? `${fragenById.get(id).frage.replace(/\?$/, '')}: ${text}` : text;
 }
 
 function antwortText(id) {
@@ -368,7 +360,13 @@ function ergebnisHtml() {
     const technisch = r.ausgeschlossen.filter((b) => b.gruende.some((g) => g.art !== 'A5'));
     const bedienart = r.ausgeschlossen.length - technisch.length;
     if (technisch.length) html += `<details class="liste ausgeschlossen"><summary>Ausgeschlossen, weil … (${technisch.length})</summary><ul>${technisch.map(ausschlussHtml).join('')}</ul></details>`;
-    if (bedienart) html += `<p class="ausgeblendet">${bedienart} Varianten mit anderer Bedienart ausgeblendet (nicht ungeeignet). <button type="button" class="link" data-aktion="bearbeiten" data-frage="${state.antworten.richtung && state.antworten.system === 'dreh' ? 'richtung' : 'system'}">Bedienart ändern</button></p>`;
+    if (bedienart) {
+        // A5 heißt „so nicht gewünscht“, nicht „technisch ungeeignet“ – das gilt für Bedienart,
+        // Öffnungsrichtung und seit dem Katalogabgleich auch für den Montageort.
+        const ziel = state.antworten.einbauweise ? 'einbauweise' : state.antworten.richtung && state.antworten.system === 'dreh' ? 'richtung' : 'system';
+        const wort = {einbauweise: 'Montageort', richtung: 'Öffnungsrichtung', system: 'Bedienart'}[ziel];
+        html += `<p class="ausgeblendet">${bedienart} Varianten mit anderer Bedienart oder anderem Montageort ausgeblendet (nicht ungeeignet). <button type="button" class="link" data-aktion="bearbeiten" data-frage="${ziel}">${esc(wort)} ändern</button></p>`;
+    }
     html += '<p class="schluss">Die Vorauswahl ersetzt kein Aufmaß. Bestellmaße, Einbauluft und Zusatzausstattung an der gewählten Variante prüfen.</p>';
     return html;
 }
@@ -438,7 +436,6 @@ async function teilen(knopf) {
 }
 
 // ---------- Ereignisse ----------
-let weiterTimer = null;
 document.addEventListener('click', (event) => {
     const ziel = event.target.closest('[data-aktion]');
     if (ziel && !ziel.disabled) {
@@ -449,26 +446,22 @@ document.addEventListener('click', (event) => {
         else if (aktion === 'ueberspringen') ueberspringe(ziel.dataset.abschnitt);
         else if (aktion === 'antwort') beantworte(ziel.dataset.frage, ziel.dataset.wert);
         else if (aktion === 'teilen') teilen(ziel);
-        return;
     }
-    // Antippen oder Klicken einer Antwortkarte geht direkt weiter; Tastatur nutzt „Weiter“
-    const karte = event.target.closest('label.karte');
-    if (!karte || event.detail === 0) return;
-    const form = karte.closest('form[data-typ="eins"], form[data-typ="mass"]');
-    const input = karte.querySelector('input');
-    if (!form || !input || input.disabled) return;
-    const id = form.dataset.frage;
-    clearTimeout(weiterTimer); // Label-Klick löst im Browser zusätzlich einen Klick auf das Eingabefeld aus
-    weiterTimer = setTimeout(() => beantworte(id, input.value), ruhig() ? 0 : 180);
 });
 
+// Auswählen beantwortet die Frage – mit Maus, Finger und Tastatur gleichermaßen.
+// Deshalb gibt es keinen „Weiter“-Knopf mehr.
 document.addEventListener('change', (event) => {
     const input = event.target;
-    const karte = input.closest && input.closest('label.karte');
-    if (!karte) return;
-    const form = karte.closest('form');
-    if (input.type === 'radio') for (const k of form.querySelectorAll('label.karte')) k.classList.toggle('aktiv', k.contains(input));
-    else karte.classList.toggle('aktiv', input.checked);
+    const form = input.closest && input.closest('form[data-frage]');
+    if (!form || input.disabled) return;
+    const id = form.dataset.frage;
+    if (input.type === 'radio') return beantworte(id, input.value);
+    if (input.type === 'checkbox') return beantworte(id, [...form.querySelectorAll('input:checked')].map((i) => i.value));
+    if (input.name === 'wert') {
+        const wert = Number(String(input.value).replace(',', '.'));
+        return beantworte(id, input.value !== '' && Number.isFinite(wert) && wert >= 0 ? wert : SPAETER);
+    }
 });
 
 document.addEventListener('submit', (event) => {

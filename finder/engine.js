@@ -26,6 +26,17 @@ const KONFLIKTE = {
     K12: 'Kellerfenster-Überstand höchstens 90 mm (sonst LI1/4 oder LI1/7).',
 };
 
+// Einbaulage laut Bestellmaß-Bezug des Hauptkatalogs (erzeugt in scripts/erzeuge-finder-daten.py)
+const LAGE_TEXT = {
+    auf_blendrahmen: 'liegt außen auf dem Blendrahmen auf',
+    im_blendrahmen: 'sitzt im Blendrahmen, in der Rahmenöffnung',
+    mauerleibung: 'sitzt in der Mauerleibung',
+    fuehrungsschienen: 'sitzt zwischen den Rollladenführungsschienen',
+    innenfutter: 'sitzt im Innenfutter des Dachfensters',
+    aussenkante: 'sitzt auf der Außenkante des Blendrahmens',
+    lichtschacht: 'liegt auf dem Lichtschacht',
+};
+
 const SYSTEM_TEXT = {
     spannrahmen: 'Spannrahmen', pendel: 'Pendelanlage', dreh: 'Drehrahmen', rollo: 'Rollo', plissee: 'Plissee',
     schiebe: 'Schiebeanlage', schieberahmen: 'Schieberahmen', abdeckung: 'Lichtschachtabdeckung',
@@ -118,10 +129,14 @@ function erstelleFinder(daten, katalog) {
     const klasseVon = (frage, a) => (frage.klassen || []).find((k) => k.id === a[frage.id]) || null;
 
     function schaetzUrteil(klasse, grenzen) {
-        // Die Klasse reicht bis zur Grenze heran (z. B. „bis 15 mm“ bei „mindestens 15 mm“):
-        // Der größte Teil der Spanne liegt darunter, also muss nachgemessen werden.
-        const knapp = grenzen.filter((g) => ((g.op === 'gte' || g.op === 'gt') && klasse.bis !== undefined && klasse.bis <= g.wert)
-            || ((g.op === 'lte' || g.op === 'lt') && klasse.ab !== undefined && klasse.ab >= g.wert));
+        // Eine Schätzung bestätigt nur, wenn die **ganze** Spanne die Grenze einhält:
+        // „mindestens 15 mm“ ist erst durch eine Klasse ab 15 mm sicher erfüllt, „höchstens 3 mm“
+        // erst durch eine Klasse bis 3 mm. Offene Spannen („über 25 mm“) erfüllen eine höhere
+        // Grenze (z. B. 38 mm) gerade nicht – sonst entstünde ein falsches Häkchen.
+        const erfuellt = (g) => ((g.op === 'gte' || g.op === 'gt') ? klasse.ab !== undefined && klasse.ab >= g.wert
+            : (g.op === 'lte' || g.op === 'lt') ? klasse.bis !== undefined && klasse.bis <= g.wert
+            : true);
+        const knapp = grenzen.filter((g) => !erfuellt(g));
         const liste = (gs) => gs.map((g) => `${g.text} ${opText[g.op]} ${g.wert} mm`).join(' · ');
         return {
             knapp: knapp.length > 0,
@@ -145,6 +160,14 @@ function erstelleFinder(daten, katalog) {
             if (v.wahr.has(andere) && !v.wahr.has(richtung.richtung))
                 gruende.push({art: 'A5', text: `öffnet ${andere.endsWith('inward') ? 'nach innen' : 'nach außen'}, gewünscht ist ${richtung.text.toLowerCase()}`, quelle: 'deine Antwort', frage: 'richtung'});
         }
+        const einbau = antwortVon(a, fragenById.get('einbauweise'));
+        if (einbau?.lage && v.lage && v.lage !== einbau.lage && sichtbar(fragenById.get('einbauweise'), a))
+            gruende.push({
+                art: 'A5',
+                text: `${LAGE_TEXT[v.lage] || v.lage}, gewünscht ist „${einbau.text}“`,
+                quelle: `Bestellmaß laut Hauptkatalog (${(v.lageBeleg || []).join(' ')})`,
+                frage: 'einbauweise',
+            });
         for (const frage of fragen) {
             if (!sichtbar(frage, a)) continue;
             const antwort = antwortVon(a, frage);
@@ -259,6 +282,13 @@ function erstelleFinder(daten, katalog) {
             }
             if (frage.id === 'system') {
                 zeilen.push({frage: frage.id, urteil: a.system === 'egal' ? 'neutral' : 'ja', text: a.system === 'egal' ? 'Bedienart noch offen' : 'Bedienart wie gewünscht'});
+                continue;
+            }
+            if (frage.id === 'einbauweise') {
+                const antwort = antwortVon(a, frage);
+                zeilen.push(v.lage && antwort?.lage === v.lage
+                    ? {frage: frage.id, urteil: 'ja', text: `${LAGE_TEXT[v.lage]} (Bestellmaß laut Hauptkatalog)`}
+                    : {frage: frage.id, urteil: 'neutral', text: 'zum Montageort sagt der Katalog hier nichts'});
                 continue;
             }
             if (frage.id === 'richtung') {
@@ -404,7 +434,7 @@ function erstelleFinder(daten, katalog) {
         }
         if (frage.id === 'einbauweise') {
             // Eine Einbauweise verschwindet nicht mehr stillschweigend: Sie wird gesperrt und begründet.
-            const belegt = (x) => pool.some((v) => Object.entries(x.setzt).some(([l, w]) => w && v.wahr.has(l)));
+            const belegt = (x) => pool.some((v) => v.lage === x.lage);
             antworten = antworten.map((x) => (belegt(x)
                 ? {...x, moeglich: true}
                 : {...x, moeglich: false, grund: 'im ausgewählten Sortiment (Hauptkatalog und Rudis Liste) ist dafür keine Lösung hinterlegt – Rücksprache'}));
@@ -466,7 +496,7 @@ function erstelleFinder(daten, katalog) {
     // damit niemand rätselt, warum die Trefferzahl gleich bleibt (Umbauplan B6).
     function nurSortierung(frage, a, vorhandenerPool) {
         // Pflichtfragen bestimmen den Pool (Element, Dachfenster, Auflage) und sortieren nie nur
-        if (frage.pflicht || frage.id === 'system' || frage.id === 'richtung') return false;
+        if (frage.pflicht || frage.id === 'system' || frage.id === 'richtung' || frage.id === 'einbauweise') return false;
         const pool = vorhandenerPool || auswerten(a).passend.map((b) => b.variante);
         if (frage.typ === 'mass') return !pool.some((v) => v.grenzen.some((g) => g.messbar && (frage.schluessel || []).includes(g.k)));
         for (const antwort of frage.antworten || []) {

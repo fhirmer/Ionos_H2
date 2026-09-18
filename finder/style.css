@@ -1,4 +1,4 @@
-/* H2 Produktfinder 3.1 – mobil zuerst (360 px), ohne Framework und ohne externe Abhängigkeiten */
+/* H2 Produktfinder 3.2 – mobil zuerst (360 px), ohne Framework und ohne externe Abhängigkeiten */
 :root {
   --primaer: #008080;
   --primaer-dunkel: #006666;
@@ -133,9 +133,6 @@ small { font-size: 16px; }
 .skizze svg { width: 100%; height: 100%; }
 .skizze.gross { width: 100%; max-width: 320px; height: auto; aspect-ratio: 4 / 3; margin: 0 auto; }
 .frage-zeichen { font-size: 28px; font-weight: 700; }
-.knoepfe { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-.knoepfe.tastatur .haupt { width: 100%; }
-@media (hover: none) and (pointer: coarse) { .knoepfe.tastatur { display: none; } }
 .haupt, .neben { min-height: 52px; padding: 0 20px; border-radius: 999px; font-weight: 600; font-size: 17px; }
 .haupt { border: 0; background: var(--primaer); color: #fff; }
 @media (prefers-color-scheme: dark) { .haupt { color: #0f1f22; } }
@@ -147,8 +144,6 @@ small { font-size: 16px; }
 .mass-feld span:last-child { font-size: 20px; color: var(--text-leise); }
 
 /* Angaben */
-.angaben { margin-top: 28px; }
-.angaben h2 { font-size: 16px; color: var(--text-leise); font-weight: 600; margin-bottom: 8px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { min-height: 48px; padding: 6px 14px; border: 1px solid var(--rand); border-radius: 999px; background: var(--karte); font-size: 16px; text-align: left; }
 
