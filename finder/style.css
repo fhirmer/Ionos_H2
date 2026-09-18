@@ -1,4 +1,4 @@
-/* H2 Produktfinder 3.0 – mobil zuerst (360 px), ohne Framework und ohne externe Abhängigkeiten */
+/* H2 Produktfinder 3.1 – mobil zuerst (360 px), ohne Framework und ohne externe Abhängigkeiten */
 :root {
   --primaer: #008080;
   --primaer-dunkel: #006666;
@@ -67,21 +67,36 @@ small { font-size: 16px; }
 /* Rahmen */
 .rahmen { max-width: 1200px; margin: 0 auto; padding: 12px 16px 24px; }
 .spalten { display: block; }
-.schritt { outline: none; }
+.verlauf { outline: none; }
 .vorschau { display: none; }
 
-/* Fortschritt */
-.fortschritt { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--text-leise); font-size: 16px; min-height: 48px; }
-.zurueck { min-height: 48px; padding: 0 12px 0 0; border: 0; background: none; color: var(--primaer-dunkel); font-weight: 600; }
-.zurueck:disabled { visibility: hidden; }
-.balken { height: 6px; border-radius: 3px; background: var(--rand); overflow: hidden; }
+/* Fortschritt und Abschnitte des Verlaufs */
+.balken { position: sticky; top: var(--kopf); z-index: 40; height: 6px; border-radius: 3px; background: var(--rand); overflow: hidden; }
 .balken span { display: block; height: 100%; background: var(--primaer); transition: width .3s; }
-.block-titel { margin: 18px 0 4px; font-size: 16px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--primaer-dunkel); }
+.abschnitt { margin: 0 0 8px; padding: 0 0 8px; }
+.abschnitt + .abschnitt { border-top: 1px solid var(--rand); padding-top: 20px; }
+.abschnitt-kopf { margin: 22px 0 14px; }
+.abschnitt-nr { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--primaer-dunkel); }
+.abschnitt-kopf h2 { margin: 2px 0 0; font-size: 22px; outline: none; }
+.abschnitt-kopf .unterzeile { margin: 4px 0 0; }
+.ueberspringen { width: 100%; margin-top: 4px; }
+.ausblick { margin: 6px 0 0; color: var(--text-leise); font-size: 16px; }
+.ergebnis { display: block; margin-top: 24px; padding-top: 8px; border-top: 2px solid var(--rand); }
 
 /* Frage */
+.frage { margin: 0 0 22px; }
 .frage fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
 .frage legend { padding: 0; margin-bottom: 12px; width: 100%; }
-.frage h1 { font-size: 23px; font-weight: 700; outline: none; }
+.frage h3 { font-size: 21px; font-weight: 700; outline: none; margin: 0; }
+/* Beantwortete Fragen bleiben lesbar, treten aber zurück */
+.frage.beantwortet { opacity: .72; }
+.frage.beantwortet:focus-within, .frage.beantwortet:hover { opacity: 1; }
+/* Beantwortet heißt kompakt, nicht verborgen: jede Antwort bleibt mit einem Tipp änderbar */
+.frage.beantwortet .karte { min-height: 48px; padding: 8px 12px; }
+.frage.beantwortet .karte .skizze { display: none; }
+.frage.beantwortet .karte:not(.aktiv) small { display: none; }
+.frage.beantwortet .hilfe { display: none; }
+.frage.beantwortet h3 { font-size: 17px; color: var(--text-leise); }
 .unterzeile { margin: -4px 0 12px; color: var(--text-leise); font-size: 16px; }
 .hilfe { margin: 0 0 14px; border: 1px solid var(--rand); border-radius: var(--radius); background: var(--karte); }
 .hilfe summary { min-height: 48px; display: flex; align-items: center; padding: 0 14px; color: var(--primaer-dunkel); font-weight: 600; list-style: none; }
@@ -200,7 +215,8 @@ small { font-size: 16px; }
   .rahmen { padding: 20px 24px 32px; }
   .karten { grid-template-columns: 1fr 1fr; }
   .karte-unbekannt { grid-column: 1 / -1; }
-  .frage h1 { font-size: 26px; }
+  .frage h3 { font-size: 24px; }
+  .frage.beantwortet h3 { font-size: 17px; }
   .loesung { padding: 22px 24px; }
 }
 
@@ -217,7 +233,23 @@ small { font-size: 16px; }
 }
 
 @media print {
-  .kopf, .leiste, .vorschau, .ergebnis-kopf, .angaben { display: none !important; }
+  .kopf, .leiste, .vorschau, .balken, .ueberspringen, .abschnitt .frage { display: none !important; }
   body { padding: 0; background: #fff; color: #000; }
   .loesung details { display: block; }
 }
+
+/* Ergebnis: Abgleich der Angaben und Eigenschaften der Lösung */
+.warum-rudi { margin: .6rem 0 0; font-size: .95rem; color: var(--text-leise); }
+.abgleich, .eigenschaften { list-style: none; margin: .4rem 0 0; padding: 0; display: grid; gap: .45rem; }
+.abgleich li { display: flex; gap: .55rem; align-items: start; }
+.abgleich .zeichen {
+    flex: 0 0 1.55rem; height: 1.55rem; border-radius: 50%; display: grid; place-items: center;
+    font-weight: 700; font-size: .95rem; background: var(--rand); color: var(--text);
+}
+.abgleich li.urteil-ja .zeichen { background: var(--primaer-hell); color: var(--ok); }
+.abgleich li.urteil-nein .zeichen { background: var(--warnung-hell); color: var(--fehler); }
+.abgleich-text { flex: 1; }
+.abgleich small, .eigenschaften small { display: block; color: var(--text-leise); }
+.eigenschaften li { padding-left: .9rem; position: relative; }
+.eigenschaften li::before { content: "·"; position: absolute; left: 0; font-weight: 700; }
+.eigenschaften small { display: inline; }

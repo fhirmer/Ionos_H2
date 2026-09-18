@@ -9,7 +9,7 @@ globalThis.H2Finder = {finder};
 if (typeof document === 'undefined') return;
 
 const SPEICHER = 'h2-produktfinder-3';
-const VERSION = '3.0';
+const VERSION = '3.1';
 const ART = {
     A1: 'Praxis-Ausschluss (Rudi)',
     A2: 'laut Katalog nicht geeignet',
@@ -25,7 +25,7 @@ const STUFE = {
     5: 'Sonderlösung aus dem Masterkatalog – Rücksprache',
 };
 
-const state = {antworten: {}, verlauf: [], ansicht: 'frage', bearbeite: null};
+const state = {antworten: {}, verlauf: []};
 const el = (id) => document.getElementById(id);
 const esc = (wert) => String(wert ?? '').replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const skizze = (id, klasse = 'skizze') => {
@@ -33,8 +33,18 @@ const skizze = (id, klasse = 'skizze') => {
     return svg ? `<span class="${klasse}" aria-hidden="true">${svg}</span>` : '';
 };
 const ruhig = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Sprache je Element: `frageJe`, `hilfeJe` und `hinweisJe` aus fragen.js gehen vor dem
+// element-neutralen Text. Fehlt die Sonderform, bleibt es beim neutralen Wortlaut.
+const jeText = (objekt, feld, antworten) => {
+    const je = objekt[`${feld}Je`];
+    return (typeof je === 'function' ? je(antworten) : null) || objekt[feld];
+};
+const BLICK = {aussen: 'von außen', innen: 'von innen'};
+// Blickseite: ohne sie ist „steht vor“ oder „links eng“ zweideutig (Umbauplan B2/B3)
+const blickZeile = (frage, antworten) => (frage.blick
+    ? `<p class="unterzeile">Blickrichtung: ${esc(BLICK[frage.blick])} auf ${esc(globalThis.H2Fragen.elementWort(antworten))}.</p>`
+    : '');
 const fragenById = new Map(finder.fragen.map((f) => [f.id, f]));
-const blockTitel = new Map(finder.bloecke.map((b) => [b.id, b.titel]));
 
 // ---------- Zustand speichern und teilen ----------
 function speichern() {
@@ -72,7 +82,7 @@ function laden() {
                 verlauf.push(id);
             }
         }
-        Object.assign(state, {antworten, verlauf, ansicht: finder.naechsteFrage(antworten) ? 'frage' : 'ergebnis'});
+        Object.assign(state, {antworten, verlauf});
     } catch {
         // beschädigter Stand: neu beginnen
     }
@@ -82,78 +92,94 @@ function laden() {
 function beantworte(id, wert) {
     state.antworten[id] = wert;
     state.verlauf = [...state.verlauf.filter((x) => x !== id), id];
-    state.bearbeite = null;
-    state.ansicht = finder.naechsteFrage(state.antworten) ? 'frage' : 'ergebnis';
+    // Wer die Tür gegen ein Fenster tauscht, soll keine Türantworten mitschleppen:
+    // Antworten auf Fragen, die jetzt nicht mehr zur Situation passen, fallen weg.
+    for (const frage of finder.fragen) {
+        if (frage.id === id || state.antworten[frage.id] === undefined) continue;
+        if (frage.zeigen && !frage.zeigen(state.antworten)) {
+            delete state.antworten[frage.id];
+            state.verlauf = state.verlauf.filter((x) => x !== frage.id);
+        }
+    }
     speichern();
     zeichne(true);
 }
 
-function zurueck() {
-    if (state.ansicht === 'ergebnis' && finder.naechsteFrage(state.antworten)) {
-        state.ansicht = 'frage';
-    } else {
-        const letzte = state.verlauf.pop();
-        if (letzte) delete state.antworten[letzte];
-        state.ansicht = 'frage';
+// Ein Abschnitt lässt sich überspringen: „Weiß ich nicht“ schließt nie aus, sondern
+// erzeugt Prüfpunkte fürs Aufmaß. Damit bleibt der Verlauf schnell.
+function ueberspringe(nr) {
+    for (const abschnitt of finder.abschnitte(state.antworten)) {
+        if (String(abschnitt.nr) !== String(nr)) continue;
+        for (const eintrag of abschnitt.eintraege) {
+            if (eintrag.beantwortet || eintrag.frage.pflicht) continue;
+            const wert = eintrag.frage.typ === 'mehrfach' ? [] : eintrag.frage.typ === 'mass' ? SPAETER : UNBEKANNT;
+            state.antworten[eintrag.frage.id] = wert;
+            state.verlauf = [...state.verlauf.filter((x) => x !== eintrag.frage.id), eintrag.frage.id];
+        }
     }
-    state.bearbeite = null;
     speichern();
     zeichne(true);
 }
 
 function neu() {
-    Object.assign(state, {antworten: {}, verlauf: [], ansicht: 'frage', bearbeite: null});
+    Object.assign(state, {antworten: {}, verlauf: []});
     speichern();
     zeichne(true);
 }
 
-// ---------- Frage ----------
-function aktuelleFrage() {
-    if (state.bearbeite) {
-        const frage = fragenById.get(state.bearbeite);
-        const pool = finder.auswerten({...state.antworten, [frage.id]: undefined}).passend.map((b) => b.variante);
-        return {frage, antworten: finder.antwortenFuer(frage, state.antworten, pool)};
-    }
-    return finder.naechsteFrage(state.antworten);
+// Zu einer Frage oder zum Ergebnis scrollen, ohne den Verlauf zu verlassen
+function zeigeStelle(id) {
+    const ziel = typeof document !== 'undefined' && document.getElementById ? document.getElementById(id) : null;
+    if (!ziel) return;
+    if (ziel.scrollIntoView) ziel.scrollIntoView({behavior: ruhig() ? 'auto' : 'smooth', block: 'start'});
+    const titel = ziel.querySelector ? ziel.querySelector('h2, h3') : null;
+    if (titel && titel.focus) titel.focus({preventScroll: true});
 }
 
+// ---------- Verlauf ----------
 function anzahlMit(id, wert) {
     return finder.ergebnis({...state.antworten, [id]: wert}).alle.length;
 }
 
-function fortschritt() {
-    const beantwortet = state.verlauf.length;
-    const offen = finder.offeneFragen(state.antworten).length;
-    const gesamt = Math.max(beantwortet + offen, beantwortet + 1);
-    return {nr: Math.min(beantwortet + 1, gesamt), gesamt, prozent: Math.round((beantwortet / gesamt) * 100)};
-}
-
-function frageHtml(eintrag) {
+// Eine Frage als Block im Verlauf. Beantwortete Blöcke bleiben stehen und sind änderbar.
+function frageHtml(eintrag, erste) {
     const {frage} = eintrag;
-    const alt = state.antworten[frage.id];
-    const f = fortschritt();
-    let kopf = `<div class="fortschritt">
-        <button type="button" class="zurueck" data-aktion="zurueck" ${state.verlauf.length ? '' : 'disabled'}>‹ Zurück</button>
-        <span>Frage ${f.nr} von ca. ${f.gesamt}</span>
-      </div>
-      <div class="balken" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${f.prozent}"><span style="width:${f.prozent}%"></span></div>
-      <p class="block-titel">${esc(blockTitel.get(frage.block))}</p>`;
-    const hilfe = frage.hilfe || frage.skizze
-        ? `<details class="hilfe"><summary>Wie erkenne ich das?</summary><div class="hilfe-inhalt">${skizze(frage.skizze, 'skizze gross')}${frage.hilfe ? `<p>${esc(frage.hilfe)}</p>` : ''}</div></details>`
+    const antw = state.antworten;
+    const alt = antw[frage.id];
+    const frageText = jeText(frage, 'frage', antw);
+    const hilfeText = jeText(frage, 'hilfe', antw);
+    const blick = blickZeile(frage, antw);
+    const sortierhinweis = eintrag.nurSortierung
+        ? '<p class="unterzeile">Ändert nur die Reihenfolge – es fällt keine Lösung weg.</p>'
         : '';
-    const legende = `<legend><h1 id="frage-titel" tabindex="-1">${esc(frage.frage)}</h1></legend>`;
+    const kopf = '';
+    const hilfe = hilfeText || frage.skizze
+        ? `<details class="hilfe"><summary>Wie erkenne ich das?</summary><div class="hilfe-inhalt">${skizze(frage.skizze, 'skizze gross')}${hilfeText ? `<p>${esc(hilfeText)}</p>` : ''}</div></details>`
+        : '';
+    // Die erste offene Frage trägt die Sprungmarke, damit der Fokus dorthin wandert
+    const legende = `<legend><h3 ${erste ? 'id="frage-titel" ' : ''}tabindex="-1">${esc(frageText)}</h3></legend>`;
 
     if (frage.typ === 'mass') {
-        return `${kopf}<form class="frage" data-frage="${frage.id}" data-typ="mass" novalidate>
-          <fieldset>${legende}${hilfe}
-            <label class="mass-feld"><span class="sr">${esc(frage.frage)}</span>
-              <input name="wert" type="number" inputmode="decimal" min="0" max="10000" step="0.5" value="${typeof alt === 'number' ? alt : ''}" aria-describedby="mass-einheit">
-              <span id="mass-einheit">${esc(frage.einheit)}</span>
+        // Schätzen reicht: Die Klassen sortieren und warnen, ausschließen kann nur ein gemessener Wert.
+        const klassen = (frage.klassen || []).map((k) => `<label class="karte ${alt === k.id ? 'aktiv' : ''}">
+              <input type="radio" name="antwort" value="${k.id}" ${alt === k.id ? 'checked' : ''}>
+              <span class="karte-text"><strong>${esc(k.text)}</strong><small>${esc(k.hinweis)}</small></span>
+            </label>`).join('');
+        const genau = `<details class="hilfe genau" ${typeof alt === 'number' ? 'open' : ''}><summary>Genau messen (freiwillig)</summary>
+            <div class="hilfe-inhalt"><label class="mass-feld"><span class="sr">${esc(frageText)}</span>
+              <input name="wert" type="number" inputmode="decimal" min="0" max="10000" step="0.5" value="${typeof alt === 'number' ? alt : ''}" aria-describedby="mass-einheit-${frage.id}">
+              <span id="mass-einheit-${frage.id}">${esc(frage.einheit)}</span>
             </label>
-            <div class="knoepfe">
-              <button type="submit" class="haupt">Weiter</button>
-              <button type="button" class="neben" data-aktion="antwort" data-frage="${frage.id}" data-wert="${SPAETER}">Später beim Aufmaß</button>
-            </div>
+            <p class="unterzeile">Ein eingetragenes Maß kann eine Lösung ausschließen, eine Schätzung nie.</p>
+            <button type="submit" class="haupt">Maß übernehmen</button></div></details>`;
+        return `${kopf}<form class="frage ${eintrag.beantwortet ? 'beantwortet' : ''}" id="frage-${frage.id}" data-frage="${frage.id}" data-typ="mass" novalidate>
+          <fieldset>${legende}${blick}${sortierhinweis}${hilfe}
+            <div class="karten">${klassen}<label class="karte karte-unbekannt ${alt === SPAETER ? 'aktiv' : ''}">
+              <input type="radio" name="antwort" value="${SPAETER}" ${alt === SPAETER ? 'checked' : ''}>
+              <span class="skizze frage-zeichen" aria-hidden="true">?</span>
+              <span class="karte-text"><strong>Später beim Aufmaß</strong><small>kommt auf die Prüfliste</small></span>
+            </label></div>
+            ${genau}
           </fieldset></form>`;
     }
 
@@ -162,8 +188,8 @@ function frageHtml(eintrag) {
         const karten = eintrag.antworten.map((a) => `<label class="karte ${gewaehlt.has(a.id) ? 'aktiv' : ''}">
               <input type="checkbox" name="wunsch" value="${a.id}" ${gewaehlt.has(a.id) ? 'checked' : ''}>
               <span class="karte-text"><strong>${esc(a.text)}</strong></span></label>`).join('');
-        return `${kopf}<form class="frage" data-frage="${frage.id}" data-typ="mehrfach">
-          <fieldset>${legende}<p class="unterzeile">Mehrfachauswahl möglich. Das ändert nur die Hinweise zum Gewebe.</p>${hilfe}
+        return `${kopf}<form class="frage ${eintrag.beantwortet ? 'beantwortet' : ''}" id="frage-${frage.id}" data-frage="${frage.id}" data-typ="mehrfach">
+          <fieldset>${legende}${blick}<p class="unterzeile">Mehrfachauswahl möglich. Das ändert nur die Hinweise zum Gewebe.</p>${hilfe}
             <div class="karten">${karten}</div>
             <div class="knoepfe"><button type="submit" class="haupt">Weiter</button></div>
           </fieldset></form>`;
@@ -171,12 +197,14 @@ function frageHtml(eintrag) {
 
     const karten = eintrag.antworten.map((a) => {
         const n = anzahlMit(frage.id, a.id);
-        const gesperrt = frage.id === 'system' && a.system !== 'egal' && n === 0;
+        const hinweis = jeText(a, 'hinweis', antw);
+        const gesperrt = a.moeglich === false || (frage.id === 'system' && a.system !== 'egal' && n === 0);
+        const grund = a.grund || 'keine Lösung für deine Angaben';
         return `<label class="karte ${alt === a.id ? 'aktiv' : ''} ${gesperrt ? 'gesperrt' : ''}">
             <input type="radio" name="antwort" value="${a.id}" ${alt === a.id ? 'checked' : ''} ${gesperrt ? 'disabled' : ''}>
             ${skizze(a.skizze)}
-            <span class="karte-text"><strong>${esc(a.text)}</strong>${a.hinweis ? `<small>${esc(a.hinweis)}</small>` : ''}
-              ${gesperrt ? '<small class="grund">keine Lösung für deine Angaben</small>' : ''}</span>
+            <span class="karte-text"><strong>${esc(a.text)}</strong>${hinweis ? `<small>${esc(hinweis)}</small>` : ''}
+              ${gesperrt ? `<small class="grund">${esc(grund)}</small>` : ''}</span>
             <span class="zahl" aria-label="${n} passende Lösungen">${n}</span>
           </label>`;
     }).join('');
@@ -185,11 +213,44 @@ function frageHtml(eintrag) {
           <span class="skizze frage-zeichen" aria-hidden="true">?</span>
           <span class="karte-text"><strong>Weiß ich nicht</strong><small>kommt auf die Prüfliste fürs Aufmaß</small></span>
         </label>`;
-    return `${kopf}<form class="frage" data-frage="${frage.id}" data-typ="eins">
-      <fieldset>${legende}${hilfe}
+    return `${kopf}<form class="frage ${eintrag.beantwortet ? 'beantwortet' : ''}" id="frage-${frage.id}" data-frage="${frage.id}" data-typ="eins">
+      <fieldset>${legende}${blick}${sortierhinweis}${hilfe}
         <div class="karten">${karten}${unbekannt}</div>
-        <div class="knoepfe tastatur"><button type="submit" class="haupt">Weiter</button></div>
+        ${eintrag.beantwortet ? '' : '<div class="knoepfe tastatur"><button type="submit" class="haupt">Weiter</button></div>'}
       </fieldset></form>`;
+}
+
+function verlaufHtml() {
+    const abschnitte = finder.abschnitte(state.antworten);
+    const sichtbare = abschnitte.filter((x) => x.bereit);
+    const gezeigt = sichtbare.reduce((n, x) => n + x.eintraege.length, 0);
+    const beantwortet = sichtbare.reduce((n, x) => n + x.eintraege.filter((e) => e.beantwortet).length, 0);
+    const offenGesamt = abschnitte.reduce((n, x) => n + x.offen, 0);
+    const prozent = gezeigt ? Math.round((beantwortet / (beantwortet + Math.max(offenGesamt, 0) || 1)) * 100) : 0;
+    let erste = true;
+    const stuecke = sichtbare.map((abschnitt) => {
+        const fragen = abschnitt.eintraege.map((eintrag) => {
+            const html = frageHtml(eintrag, erste && !eintrag.beantwortet);
+            if (erste && !eintrag.beantwortet) erste = false;
+            return html;
+        }).join('');
+        const rest = abschnitt.eintraege.filter((e) => !e.beantwortet && !e.frage.pflicht).length;
+        return `<section class="abschnitt" id="abschnitt-${abschnitt.nr}">
+            <div class="abschnitt-kopf">
+              <p class="abschnitt-nr">Abschnitt ${abschnitt.nr} von ${abschnitte.length}</p>
+              <h2 tabindex="-1">${esc(abschnitt.titel)}</h2>
+              ${abschnitt.hinweis ? `<p class="unterzeile">${esc(abschnitt.hinweis)}</p>` : ''}
+            </div>
+            ${fragen}
+            ${rest > 1 ? `<button type="button" class="neben ueberspringen" data-aktion="ueberspringen" data-abschnitt="${abschnitt.nr}">Rest überspringen – kommt auf die Prüfliste</button>` : ''}
+          </section>`;
+    }).join('');
+    const naechster = abschnitte.find((x) => !x.bereit);
+    const ausblick = naechster
+        ? `<p class="ausblick">Danach kommt: ${esc(naechster.titel)}</p>`
+        : '';
+    return `<div class="balken" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${prozent}" aria-label="Fortschritt"><span style="width:${prozent}%"></span></div>
+      ${stuecke}${ausblick}`;
 }
 
 // „Ja“ oder „Nein“ allein sagt nichts: dann die Frage voranstellen
@@ -202,21 +263,52 @@ function antwortText(id) {
     const wert = state.antworten[id];
     if (wert === UNBEKANNT) return 'weiß ich nicht';
     if (wert === SPAETER) return 'später messen';
-    if (typeof wert === 'number') return `${wert} ${frage.einheit}`;
+    if (typeof wert === 'number') return `${String(wert).replace('.', ',')} ${frage.einheit} gemessen`;
+    const klasse = (frage.klassen || []).find((k) => k.id === wert);
+    if (klasse) return `${klasse.text} (geschätzt)`;
     if (Array.isArray(wert)) return wert.length ? wert.map((w) => frage.antworten.find((a) => a.id === w)?.text).join(', ') : 'keine';
     return frage.antworten?.find((a) => a.id === wert)?.text ?? String(wert);
 }
 
-function angabenHtml() {
-    if (!state.verlauf.length) return '';
-    return `<section class="angaben" aria-label="Deine Angaben"><h2>Deine Angaben</h2><div class="chips">${state.verlauf.map((id) => `<button type="button" class="chip" data-aktion="bearbeiten" data-frage="${id}" title="${esc(fragenById.get(id).frage)}">${esc(mitFrage(id, antwortText(id)))}</button>`).join('')}</div></section>`;
+// ---------- Ergebnis ----------
+// Abgleich: Haken, Kreuz, Fragezeichen – das Zeichen steht nie allein, daneben immer ein Wort
+const URTEIL = {
+    ja: {zeichen: '✓', wort: 'passt'},
+    nein: {zeichen: '✗', wort: 'passt nicht'},
+    offen: {zeichen: '?', wort: 'offen'},
+    neutral: {zeichen: '?', wort: 'keine Angabe'},
+};
+
+function abgleichZeile(z) {
+    const u = URTEIL[z.urteil] || URTEIL.neutral;
+    const frage = fragenById.get(z.frage);
+    return `<li class="urteil-${z.urteil}"><span class="zeichen" aria-hidden="true">${u.zeichen}</span>
+        <span class="abgleich-text"><b>${esc(frage.frage.replace(/\?$/, ''))}:</b> ${esc(antwortText(z.frage))}
+        <small><span class="sr">${esc(u.wort)}. </span>${esc(z.text)}</small></span></li>`;
 }
 
-// ---------- Ergebnis ----------
+function abgleichHtml(b) {
+    const zeilen = (b.abgleich || []).filter((z) => fragenById.has(z.frage));
+    if (!zeilen.length) return '';
+    // Angaben, zu denen der Katalog nichts sagt, sind kein Mangel: zusammengefasst statt Zeile für Zeile
+    const wichtig = zeilen.filter((z) => z.urteil !== 'neutral');
+    const neutral = zeilen.filter((z) => z.urteil === 'neutral');
+    const rest = neutral.length
+        ? `<details class="abgleich-rest"><summary>${neutral.length} Angaben, zu denen der Katalog bei dieser Lösung nichts sagt</summary>
+             <ul class="abgleich">${neutral.map(abgleichZeile).join('')}</ul></details>`
+        : '';
+    return `<h3>Deine Angaben im Abgleich</h3>${wichtig.length ? `<ul class="abgleich">${wichtig.map(abgleichZeile).join('')}</ul>` : ''}${rest}`;
+}
+
+function eigenschaftenHtml(v) {
+    const liste = globalThis.H2Eigenschaften ? globalThis.H2Eigenschaften.eigenschaften(v) : [];
+    if (!liste.length) return '';
+    return `<h3>Eigenschaften dieser Lösung</h3><ul class="eigenschaften">${liste.map((e) =>
+        `<li><b>${esc(e.titel)}:</b> ${esc(e.text)}${e.quelle ? ` <small>(laut ${esc(e.quelle)})</small>` : ''}</li>`).join('')}</ul>`;
+}
 function loesungHtml(b, rang) {
     const v = b.variante;
     const pruef = [...new Map(b.pruefpunkte.map((p) => [p.text, p])).values()];
-    const warum = [...new Set(b.warum.map((w) => mitFrage(w.frage, w.text)))];
     const rudi = b.rudi;
     const konflikte = (rudi?.konflikte || []).map((k) => `<li><b>${esc(k)}:</b> ${esc(finder.KONFLIKTE[k] || '')}</li>`).join('');
     const quellen = [
@@ -232,8 +324,9 @@ function loesungHtml(b, rang) {
       <p class="titel">${esc(titel)}</p>
       ${zweck ? `<p class="zweck">für ${esc(zweck.replace(/^für /, ''))}</p>` : ''}
       <p class="status status-${b.status}">${b.status === 'passt' ? '✓ Passt zu deinen Angaben' : '✓ Passt – beim Aufmaß prüfen'}</p>
-      ${warum.length || rudi ? `<h3>Warum</h3><ul class="warum">${rudi ? `<li>Rudi: ${esc([rudi.gruppe, rudi.untergruppe, rudi.situation].filter(Boolean).join(' › '))}</li>` : ''}${warum.map((w) => `<li>${esc(w)}</li>`).join('')}</ul>` : ''}
-      ${b.abweichungen.length ? `<p class="abweichung">Weicht ab: ${b.abweichungen.map(esc).join('; ')}</p>` : ''}
+      ${rudi ? `<p class="warum-rudi">Rudis Lösung für: ${esc([rudi.gruppe, rudi.untergruppe, rudi.situation].filter(Boolean).join(' › '))}</p>` : ''}
+      ${abgleichHtml(b)}
+      ${eigenschaftenHtml(v)}
       ${v.darstellung ? `<p class="einbau">Einbauweise: ${esc(v.darstellung)}</p>` : ''}
       ${pruef.length ? `<h3>Beim Aufmaß prüfen</h3><ul class="pruefliste">${pruef.map((p) => `<li>${esc(p.text)}</li>`).join('')}</ul>` : ''}
       ${rudi?.hinweise?.length || rudi?.qualitaet ? `<h3>Rudis Hinweis</h3><ul class="warum">${(rudi.hinweise || []).map((h) => `<li>${esc(h)}</li>`).join('')}${rudi.qualitaet ? `<li>${esc(rudi.qualitaet)}</li>` : ''}</ul>` : ''}
@@ -253,11 +346,10 @@ function ergebnisHtml() {
     const r = finder.ergebnis(state.antworten);
     const offen = finder.naechsteFrage(state.antworten);
     let html = `<div class="ergebnis-kopf">
-        <button type="button" class="zurueck" data-aktion="zurueck">‹ ${offen ? 'Weiter fragen' : 'Zurück'}</button>
+        <h2 ${offen ? '' : 'id="frage-titel" '}tabindex="-1" class="ergebnis-titel">${r.empfehlung ? (offen ? 'Vorläufige Empfehlung' : 'Deine Produktempfehlung') : 'Keine passende Lösung'}</h2>
         <button type="button" class="neben" data-aktion="teilen">Zusammenfassung teilen</button>
-      </div>
-      <h1 id="frage-titel" tabindex="-1" class="ergebnis-titel">${r.empfehlung ? 'Deine Produktempfehlung' : 'Keine passende Lösung'}</h1>`;
-    if (offen) html += `<p class="hinweis-box">Vorläufiges Ergebnis: ${finder.offeneFragen(state.antworten).length} Fragen sind noch offen. Mehr Angaben machen die Empfehlung sicherer.</p>`;
+      </div>`;
+    if (offen) html += `<p class="hinweis-box">Das Ergebnis wächst mit: ${finder.offeneFragen(state.antworten).length} Fragen sind noch offen. Jede weitere Antwort macht die Empfehlung sicherer.</p>`;
     const unbekannt = state.verlauf.filter((id) => state.antworten[id] === UNBEKANNT).length;
     if (!offen && unbekannt >= 3) html += `<p class="hinweis-box">${unbekannt} Angaben sind unbekannt. Alle gezeigten Lösungen sind möglich, die Reihenfolge ist aber unsicher – beim Aufmaß die Prüfliste abarbeiten.</p>`;
     if (!r.empfehlung) {
@@ -277,7 +369,6 @@ function ergebnisHtml() {
     const bedienart = r.ausgeschlossen.length - technisch.length;
     if (technisch.length) html += `<details class="liste ausgeschlossen"><summary>Ausgeschlossen, weil … (${technisch.length})</summary><ul>${technisch.map(ausschlussHtml).join('')}</ul></details>`;
     if (bedienart) html += `<p class="ausgeblendet">${bedienart} Varianten mit anderer Bedienart ausgeblendet (nicht ungeeignet). <button type="button" class="link" data-aktion="bearbeiten" data-frage="${state.antworten.richtung && state.antworten.system === 'dreh' ? 'richtung' : 'system'}">Bedienart ändern</button></p>`;
-    html += angabenHtml();
     html += '<p class="schluss">Die Vorauswahl ersetzt kein Aufmaß. Bestellmaße, Einbauluft und Zusatzausstattung an der gewählten Variante prüfen.</p>';
     return html;
 }
@@ -292,24 +383,24 @@ function vorschauHtml() {
 
 function leisteHtml() {
     const n = finder.ergebnis(state.antworten).alle.length;
-    if (state.ansicht === 'ergebnis') return `<button type="button" class="neben" data-aktion="zurueck">Angaben ändern</button><button type="button" class="haupt" data-aktion="neu">Neu starten</button>`;
-    return `<span class="leiste-zahl" aria-live="polite"><b>${n}</b> passende Lösungen</span><button type="button" class="haupt" data-aktion="ergebnis" ${state.antworten.element ? '' : 'disabled'}>Ansehen</button>`;
+    const offen = finder.offeneFragen(state.antworten).length;
+    return `<span class="leiste-zahl" aria-live="polite"><b>${n}</b> passende Lösungen${offen ? ` · ${offen} Fragen offen` : ''}</span>
+      <button type="button" class="haupt" data-aktion="ergebnis" ${state.antworten.element ? '' : 'disabled'}>Zum Ergebnis</button>`;
 }
 
 function zeichne(fokus = false) {
-    const schritt = el('schritt');
-    const eintrag = state.ansicht === 'frage' ? aktuelleFrage() : null;
-    if (state.ansicht === 'frage' && !eintrag) state.ansicht = 'ergebnis';
-    schritt.innerHTML = state.ansicht === 'frage' ? frageHtml(eintrag) + angabenHtml() : ergebnisHtml();
+    const verlauf = el('verlauf');
+    verlauf.innerHTML = `${verlaufHtml()}<section class="ergebnis" id="ergebnis">${ergebnisHtml()}</section>`;
     el('vorschau').innerHTML = vorschauHtml();
     el('leiste').innerHTML = leisteHtml();
     el('leiste').hidden = !state.antworten.element;
     const neuKnopf = document.querySelector('[data-aktion="neu"]');
     if (neuKnopf) neuKnopf.hidden = !state.verlauf.length;
+    // Der Fokus wandert zur nächsten offenen Frage, nicht an den Seitenanfang
     if (fokus) {
-        const titel = schritt.querySelector('#frage-titel');
-        if (titel) titel.focus({preventScroll: true});
-        if (typeof scrollTo === 'function') scrollTo({top: 0, behavior: ruhig() ? 'auto' : 'smooth'});
+        const titel = verlauf.querySelector('#frage-titel');
+        if (titel && titel.focus) titel.focus({preventScroll: true});
+        if (titel && titel.scrollIntoView) titel.scrollIntoView({behavior: ruhig() ? 'auto' : 'smooth', block: 'center'});
     }
 }
 
@@ -352,23 +443,18 @@ document.addEventListener('click', (event) => {
     const ziel = event.target.closest('[data-aktion]');
     if (ziel && !ziel.disabled) {
         const aktion = ziel.dataset.aktion;
-        if (aktion === 'zurueck') zurueck();
-        else if (aktion === 'neu') neu();
-        else if (aktion === 'ergebnis') {
-            state.ansicht = 'ergebnis';
-            zeichne(true);
-        } else if (aktion === 'bearbeiten') {
-            state.bearbeite = ziel.dataset.frage;
-            state.ansicht = 'frage';
-            zeichne(true);
-        } else if (aktion === 'antwort') beantworte(ziel.dataset.frage, ziel.dataset.wert);
+        if (aktion === 'neu') neu();
+        else if (aktion === 'ergebnis') zeigeStelle('ergebnis');
+        else if (aktion === 'bearbeiten') zeigeStelle(`frage-${ziel.dataset.frage}`);
+        else if (aktion === 'ueberspringen') ueberspringe(ziel.dataset.abschnitt);
+        else if (aktion === 'antwort') beantworte(ziel.dataset.frage, ziel.dataset.wert);
         else if (aktion === 'teilen') teilen(ziel);
         return;
     }
     // Antippen oder Klicken einer Antwortkarte geht direkt weiter; Tastatur nutzt „Weiter“
     const karte = event.target.closest('label.karte');
     if (!karte || event.detail === 0) return;
-    const form = karte.closest('form[data-typ="eins"]');
+    const form = karte.closest('form[data-typ="eins"], form[data-typ="mass"]');
     const input = karte.querySelector('input');
     if (!form || !input || input.disabled) return;
     const id = form.dataset.frage;
@@ -391,9 +477,11 @@ document.addEventListener('submit', (event) => {
     event.preventDefault();
     const id = form.dataset.frage;
     if (form.dataset.typ === 'mass') {
-        const wert = Number(String(form.querySelector('input[name="wert"]').value).replace(',', '.'));
-        if (form.querySelector('input[name="wert"]').value === '' || !Number.isFinite(wert) || wert < 0) return beantworte(id, SPAETER);
-        return beantworte(id, wert);
+        const feld = form.querySelector('input[name="wert"]');
+        const wert = Number(String(feld ? feld.value : '').replace(',', '.'));
+        if (feld && feld.value !== '' && Number.isFinite(wert) && wert >= 0) return beantworte(id, wert);
+        const gewaehlt = form.querySelector('input:checked');
+        return beantworte(id, gewaehlt ? gewaehlt.value : SPAETER);
     }
     if (form.dataset.typ === 'mehrfach') return beantworte(id, [...form.querySelectorAll('input:checked')].map((i) => i.value));
     const gewaehlt = form.querySelector('input:checked');

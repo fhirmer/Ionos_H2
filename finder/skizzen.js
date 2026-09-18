@@ -21,9 +21,9 @@ const H2Skizzen = {
     schiebetuer: svg('<rect x="10" y="8" width="100" height="74"/><rect x="14" y="12" width="50" height="66" fill="currentColor" fill-opacity=".08"/><rect x="56" y="16" width="50" height="62" fill="currentColor" fill-opacity=".15"/>' + pfeil(40, 45, 20, 45), 'Schiebetür'),
 
     fluegellage: svg(`${rahmen(6, 44, 24, 24)}${fluegel(30, 44, 20, 24)}<path d="M2 44h52" stroke-dasharray="3 4" stroke-width="1.2"/>${rahmen(66, 44, 24, 24)}${fluegel(90, 30, 24, 24)}<path d="M62 44h56" stroke-dasharray="3 4" stroke-width="1.2"/>` + text(8, 84, 'bündig', 10) + text(72, 84, 'versetzt', 10) + text(2, 20, 'außen', 9), 'Flügellage im Schnitt: bündig und versetzt'),
-    buendig: svg(`${rahmen(14, 36, 44, 34)}${fluegel(58, 36, 48, 34)}<path d="M6 36h108" stroke-dasharray="3 4" stroke-width="1.2"/>` + text(8, 26, 'außen', 10), 'bündig: Flügel und Rahmen in einer Ebene'),
-    versetzt: svg(`${rahmen(14, 44, 44, 32)}${fluegel(58, 20, 48, 32)}<path d="M6 44h108" stroke-dasharray="3 4" stroke-width="1.2"/>${mass(110, 20, 110, 44)}` + text(8, 14, 'außen', 10), 'flächenversetzt: Flügel steht vor'),
-    halbversetzt: svg(`${rahmen(14, 40, 44, 32)}${fluegel(58, 28, 48, 32)}<path d="M6 40h108" stroke-dasharray="3 4" stroke-width="1.2"/>${mass(110, 28, 110, 40)}` + text(8, 18, 'außen', 10), 'halbflächenversetzt'),
+    buendig: svg(`${rahmen(14, 36, 44, 34)}${fluegel(58, 36, 48, 34)}<path d="M6 36h108" stroke-dasharray="3 4" stroke-width="1.2"/>` + text(8, 26, 'außen', 10) + text(8, 86, 'innen', 10), 'bündig: Flügel und Rahmen in einer Ebene, von außen gesehen'),
+    versetzt: svg(`${rahmen(14, 44, 44, 32)}${fluegel(58, 20, 48, 32)}<path d="M6 44h108" stroke-dasharray="3 4" stroke-width="1.2"/>${mass(110, 20, 110, 44)}` + text(8, 14, 'außen', 10) + text(8, 88, 'innen', 10) + text(64, 16, 'Versatz', 9), 'flächenversetzt: Flügel steht vor, von außen gesehen'),
+    halbversetzt: svg(`${rahmen(14, 40, 44, 32)}${fluegel(58, 28, 48, 32)}<path d="M6 40h108" stroke-dasharray="3 4" stroke-width="1.2"/>${mass(110, 28, 110, 40)}` + text(8, 18, 'außen', 10) + text(8, 88, 'innen', 10) + text(62, 20, 'Versatz', 9), 'halbflächenversetzt, von außen gesehen'),
 
     ueberschlag: svg('<path d="M8 70V30h26v40"/><path d="M46 70V30h14l12 12v28"/><path d="M84 70V30h8q20 0 20 22v18"/>' + text(10, 84, 'gerade', 8) + text(46, 84, 'schräg', 8) + text(82, 84, 'sehr schräg', 8), 'Überschlag: gerade, schräg, sehr schräg'),
     'ueberschlag-gerade': svg('<path d="M30 78V22h56v56" fill="currentColor" fill-opacity=".35"/>', 'gerader Überschlag'),
@@ -31,15 +31,15 @@ const H2Skizzen = {
     'ueberschlag-sehrschraeg': svg('<path d="M30 78V22h10q46 0 46 44v12" fill="currentColor" fill-opacity=".35"/>', 'sehr schräger oder abgerundeter Überschlag'),
 
     rollladen: svg('<rect x="16" y="6" width="88" height="16" rx="2" fill="currentColor" fill-opacity=".2"/><path d="M22 22v60M98 22v60" stroke-width="4"/><path d="M26 30h68M26 38h68M26 46h68M26 54h68M26 62h68" stroke-width="1.5"/>', 'Rollladen mit Kasten und Führungsschienen'),
-    panzer: svg(`${rahmen(20, 50, 30, 30)}${fluegel(50, 44, 50, 30)}<path d="M50 34h52" stroke-width="5" stroke-dasharray="6 2"/>${mass(106, 36, 106, 44)}` + text(8, 20, 'Rollladenpanzer', 10), 'Rollladenpanzer eng am Flügel'),
-    fuehrung: svg('<rect x="24" y="10" width="72" height="72"/><rect x="30" y="16" width="60" height="60" fill="currentColor" fill-opacity=".08"/><path d="M16 10v72M104 10v72" stroke-width="6"/>' + pfeil(8, 50, 16, 50) + pfeil(112, 50, 104, 50), 'Führungsschienen eng am Rahmen'),
+    panzer: svg(`${rahmen(20, 50, 30, 30)}${fluegel(50, 44, 50, 30)}<path d="M50 34h52" stroke-width="5" stroke-dasharray="6 2"/>${mass(106, 36, 106, 44)}` + text(8, 20, 'Rollladenpanzer', 10) + text(8, 12, 'außen', 9) + text(8, 88, 'innen', 9), 'Rollladenpanzer eng am Flügel, von außen gesehen'),
+    fuehrung: svg('<rect x="24" y="10" width="72" height="72"/><rect x="30" y="16" width="60" height="60" fill="currentColor" fill-opacity=".08"/><path d="M16 10v72M104 10v72" stroke-width="6"/>' + pfeil(8, 50, 16, 50) + pfeil(112, 50, 104, 50) + text(24, 8, 'von außen gesehen', 8), 'Führungsschienen eng am Rahmen, von außen gesehen'),
     haengend: svg('<rect x="16" y="6" width="88" height="14" rx="2" fill="currentColor" fill-opacity=".2"/><path d="M22 20v64M98 20v64" stroke-width="4"/><path d="M26 26h68M26 32h68" stroke-width="2"/><rect x="26" y="40" width="68" height="44" stroke-dasharray="4 4"/>' + pfeil(60, 34, 60, 46), 'Rollladen hängt in die Öffnung'),
 
     regenschiene: svg(`${fluegel(46, 10, 30, 44)}${rahmen(14, 54, 90, 16)}<path d="M40 56h40v8h8" stroke-width="3.5"/>` + text(8, 86, 'Regenschiene am Blendrahmen', 9), 'Regenschiene unten am Blendrahmen'),
     wetterschenkel: svg(`${fluegel(46, 10, 30, 48)}${rahmen(14, 60, 90, 14)}<path d="M76 40h16l-4 12H76z" fill="currentColor" fill-opacity=".35"/>` + text(8, 86, 'Wetterschenkel am Flügel', 9), 'Wetterschenkel unten am Flügel'),
     schwelle: svg('<path d="M4 70h40M76 70h40"/><rect x="44" y="60" width="32" height="10" fill="currentColor" fill-opacity=".35"/><rect x="50" y="10" width="20" height="50" fill="currentColor" fill-opacity=".08"/>' + text(30, 86, 'Schwelle', 10), 'Türschwelle'),
     trittschutz: svg('<path d="M4 76h112"/><rect x="36" y="62" width="48" height="14" fill="currentColor" fill-opacity=".35"/><path d="M40 62h40v-6H40z" fill="currentColor" fill-opacity=".6"/><rect x="50" y="8" width="20" height="48" fill="currentColor" fill-opacity=".08"/>' + text(28, 90, 'Trittschutz', 10), 'Trittschutzprofil unten an der Tür'),
-    mauerleibung: svg(`${wand(4, 20, 30, 60)}${wand(86, 20, 30, 60)}${rahmen(34, 44, 52, 12)}<path d="M34 20v24M86 20v24" stroke-width="4"/>` + text(8, 14, 'außen', 10), 'Mauerleibung: Wandfläche neben dem Rahmen'),
+    mauerleibung: svg(`${wand(4, 20, 30, 60)}${wand(86, 20, 30, 60)}${rahmen(34, 44, 52, 12)}<path d="M34 20v24M86 20v24" stroke-width="4"/>` + text(8, 14, 'außen', 10) + text(8, 88, 'innen', 10), 'Mauerleibung: Wandfläche neben dem Rahmen, von außen gesehen'),
 
     innenfutter: svg('<path d="M10 20L100 20" stroke-width="1.5"/><path d="M30 40l40 20" stroke-width="6"/><path d="M30 40v44M70 60l40 0" /><path d="M30 40L14 30" stroke-dasharray="4 4"/>' + text(60, 84, 'Innenfutter', 10), 'Innenfutter am Dachfenster'),
 
@@ -57,9 +57,9 @@ const H2Skizzen = {
     schieberahmen: svg('<path d="M6 76L86 14"/><path d="M34 70l52-40 8 10-52 40z" stroke-dasharray="4 3"/>' + pfeil(64, 62, 84, 46), 'Schieberahmen am Dachfenster'),
 
     einbauweise: svg(`${wand(2, 30, 18, 40)}${rahmen(20, 50, 18, 10)}<path d="M20 44h18" stroke-dasharray="3 3"/>${wand(42, 30, 12, 40)}${wand(70, 30, 12, 40)}${rahmen(54, 50, 16, 10)}<path d="M56 50h12" stroke-dasharray="3 3" stroke-width="3"/>${wand(86, 30, 6, 40)}${wand(114, 30, 6, 40)}${rahmen(92, 56, 22, 10)}<path d="M92 40h22" stroke-dasharray="3 3" stroke-width="3"/>` + text(8, 84, 'AMB', 9) + text(50, 84, 'LMB', 9) + text(92, 84, 'LMM', 9), 'Einbauweisen AMB, LMB, LMM'),
-    amb: svg(`${wand(4, 20, 26, 60)}${wand(90, 20, 26, 60)}${rahmen(30, 50, 60, 14)}<path d="M24 40h72" stroke-dasharray="5 4" stroke-width="3.5"/>` + text(8, 14, 'außen', 10), 'AMB: auf dem Blendrahmen'),
-    lmb: svg(`${wand(4, 20, 26, 60)}${wand(90, 20, 26, 60)}${rahmen(30, 50, 14, 14)}${rahmen(76, 50, 14, 14)}<path d="M44 52h32" stroke-dasharray="5 4" stroke-width="3.5"/>` + text(8, 14, 'außen', 10), 'LMB: in der Öffnung des Blendrahmens'),
-    lmm: svg(`${wand(4, 20, 26, 60)}${wand(90, 20, 26, 60)}${rahmen(30, 58, 60, 14)}<path d="M30 32h60" stroke-dasharray="5 4" stroke-width="3.5"/>` + text(8, 14, 'außen', 10), 'LMM: in der Mauerleibung'),
+    amb: svg(`${wand(4, 20, 26, 60)}${wand(90, 20, 26, 60)}${rahmen(30, 50, 60, 14)}<path d="M24 40h72" stroke-dasharray="5 4" stroke-width="3.5"/>` + text(8, 14, 'außen', 10) + text(8, 88, 'innen', 10), 'AMB: auf dem Blendrahmen, von außen gesehen'),
+    lmb: svg(`${wand(4, 20, 26, 60)}${wand(90, 20, 26, 60)}${rahmen(30, 50, 14, 14)}${rahmen(76, 50, 14, 14)}<path d="M44 52h32" stroke-dasharray="5 4" stroke-width="3.5"/>` + text(8, 14, 'außen', 10) + text(8, 88, 'innen', 10), 'LMB: in der Öffnung des Blendrahmens, von außen gesehen'),
+    lmm: svg(`${wand(4, 20, 26, 60)}${wand(90, 20, 26, 60)}${rahmen(30, 58, 60, 14)}<path d="M30 32h60" stroke-dasharray="5 4" stroke-width="3.5"/>` + text(8, 14, 'außen', 10) + text(8, 88, 'innen', 10), 'LMM: in der Mauerleibung, von außen gesehen'),
 
     'mass-seitlich': svg(`<path d="M20 20v60" stroke-width="7"/>${rahmen(24, 20, 28, 60)}${fluegel(52, 20, 50, 60)}${mass(26, 50, 50, 50)}` + text(28, 14, 'Auflage', 10), 'freie Auflagefläche seitlich'),
     'mass-fuehrung': svg(`<path d="M22 14v66" stroke-width="7"/>${rahmen(40, 14, 26, 66)}${fluegel(66, 14, 44, 66)}${mass(26, 48, 40, 48)}` + text(8, 90, 'Führung ↔ Rahmen', 9), 'Abstand Führungsschiene zum Blendrahmen'),

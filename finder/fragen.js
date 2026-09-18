@@ -7,6 +7,14 @@
 // modus 'eins': Die Labels einer Variante sind Alternativen („flächenbündig und flächenversetzt“).
 // modus 'alle': Die Labels einer Variante gelten zusammen („links und rechts eng“); exakt: diese Labels müssen genau übereinstimmen.
 // spezifisch: Eine Ja-Antwort sortiert Varianten nach hinten, die für diese Besonderheit nicht ausgelegt sind.
+//
+// Sprache und Blickseite (Umbauplan Schritt 1):
+// - blick: 'aussen' | 'innen' – von welcher Seite man auf das Element schaut. Die Oberfläche
+//   schreibt daraus eine Zeile über die Antwortkarten. Ohne Blickseite ist jede Frage nach
+//   Versatz, Abstand oder Auflage zweideutig.
+// - frageJe / hilfeJe / hinweisJe: Wortlaut je nach gewähltem Element. `frage` und `hilfe`
+//   bleiben element-neutrale Zeichenketten, damit engine.js (Prüfpunkte) und der erzeugte
+//   Fragenkatalog unverändert damit arbeiten können.
 (function () {
 'use strict';
 
@@ -16,6 +24,26 @@ const fensterOderTuer = (a) => a.element === 'fenster' || a.element === 'tuer';
 const fassade = (a) => a.element === 'tuer' || alsFenster(a);
 const mitRollladen = (a) => fassade(a) && a.rollladen === 'ja';
 const system = (a, ...s) => !a.system || a.system === 'egal' || a.system === 'unbekannt' || s.includes(a.system);
+
+// Das gewählte Element in der Form, wie es in einem Satz steht („… auf die geschlossene Tür schauen“)
+const elementWort = (a) => (a.element === 'tuer' ? 'die geschlossene Tür'
+    : a.element === 'lichtschacht' ? 'den Lichtschacht'
+    : a.fenstertyp === 'dach' ? 'das geschlossene Dachfenster'
+    : 'das geschlossene Fenster');
+// Wortlaut je Element; fehlt ein Eintrag, gilt der Fenstertext
+const jeElement = (texte) => (a) => (a.element === 'tuer' ? texte.tuer
+    : a.element === 'lichtschacht' ? (texte.lichtschacht ?? texte.fenster)
+    : a.fenstertyp === 'dach' ? (texte.dach ?? texte.fenster)
+    : texte.fenster);
+
+// Abschnitte des Verlaufs: Der nächste Abschnitt entsteht aus den Antworten des vorherigen.
+// `block` bleibt für die Dokumentation erhalten; für die Anzeige zählt `abschnitt`.
+const abschnitte = [
+    {nr: 1, titel: 'Was soll geschützt werden?', hinweis: 'Element und Bedienung'},
+    {nr: 2, titel: 'Wie sieht es vor Ort aus?', hinweis: 'nur Fragen, die die Empfehlung ändern'},
+    {nr: 3, titel: 'Wie soll montiert werden?', hinweis: 'Montageort und unterer Abschluss'},
+    {nr: 4, titel: 'Feinheiten', hinweis: 'freiwillig – geht auch ohne'},
+];
 
 const bloecke = [
     {id: 'A', titel: 'Element'},
@@ -33,7 +61,7 @@ const bloecke = [
 const fragen = [
     // A – Element
     {
-        id: 'element', block: 'A', pflicht: true, weissNicht: false,
+        id: 'element', abschnitt: 1, block: 'A', pflicht: true, weissNicht: false,
         frage: 'Was bekommt Insektenschutz?',
         antworten: [
             {id: 'fenster', text: 'Fenster', hinweis: 'in der Fassade oder im Dach', skizze: 'fenster'},
@@ -42,7 +70,7 @@ const fragen = [
         ],
     },
     {
-        id: 'fenstertyp', block: 'A', pflicht: true, weissNicht: false,
+        id: 'fenstertyp', abschnitt: 1, block: 'A', pflicht: true, weissNicht: false,
         zeigen: (a) => a.element === 'fenster',
         frage: 'Welches Fenster?',
         antworten: [
@@ -51,7 +79,7 @@ const fragen = [
         ],
     },
     {
-        id: 'tuerart', block: 'A',
+        id: 'tuerart', abschnitt: 1, block: 'A',
         zeigen: alsTuer,
         frage: 'Wie ist die Tür aufgebaut?',
         hilfe: 'Stulptür: zwei Flügel, und beim Öffnen bleibt kein fester Mittelpfosten stehen.',
@@ -65,7 +93,7 @@ const fragen = [
 
     // B – Rahmen
     {
-        id: 'material', block: 'B',
+        id: 'material', abschnitt: 2, block: 'B',
         zeigen: fensterOderTuer,
         frage: 'Aus welchem Material ist der Rahmen?',
         hilfe: 'Das Material sortiert nur. Holz-Alu und Kunststoff-Alu behandelt der Katalog wie Kunststoff.',
@@ -79,7 +107,7 @@ const fragen = [
         ],
     },
     {
-        id: 'stulpfenster', block: 'B',
+        id: 'stulpfenster', abschnitt: 2, block: 'B',
         zeigen: alsFenster,
         frage: 'Hat das Fenster zwei Flügel ohne festen Mittelpfosten?',
         hilfe: 'Stulpfenster: Öffnet man beide Flügel, bleibt in der Mitte kein Pfosten stehen.',
@@ -91,10 +119,14 @@ const fragen = [
         ],
     },
     {
-        id: 'fluegellage', block: 'B',
+        id: 'fluegellage', abschnitt: 2, block: 'B', blick: 'aussen',
         zeigen: (a) => fassade(a) && a.tuerart !== 'schiebe',
         frage: 'Wie liegt der Flügel zum Rahmen?',
-        hilfe: 'Von außen seitlich auf das geschlossene Fenster bzw. die Tür schauen.',
+        hilfe: 'Von außen seitlich auf das geschlossene Element schauen: Liegt der bewegliche Flügel in einer Ebene mit dem festen Rahmen oder steht er davor?',
+        hilfeJe: jeElement({
+            fenster: 'Von außen seitlich auf das geschlossene Fenster schauen: Liegt der bewegliche Flügel in einer Ebene mit dem festen Blendrahmen oder steht er davor?',
+            tuer: 'Von außen seitlich auf die geschlossene Tür schauen: Liegt der bewegliche Türflügel in einer Ebene mit dem festen Blendrahmen oder steht er davor?',
+        }),
         skizze: 'fluegellage',
         labels: ['geometry.sash_flush_with_frame', 'geometry.sash_offset_from_frame', 'geometry.sash_half_offset_from_frame'],
         antworten: [
@@ -108,10 +140,10 @@ const fragen = [
         ],
     },
     {
-        id: 'ueberschlag', block: 'B',
+        id: 'ueberschlag', abschnitt: 2, block: 'B', blick: 'aussen',
         zeigen: (a) => fassade(a) && a.tuerart !== 'schiebe',
         frage: 'Wie sieht die Außenkante des Blendrahmens aus?',
-        hilfe: 'Gemeint ist der Überschlag: die äußere Kante des festen Rahmens, auf der der Insektenschutz aufliegt.',
+        hilfe: 'Gemeint ist der Überschlag: die äußere Kante des festen Rahmens, auf der der Insektenschutz aufliegt. Von außen seitlich darauf schauen.',
         skizze: 'ueberschlag',
         labels: ['geometry.frame_overlap_straight', 'geometry.frame_overlap_sloped', 'geometry.frame_overlap_extremely_sloped'],
         antworten: [
@@ -126,7 +158,7 @@ const fragen = [
         ],
     },
     {
-        id: 'sonderform', block: 'B',
+        id: 'sonderform', abschnitt: 2, block: 'B',
         zeigen: alsFenster,
         frage: 'Ist das Fenster rechteckig?',
         labels: ['geometry.special_form_curved_supported', 'geometry.special_form_out_of_square_supported'],
@@ -138,7 +170,7 @@ const fragen = [
 
     // C – Rollladen und Platz
     {
-        id: 'rollladen', block: 'C',
+        id: 'rollladen', abschnitt: 2, block: 'C',
         zeigen: fassade,
         frage: 'Ist ein Rollladen vorhanden?',
         skizze: 'rollladen',
@@ -149,10 +181,10 @@ const fragen = [
         ],
     },
     {
-        id: 'panzer', block: 'C',
+        id: 'panzer', abschnitt: 2, block: 'C', blick: 'aussen',
         zeigen: mitRollladen,
         frage: 'Liegt der heruntergelassene Rollladen eng am Flügel?',
-        hilfe: 'Rollladen ganz herunterlassen und schauen, wie viel Platz zwischen Panzer und Flügel bleibt.',
+        hilfe: 'Rollladen ganz herunterlassen und von außen seitlich schauen, wie viel Platz zwischen Panzer und Flügel bleibt.',
         skizze: 'panzer',
         labels: ['shutter.armour_close_to_sash'],
         antworten: [
@@ -161,12 +193,12 @@ const fragen = [
         ],
     },
     {
-        id: 'fuehrung', block: 'C',
+        id: 'fuehrung', abschnitt: 2, block: 'C', blick: 'aussen',
         zeigen: mitRollladen,
         modus: 'alle',
         exakt: ['shutter.guide_close_left', 'shutter.guide_close_right'],
         frage: 'Sitzen die Führungsschienen eng am Blendrahmen?',
-        hilfe: 'Seitlich schauen: Bleibt zwischen Führungsschiene und Flügel nur wenig Rahmenfläche frei?',
+        hilfe: 'Von außen seitlich schauen: Bleibt zwischen Führungsschiene und Flügel nur wenig Rahmenfläche frei? Links und rechts gelten von außen gesehen.',
         skizze: 'fuehrung',
         labels: ['shutter.guide_close_left', 'shutter.guide_close_right', 'shutter.guide_close_hinge_side'],
         antworten: [
@@ -177,9 +209,10 @@ const fragen = [
         ],
     },
     {
-        id: 'haengend', spezifisch: true, block: 'C',
+        id: 'haengend', abschnitt: 2, spezifisch: true, block: 'C', blick: 'aussen',
         zeigen: mitRollladen,
         frage: 'Hängt der Rollladen in die Öffnung, auch wenn er ganz hochgezogen ist?',
+        hilfe: 'Rollladen ganz hochziehen und von außen schauen, ob die unterste Lamelle noch vor der Öffnung steht.',
         skizze: 'haengend',
         labels: ['shutter.armour_hanging_down'],
         antworten: [
@@ -188,7 +221,7 @@ const fragen = [
         ],
     },
     {
-        id: 'geteilt', spezifisch: true, block: 'C',
+        id: 'geteilt', abschnitt: 2, spezifisch: true, block: 'C',
         zeigen: (a) => mitRollladen(a) && a.element === 'tuer',
         frage: 'Ist der Rollladen geteilt (zwei Rollläden nebeneinander)?',
         labels: ['shutter.split_roller_shutter'],
@@ -200,10 +233,10 @@ const fragen = [
 
     // D – Unten und Anschluss
     {
-        id: 'regenschiene', block: 'D',
+        id: 'regenschiene', abschnitt: 2, block: 'D', blick: 'aussen',
         zeigen: alsFenster,
         frage: 'Ist unten am Blendrahmen eine Regenschiene?',
-        hilfe: 'Regenschiene: Alu-Profil unten am festen Rahmen, meist bei Holzfenstern. Die Fensterbank ist keine Regenschiene.',
+        hilfe: 'Von außen auf die Unterkante schauen. Regenschiene: Alu-Profil unten am festen Rahmen, meist bei Holzfenstern. Die Fensterbank ist keine Regenschiene.',
         skizze: 'regenschiene',
         labels: ['component.rain_rail_present'],
         antworten: [
@@ -213,9 +246,10 @@ const fragen = [
         ],
     },
     {
-        id: 'regenschiene_lage', block: 'D',
+        id: 'regenschiene_lage', abschnitt: 2, block: 'D', blick: 'aussen',
         zeigen: (a) => alsFenster(a) && a.regenschiene === 'ja',
         frage: 'Liegt die Regenschiene am Blendrahmen an oder steht sie über?',
+        hilfe: 'Von außen seitlich schauen: Schließt die Schiene bündig mit der Außenfläche des Blendrahmens ab oder steht sie davor?',
         skizze: 'regenschiene',
         labels: ['component.rain_rail_contact_required', 'component.rain_rail_may_project'],
         antworten: [
@@ -224,10 +258,10 @@ const fragen = [
         ],
     },
     {
-        id: 'wetterschenkel', block: 'D',
+        id: 'wetterschenkel', abschnitt: 2, block: 'D', blick: 'aussen',
         zeigen: alsFenster,
         frage: 'Ist unten am Flügel ein Wetterschenkel?',
-        hilfe: 'Wetterschenkel: Leiste unten am beweglichen Flügel, die Wasser ableitet. Nicht mit der Regenschiene verwechseln.',
+        hilfe: 'Von außen auf die Unterkante des beweglichen Flügels schauen. Wetterschenkel: Leiste unten am Flügel, die Wasser ableitet. Nicht mit der Regenschiene am festen Rahmen verwechseln.',
         skizze: 'wetterschenkel',
         labels: ['component.weather_bar_present', 'component.weather_bar_suitable'],
         antworten: [
@@ -236,7 +270,7 @@ const fragen = [
         ],
     },
     {
-        id: 'schwelle', spezifisch: true, block: 'D',
+        id: 'schwelle', abschnitt: 2, spezifisch: true, block: 'D',
         zeigen: alsTuer,
         frage: 'Ist die Tür unten schwellenfrei?',
         hilfe: 'Schwellenfrei bzw. barrierefrei: Der Boden geht ohne Stufe oder Kante durch die Tür.',
@@ -248,7 +282,7 @@ const fragen = [
         ],
     },
     {
-        id: 'trittschutz', block: 'D',
+        id: 'trittschutz', abschnitt: 2, block: 'D',
         zeigen: (a) => alsTuer(a) && a.tuerart !== 'schiebe',
         frage: 'Hat die Tür unten ein Trittschutzprofil?',
         hilfe: 'Trittschutz: Profil unten auf dem Rahmen, typisch bei Kunststofftüren.',
@@ -260,9 +294,18 @@ const fragen = [
         ],
     },
     {
-        id: 'boden', block: 'D',
+        id: 'boden', abschnitt: 2, block: 'D',
         zeigen: (a) => alsTuer(a) || (alsFenster(a) && ['rollo', 'plissee'].includes(a.system)),
-        frage: 'Ist die Fläche unten eben (Boden bzw. Fensterbank)?',
+        frage: 'Ist die Fläche unten eben?',
+        frageJe: jeElement({
+            fenster: 'Ist die Fensterbank unten eben?',
+            tuer: 'Ist der Boden im Türdurchgang eben?',
+        }),
+        hilfe: 'Gemeint ist die Fläche, auf der der Insektenschutz unten aufsitzt.',
+        hilfeJe: jeElement({
+            fenster: 'Gemeint ist die Fensterbank, auf der das Rollo bzw. Plissee unten aufsitzt.',
+            tuer: 'Gemeint ist der Boden im Durchgang, auf dem die Anlage unten aufsitzt: Fliesen, Estrich, Holzdiele, Naturstein.',
+        }),
         labels: ['geometry.bottom_surface_level', 'geometry.bottom_surface_uneven'],
         antworten: [
             {id: 'eben', text: 'Eben', setzt: {'geometry.bottom_surface_level': true, 'geometry.bottom_surface_uneven': false}},
@@ -270,10 +313,10 @@ const fragen = [
         ],
     },
     {
-        id: 'mauerleibung', block: 'D',
+        id: 'mauerleibung', abschnitt: 2, block: 'D',
         zeigen: fassade,
         frage: 'Gibt es neben dem Rahmen eine gerade Mauerleibung, an der montiert werden kann?',
-        hilfe: 'Mauerleibung: die seitliche Wandfläche neben dem Fenster- oder Türrahmen.',
+        hilfe: 'Mauerleibung: die seitliche Wandfläche neben dem Blendrahmen.',
         skizze: 'mauerleibung',
         labels: ['geometry.wall_reveal_present'],
         antworten: [
@@ -284,7 +327,7 @@ const fragen = [
     },
 
     {
-        id: 'schiebefluegel', block: 'D',
+        id: 'schiebefluegel', abschnitt: 2, block: 'D',
         zeigen: (a) => alsTuer(a) && (a.tuerart === 'schiebe' || a.system === 'schiebe'),
         frage: 'Wie viele Schiebeflügel soll die Anlage haben?',
         skizze: 'schiebe',
@@ -299,7 +342,7 @@ const fragen = [
 
     // E – Dachfenster
     {
-        id: 'innenfutter_unten', block: 'E',
+        id: 'innenfutter_unten', abschnitt: 2, block: 'E',
         zeigen: (a) => a.fenstertyp === 'dach',
         frage: 'Wie verläuft das Innenfutter unten?',
         hilfe: 'Innenfutter: die Verkleidung der Dachfenster-Leibung im Raum.',
@@ -311,7 +354,7 @@ const fragen = [
         ],
     },
     {
-        id: 'innenfutter_oben', block: 'E',
+        id: 'innenfutter_oben', abschnitt: 2, block: 'E',
         zeigen: (a) => a.fenstertyp === 'dach',
         frage: 'Wie verläuft das Innenfutter oben?',
         skizze: 'innenfutter',
@@ -322,7 +365,7 @@ const fragen = [
         ],
     },
     {
-        id: 'innenfutter_montage', block: 'E',
+        id: 'innenfutter_montage', abschnitt: 2, block: 'E',
         zeigen: (a) => a.fenstertyp === 'dach',
         frage: 'Kann direkt im Innenfutter montiert werden?',
         labels: ['mounting.in_roof_window_inner_lining', 'mounting.on_inner_lining_cover_strips'],
@@ -335,7 +378,7 @@ const fragen = [
 
     // F – Lichtschacht
     {
-        id: 'auflage', block: 'F', pflicht: true,
+        id: 'auflage', abschnitt: 2, block: 'F', pflicht: true,
         zeigen: (a) => a.element === 'lichtschacht',
         frage: 'Auf wie vielen Seiten liegt die Abdeckung auf?',
         hilfe: 'Bei 3 Seiten schließt die Abdeckung hinten an die Hauswand an.',
@@ -348,7 +391,7 @@ const fragen = [
         ],
     },
     {
-        id: 'kellerfenster', spezifisch: true, block: 'F',
+        id: 'kellerfenster', abschnitt: 2, spezifisch: true, block: 'F',
         zeigen: (a) => a.element === 'lichtschacht' && a.auflage !== 'vier',
         frage: 'Steht das Kellerfenster über die Hauswand in den Schacht?',
         skizze: 'kellerfenster',
@@ -359,7 +402,7 @@ const fragen = [
         ],
     },
     {
-        id: 'gitterrost', block: 'F',
+        id: 'gitterrost', abschnitt: 2, block: 'F',
         zeigen: (a) => a.element === 'lichtschacht',
         frage: 'Ist der Gitterrost tragfähig, formstabil und nicht verrostet?',
         antworten: [
@@ -371,13 +414,13 @@ const fragen = [
 
     // G – Bedienung
     {
-        id: 'system', block: 'G',
+        id: 'system', abschnitt: 1, block: 'G',
         zeigen: (a) => a.element === 'fenster' || a.element === 'tuer',
         frage: 'Wie soll der Insektenschutz funktionieren?',
         antworten: [
             {id: 'spannrahmen', text: 'Fest einsetzen', hinweis: 'Spannrahmen', skizze: 'spannrahmen', system: 'spannrahmen', nur: (a) => alsFenster(a)},
             {id: 'rollo', text: 'Aufrollen', hinweis: 'Rollo', skizze: 'rollo', system: 'rollo'},
-            {id: 'pendel', text: 'In beide Richtungen pendeln', hinweis: 'Pendelfenster, Pendeltür', skizze: 'pendel', system: 'pendel', nur: fassade},
+            {id: 'pendel', text: 'In beide Richtungen pendeln', hinweis: 'Pendelfenster', hinweisJe: jeElement({fenster: 'Pendelfenster', tuer: 'Pendeltür'}), skizze: 'pendel', system: 'pendel', nur: fassade},
             {id: 'dreh', text: 'Aufdrehen', hinweis: 'Drehrahmen', skizze: 'dreh', system: 'dreh', nur: fassade},
             {id: 'plissee', text: 'Seitlich falten', hinweis: 'Plissee', skizze: 'plissee', system: 'plissee', nur: fassade},
             {id: 'schiebe', text: 'Seitlich schieben', hinweis: 'Schiebeanlage', skizze: 'schiebe', system: 'schiebe', nur: alsTuer},
@@ -386,18 +429,22 @@ const fragen = [
         ],
     },
     {
-        id: 'richtung', block: 'G',
+        id: 'richtung', abschnitt: 1, block: 'G',
         zeigen: (a) => fassade(a) && a.system === 'dreh',
-        frage: 'In welche Richtung soll der Drehrahmen öffnen?',
-        hilfe: 'Der Hauptkatalog empfiehlt bei Fenstern nach innen, damit man sich nicht hinauslehnen muss.',
+        frage: 'Wohin soll sich der Insektenschutz öffnen?',
+        hilfe: 'Die Öffnungsrichtung legt zugleich die Montageseite fest: Nach innen öffnend sitzt der Rahmen innen im Raum, nach außen öffnend sitzt er außen.',
+        hilfeJe: jeElement({
+            fenster: 'Die Öffnungsrichtung legt zugleich die Montageseite fest: Nach innen öffnend sitzt der Rahmen innen im Raum, nach außen öffnend außen vor dem Fenster. Der Hauptkatalog empfiehlt bei Fenstern nach innen, damit man sich zum Bedienen nicht hinauslehnen muss.',
+            tuer: 'Die Öffnungsrichtung legt zugleich die Montageseite fest: Nach innen öffnend sitzt der Rahmen innen im Raum, nach außen öffnend außen vor der Tür. Nach außen braucht davor freien Platz; nach innen ist die Lösung, wenn oben der Rollladen hereinhängt.',
+        }),
         antworten: [
-            {id: 'aussen', text: 'Nach außen', richtung: 'operation.hinged_outward'},
-            {id: 'innen', text: 'Nach innen', richtung: 'operation.hinged_inward'},
+            {id: 'aussen', text: 'Nach außen', hinweis: 'ins Freie; der Rahmen sitzt dann außen', richtung: 'operation.hinged_outward'},
+            {id: 'innen', text: 'Nach innen', hinweis: 'in den Raum; der Rahmen sitzt dann innen', richtung: 'operation.hinged_inward'},
             {id: 'egal', text: 'Egal'},
         ],
     },
     {
-        id: 'tuerschliesser', block: 'G',
+        id: 'tuerschliesser', abschnitt: 1, block: 'G',
         zeigen: (a) => alsTuer(a) && system(a, 'dreh'),
         frage: 'Soll die Tür einen Türschließer bekommen?',
         antworten: [
@@ -410,23 +457,27 @@ const fragen = [
 
     // H – Einbauweise
     {
-        id: 'einbauweise', block: 'H',
+        id: 'einbauweise', abschnitt: 3, block: 'H', blick: 'aussen',
         zeigen: fassade,
         frage: 'Wo soll montiert werden?',
-        hilfe: 'Es erscheinen nur Einbauweisen, die bei den verbliebenen Varianten vorkommen.',
+        hilfe: 'Von außen betrachtet: außen vor den Blendrahmen gesetzt, in die Öffnung des Blendrahmens gesetzt oder seitlich in die Mauerleibung. Möglichkeiten ohne hinterlegte Lösung bleiben sichtbar und nennen den Grund.',
         skizze: 'einbauweise',
         labels: ['mounting_frame.position_amb_exterior_on_frame', 'mounting_frame.position_lmb_in_clear_opening', 'mounting_frame.position_lmm_in_clear_wall_reveal', 'mounting.on_frame_front', 'mounting.in_frame_opening', 'mounting.in_wall_reveal'],
         antworten: [
-            {id: 'amb', text: 'Auf dem Blendrahmen', hinweis: 'von außen vorgesetzt (AMB)', skizze: 'amb', setzt: {'mounting_frame.position_amb_exterior_on_frame': true, 'mounting.on_frame_front': true, 'mounting_frame.position_lmb_in_clear_opening': false, 'mounting.in_frame_opening': false, 'mounting_frame.position_lmm_in_clear_wall_reveal': false, 'mounting.in_wall_reveal': false}},
-            {id: 'lmb', text: 'In der Rahmenöffnung', hinweis: 'im Lichtmaß des Blendrahmens (LMB)', skizze: 'lmb', setzt: {'mounting_frame.position_lmb_in_clear_opening': true, 'mounting.in_frame_opening': true, 'mounting_frame.position_amb_exterior_on_frame': false, 'mounting.on_frame_front': false, 'mounting_frame.position_lmm_in_clear_wall_reveal': false, 'mounting.in_wall_reveal': false}},
-            {id: 'lmm', text: 'In der Mauerleibung', hinweis: 'LMM', skizze: 'lmm', setzt: {'mounting_frame.position_lmm_in_clear_wall_reveal': true, 'mounting.in_wall_reveal': true, 'mounting_frame.position_amb_exterior_on_frame': false, 'mounting.on_frame_front': false, 'mounting_frame.position_lmb_in_clear_opening': false, 'mounting.in_frame_opening': false}},
+            {id: 'amb', text: 'Außen auf den Blendrahmen', hinweis: 'vorgesetzt, Katalogkürzel AMB', skizze: 'amb', setzt: {'mounting_frame.position_amb_exterior_on_frame': true, 'mounting.on_frame_front': true, 'mounting_frame.position_lmb_in_clear_opening': false, 'mounting.in_frame_opening': false, 'mounting_frame.position_lmm_in_clear_wall_reveal': false, 'mounting.in_wall_reveal': false}},
+            {id: 'lmb', text: 'Im Blendrahmen', hinweis: 'in der Rahmenöffnung, Katalogkürzel LMB', skizze: 'lmb', setzt: {'mounting_frame.position_lmb_in_clear_opening': true, 'mounting.in_frame_opening': true, 'mounting_frame.position_amb_exterior_on_frame': false, 'mounting.on_frame_front': false, 'mounting_frame.position_lmm_in_clear_wall_reveal': false, 'mounting.in_wall_reveal': false}},
+            {id: 'lmm', text: 'In der Mauerleibung', hinweis: 'seitlich in der Wandöffnung, Katalogkürzel LMM', skizze: 'lmm', setzt: {'mounting_frame.position_lmm_in_clear_wall_reveal': true, 'mounting.in_wall_reveal': true, 'mounting_frame.position_amb_exterior_on_frame': false, 'mounting.on_frame_front': false, 'mounting_frame.position_lmb_in_clear_opening': false, 'mounting.in_frame_opening': false}},
         ],
     },
     {
-        id: 'abschluss', block: 'H',
+        id: 'abschluss', abschnitt: 3, block: 'H',
         zeigen: (a) => fassade(a) && system(a, 'pendel', 'dreh', 'plissee', 'rollo'),
         frage: 'Soll der Rahmen unten geschlossen oder offen sein?',
-        hilfe: 'Unten offen: keine Stolperkante, die Bürste dichtet zum Boden bzw. zur Fensterbank ab. Unten geschlossen: umlaufender Rahmen, gut bei unebenem Untergrund.',
+        hilfe: 'Unten offen: keine Kante, die Bürste dichtet nach unten ab. Unten geschlossen: umlaufender Rahmen, gut bei unebenem Untergrund.',
+        hilfeJe: jeElement({
+            fenster: 'Unten offen: kein Profil, die Bürste dichtet zur Fensterbank ab. Unten geschlossen: umlaufender Rahmen, gut bei unebener Fensterbank.',
+            tuer: 'Unten offen: keine Stolperkante, die Bürste dichtet zum Boden ab. Unten geschlossen: umlaufender Rahmen, gut bei unebenem Boden.',
+        }),
         labels: ['mounting_frame.closed_bottom', 'mounting_frame.open_bottom', 'roller.bottom_closed', 'roller.bottom_open'],
         antworten: [
             {id: 'geschlossen', text: 'Unten geschlossen', setzt: {'mounting_frame.closed_bottom': true, 'roller.bottom_closed': true, 'mounting_frame.open_bottom': false, 'roller.bottom_open': false}},
@@ -435,7 +486,7 @@ const fragen = [
         ],
     },
     {
-        id: 'zweifluegelig', block: 'H',
+        id: 'zweifluegelig', abschnitt: 3, block: 'H',
         zeigen: (a) => alsTuer(a) && a.tuerart === 'stulp' && system(a, 'pendel', 'dreh', 'plissee'),
         frage: 'Soll der Insektenschutz selbst zwei Flügel haben?',
         hilfe: 'Zweiflügelig: je Türflügel ein Insektenschutzflügel. Einflügelig: ein Flügel über die ganze Breite oder nur für den Gehflügel.',
@@ -447,7 +498,7 @@ const fragen = [
         ],
     },
     {
-        id: 'sprosse', block: 'H',
+        id: 'sprosse', abschnitt: 3, block: 'H',
         zeigen: (a) => alsFenster(a) && system(a, 'spannrahmen'),
         frage: 'Darf der Spannrahmen eine Quersprosse haben?',
         hilfe: 'Sprossenfreie Varianten sehen ruhiger aus; bei großen Elementen kann eine Sprosse nötig sein (Sprossengrenzen im Katalog).',
@@ -459,7 +510,7 @@ const fragen = [
         ],
     },
     {
-        id: 'montagerahmen', block: 'H',
+        id: 'montagerahmen', abschnitt: 3, block: 'H',
         zeigen: (a) => fassade(a) && system(a, 'dreh'),
         frage: 'Mit oder ohne Montagerahmen?',
         hilfe: 'Ohne Rahmen wird der Drehrahmen direkt am Blendrahmen befestigt.',
@@ -473,71 +524,117 @@ const fragen = [
 
     // J – Maße (A3 nur bei gemessenem Wert)
     {
-        id: 'mass_seitlich', block: 'J', typ: 'mass', einheit: 'mm',
+        id: 'mass_seitlich', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
+        klassen: [
+            {id: 'eng', text: 'Sehr wenig', hinweis: 'schmaler als ein Finger, unter ca. 15 mm', bis: 15},
+            {id: 'normal', text: 'Fingerbreit', hinweis: 'ungefähr 15 bis 25 mm', ab: 15, bis: 25},
+            {id: 'viel', text: 'Viel Platz', hinweis: 'breiter als ein Daumen, über ca. 25 mm', ab: 25},
+        ], blick: 'aussen',
         zeigen: fassade,
         frage: 'Wie breit ist die freie Auflagefläche seitlich am Blendrahmen?',
-        hilfe: 'Von der Kante des Blendrahmens bis zum Flügel bzw. zur Führungsschiene messen, die schmalere Seite zählt.',
+        hilfe: 'Von außen messen: von der Außenkante des Blendrahmens bis zum Flügel bzw. bis zur Rollladenführung. Die schmalere der beiden Seiten zählt.',
         skizze: 'mass-seitlich',
         schluessel: ['side_support_min', 'mounting_frame_side_support_min'],
     },
     {
-        id: 'mass_fuehrung', block: 'J', typ: 'mass', einheit: 'mm',
+        id: 'mass_fuehrung', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
+        klassen: [
+            {id: 'eng', text: 'Schiene klebt am Rahmen', hinweis: 'unter ca. 15 mm', bis: 15},
+            {id: 'normal', text: 'Etwas Luft', hinweis: 'ungefähr 15 bis 25 mm', ab: 15, bis: 25},
+            {id: 'viel', text: 'Deutlich Abstand', hinweis: 'über ca. 25 mm', ab: 25},
+        ], blick: 'aussen',
         zeigen: mitRollladen,
         frage: 'Wie weit ist die Führungsschiene vom Blendrahmen entfernt?',
-        hilfe: 'Seitlich von der Führungsschiene bis zur Außenkante des Blendrahmens messen.',
+        hilfe: 'Von außen seitlich messen: von der Rollladen-Führungsschiene bis zur Außenkante des Blendrahmens.',
         skizze: 'mass-fuehrung',
         schluessel: ['shutter.guide_to_frame_min'],
     },
     {
-        id: 'mass_oben', block: 'J', typ: 'mass', einheit: 'mm',
+        id: 'mass_oben', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
+        klassen: [
+            {id: 'eng', text: 'Fast nichts frei', hinweis: 'unter ca. 18 mm', bis: 18},
+            {id: 'normal', text: 'Ein Finger passt', hinweis: 'ungefähr 18 bis 30 mm', ab: 18, bis: 30},
+            {id: 'viel', text: 'Reichlich Platz', hinweis: 'über ca. 30 mm', ab: 30},
+        ], blick: 'aussen',
         zeigen: alsFenster,
         frage: 'Wie viel Blendrahmenfläche ist oben über dem Flügel frei?',
-        hilfe: 'Von der Oberkante des Flügels bis zur Innenkante des Rollladenkastens bzw. Sturzes messen.',
+        hilfe: 'Von außen messen: von der Oberkante des Flügels bis zur Unterkante des Rollladenkastens bzw. des Sturzes.',
         skizze: 'mass-oben',
         schluessel: ['upper_frame_projection_min'],
     },
     {
-        id: 'mass_tiefe', block: 'J', typ: 'mass', einheit: 'mm',
+        id: 'mass_tiefe', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
+        klassen: [
+            {id: 'eng', text: 'Kaum Luft nach außen', hinweis: 'unter ca. 25 mm', bis: 25},
+            {id: 'normal', text: 'Eine Handbreit knapp', hinweis: 'ungefähr 25 bis 65 mm', ab: 25, bis: 65},
+            {id: 'viel', text: 'Viel Platz nach außen', hinweis: 'über ca. 65 mm', ab: 65},
+        ], blick: 'aussen',
         zeigen: fassade,
         frage: 'Wie viel Platz ist vor dem Blendrahmen bis zum Rollladen?',
-        hilfe: 'Einbautiefe: vom Blendrahmen nach außen bis zum ersten Hindernis messen.',
+        hilfe: 'Einbautiefe, von außen gemessen: von der Außenfläche des Blendrahmens nach außen bis zum ersten Hindernis davor, meist Rollladenpanzer oder Führungsschiene.',
         skizze: 'mass-tiefe',
         schluessel: ['installation_depth_min'],
     },
     {
-        id: 'mass_versatz', block: 'J', typ: 'mass', einheit: 'mm',
+        id: 'mass_versatz', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
+        klassen: [
+            {id: 'kaum', text: 'Kaum vorstehend', hinweis: 'unter ca. 8 mm', bis: 8},
+            {id: 'deutlich', text: 'Deutlich vorstehend', hinweis: 'ungefähr 8 bis 20 mm', ab: 8, bis: 20},
+            {id: 'stark', text: 'Weit vorstehend', hinweis: 'über ca. 20 mm', ab: 20},
+        ], blick: 'aussen',
         zeigen: (a) => fassade(a) && a.fluegellage !== 'buendig',
         frage: 'Wie weit steht der Flügel vor dem Blendrahmen vor?',
-        hilfe: 'Flächenversatz: von der Außenfläche des Blendrahmens bis zur Außenfläche des Flügels.',
+        hilfe: 'Von außen seitlich auf das geschlossene Element schauen und den Flächenversatz messen: von der Außenfläche des festen Blendrahmens bis zur Außenfläche des beweglichen Flügels.',
+        hilfeJe: jeElement({
+            fenster: 'Von außen seitlich auf das geschlossene Fenster schauen und den Flächenversatz messen: von der Außenfläche des festen Blendrahmens bis zur Außenfläche des beweglichen Flügels.',
+            tuer: 'Von außen seitlich auf die geschlossene Tür schauen und den Flächenversatz messen: von der Außenfläche des festen Blendrahmens bis zur Außenfläche des beweglichen Türflügels.',
+        }),
         skizze: 'versetzt',
         schluessel: ['sash_offset_min'],
     },
     {
-        id: 'mass_regenschiene', block: 'J', typ: 'mass', einheit: 'mm',
+        id: 'mass_regenschiene', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
+        klassen: [
+            {id: 'buendig', text: 'Schließt bündig ab', hinweis: 'kein nennenswerter Überstand', bis: 3},
+            {id: 'wenig', text: 'Steht wenig vor', hinweis: 'ungefähr 3 bis 12 mm', ab: 3, bis: 12},
+            {id: 'viel', text: 'Steht deutlich vor', hinweis: 'über ca. 12 mm', ab: 12},
+        ], blick: 'aussen',
         zeigen: (a) => alsFenster(a) && a.regenschiene === 'ja',
         frage: 'Wie weit steht die Regenschiene über den Blendrahmen vor?',
+        hilfe: 'Von außen seitlich messen: von der Außenfläche des Blendrahmens bis zur Vorderkante der Regenschiene.',
         skizze: 'regenschiene',
         schluessel: ['rain_rail_projection_max'],
     },
     {
-        id: 'mass_wetterschenkel', block: 'J', typ: 'mass', einheit: 'mm',
+        id: 'mass_wetterschenkel', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
+        klassen: [
+            {id: 'buendig', text: 'Schließt bündig ab', hinweis: 'kein nennenswerter Überstand', bis: 3},
+            {id: 'wenig', text: 'Steht wenig vor', hinweis: 'ungefähr 3 bis 12 mm', ab: 3, bis: 12},
+            {id: 'viel', text: 'Steht deutlich vor', hinweis: 'über ca. 12 mm', ab: 12},
+        ], blick: 'aussen',
         zeigen: (a) => alsFenster(a) && a.wetterschenkel === 'ja',
         frage: 'Wie weit steht der Wetterschenkel vor?',
+        hilfe: 'Von außen seitlich messen: von der Außenfläche des Flügels bis zur Vorderkante des Wetterschenkels.',
         skizze: 'wetterschenkel',
         schluessel: ['weather_bar_projection_max'],
     },
     {
-        id: 'mass_kellerfenster', block: 'J', typ: 'mass', einheit: 'mm',
+        id: 'mass_kellerfenster', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
+        klassen: [
+            {id: 'klein', text: 'Wenig', hinweis: 'bis etwa 90 mm, gut eine Handbreit', bis: 90},
+            {id: 'mittel', text: 'Mittel', hinweis: 'ungefähr 90 bis 110 mm', ab: 90, bis: 110},
+            {id: 'gross', text: 'Weit', hinweis: 'über ca. 110 mm', ab: 110},
+        ],
         zeigen: (a) => a.element === 'lichtschacht' && a.kellerfenster === 'ja',
         frage: 'Wie weit steht das Kellerfenster über?',
-        hilfe: 'Von der Hauswand bis zur vordersten Kante des Kellerfensters messen.',
+        hilfe: 'Von oben in den Schacht schauen und waagerecht messen: von der Hauswand bis zur vordersten Kante des Kellerfensters.',
         skizze: 'kellerfenster',
         schluessel: ['light_well_window_overhang_max', 'light_well_window_overhang_min'],
     },
 
     // K – Wünsche (nur Hinweise zum Gewebe, nie Ausschluss)
     {
-        id: 'wunsch', block: 'K', typ: 'mehrfach',
+        id: 'wunsch', abschnitt: 4, block: 'K', typ: 'mehrfach', immerZeigen: true,
         zeigen: (a) => Boolean(a.element),
         frage: 'Gibt es besondere Wünsche?',
         antworten: [
@@ -549,6 +646,6 @@ const fragen = [
     },
 ];
 
-const H2Fragen = {bloecke, fragen};
+const H2Fragen = {bloecke, abschnitte, fragen, elementWort};
 globalThis.H2Fragen = H2Fragen;
 })();
