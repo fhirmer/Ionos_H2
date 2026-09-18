@@ -9,7 +9,7 @@ globalThis.H2Finder = {finder};
 if (typeof document === 'undefined') return;
 
 const SPEICHER = 'h2-produktfinder-3';
-const VERSION = '3.2';
+const VERSION = '3.3';
 const ART = {
     A1: 'Praxis-Ausschluss (Rudi)',
     A2: 'laut Katalog nicht geeignet',
@@ -298,7 +298,29 @@ function eigenschaftenHtml(v) {
     return `<h3>Eigenschaften dieser Lösung</h3><ul class="eigenschaften">${liste.map((e) =>
         `<li><b>${esc(e.titel)}:</b> ${esc(e.text)}${e.quelle ? ` <small>(laut ${esc(e.quelle)})</small>` : ''}</li>`).join('')}</ul>`;
 }
-function loesungHtml(b, rang) {
+function warumZuerstHtml(r) {
+    const w = r.warumZuerst;
+    if (!w) return '';
+    return `<div class="warum-zuerst"><h3>Warum diese zuerst?</h3>
+        <p>${esc(w.stufe)}.</p>
+        ${w.gegen ? `<p>Gegenüber <strong>${esc(w.gegen)}</strong>: ${esc(w.grund)}</p>` : `<p>${esc(w.grund)}</p>`}</div>`;
+}
+
+// Der Weg zur Empfehlung in vier Sätzen – damit nachvollziehbar ist, was der Finder tut
+function wegHtml(r) {
+    const aus = r.ausgeschlossen.length;
+    return `<details class="liste weg"><summary>Wie ich auf diese Lösung komme</summary>
+      <ol class="weg-liste">
+        <li><b>Auswahl nach Element und Bedienart.</b> Übrig bleiben die Varianten, die laut Katalog für dein Element gebaut sind.</li>
+        <li><b>Ausschließen nur mit Beleg.</b> Eine Lösung fällt raus, wenn Rudi sie ausschließt (A1), der Katalog sie wörtlich ausschließt (A2), ein <em>gemessenes</em> Maß außerhalb der Katalog-Grenze liegt (A3), eine Voraussetzung nachweislich fehlt (A4) oder du eine andere Bedienart bzw. einen anderen Montageort gewählt hast (A5). Hier waren das ${aus} Varianten – alle mit Grund und Quelle nachlesbar.</li>
+        <li><b>Sortieren statt aussieben.</b> Alles andere bleibt und wird geordnet: zuerst Rudis Lösung für deine Situation, dann der Einsatzzweck aus dem Hauptkatalog, dann was technisch möglich ist.</li>
+        <li><b>Offene Angaben schließen nichts aus.</b> „Weiß ich nicht“ und Schätzungen machen die Reihenfolge unsicherer, nie eine Lösung unmöglich – sie werden zu Prüfpunkten fürs Aufmaß.</li>
+      </ol>
+      <p class="unterzeile">Es bleiben ${r.alle.length} mögliche Lösungen. Die Reihenfolge entscheidet sich der Reihe nach über: Stufe → Einsatzzweck → offene Merkmale → passende Angaben → Grenzwerte → Prüfpunkte → Rudis Qualitätshinweis → sichtbare Befestigung.</p>
+    </details>`;
+}
+
+function loesungHtml(b, rang, warumZuerst = '') {
     const v = b.variante;
     const pruef = [...new Map(b.pruefpunkte.map((p) => [p.text, p])).values()];
     const rudi = b.rudi;
@@ -317,6 +339,7 @@ function loesungHtml(b, rang) {
       ${zweck ? `<p class="zweck">für ${esc(zweck.replace(/^für /, ''))}</p>` : ''}
       <p class="status status-${b.status}">${b.status === 'passt' ? '✓ Passt zu deinen Angaben' : '✓ Passt – beim Aufmaß prüfen'}</p>
       ${rudi ? `<p class="warum-rudi">Rudis Lösung für: ${esc([rudi.gruppe, rudi.untergruppe, rudi.situation].filter(Boolean).join(' › '))}</p>` : ''}
+      ${warumZuerst}
       ${abgleichHtml(b)}
       ${eigenschaftenHtml(v)}
       ${v.darstellung ? `<p class="einbau">Einbauweise: ${esc(v.darstellung)}</p>` : ''}
@@ -351,7 +374,7 @@ function ergebnisHtml() {
           <div class="chips">${[...ursachen.entries()].map(([id, n]) => `<button type="button" class="chip" data-aktion="bearbeiten" data-frage="${id}">${esc(fragenById.get(id).frage)} – ${esc(antwortText(id))} (${n})</button>`).join('')}
           ${state.antworten.system ? '<button type="button" class="chip" data-aktion="bearbeiten" data-frage="system">Bedienart ändern</button>' : ''}</div>`;
     } else {
-        html += loesungHtml(r.empfehlung, 0);
+        html += loesungHtml(r.empfehlung, 0, warumZuerstHtml(r));
         html += r.weitere.map((b, i) => loesungHtml(b, i + 1)).join('');
         if (r.alle.length > 3) html += `<details class="liste"><summary>Alle ${r.alle.length} passenden Lösungen</summary><ol>${r.alle.map((b) => `<li><strong>${esc(b.variante.code)}</strong> ${esc(b.variante.titel || '')}${b.variante.empfehlung ? ` – ${esc(b.variante.empfehlung)}` : ''} <small>(${esc(STUFE[b.stufe])})</small></li>`).join('')}</ol></details>`;
     }
@@ -367,6 +390,7 @@ function ergebnisHtml() {
         const wort = {einbauweise: 'Montageort', richtung: 'Öffnungsrichtung', system: 'Bedienart'}[ziel];
         html += `<p class="ausgeblendet">${bedienart} Varianten mit anderer Bedienart oder anderem Montageort ausgeblendet (nicht ungeeignet). <button type="button" class="link" data-aktion="bearbeiten" data-frage="${ziel}">${esc(wort)} ändern</button></p>`;
     }
+    if (r.empfehlung) html += wegHtml(r);
     html += '<p class="schluss">Die Vorauswahl ersetzt kein Aufmaß. Bestellmaße, Einbauluft und Zusatzausstattung an der gewählten Variante prüfen.</p>';
     return html;
 }

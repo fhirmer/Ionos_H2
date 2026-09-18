@@ -1,70 +1,127 @@
-// Skizzen für Fragen und Antworten: einfache Strichzeichnungen, einfarbig über currentColor (Dunkelmodus).
-// Schnitte: oben = außen. Blendrahmen dunkel gefüllt, Flügel hell, Insektenschutz gestrichelt.
+// Skizzen für Fragen und Antworten: einfarbige Strichzeichnungen über currentColor (auch im Dunkelmodus).
+//
+// Bildsprache – überall gleich, damit man sie einmal lernt und dann wiedererkennt:
+//   Wand            hell, gestrichelte Kante
+//   Blendrahmen     mittel gefüllt, der feste Rahmen
+//   Flügel          hell gefüllt, der bewegliche Teil
+//   Insektenschutz  gestrichelte Linie
+//   Maß             dünne Linie mit Endstrichen und Beschriftung
+//
+// Schnitte: **oben = außen**, unten = innen. Beide Seiten sind beschriftet.
+// Der Flügel liegt bündig mit dem Blendrahmen oder dahinter – er steht nie davor
+// (Hauptkatalog, Zeichnung „Flächenversatz am Fensterflügel“).
 (function () {
 'use strict';
 
-const svg = (inhalt, titel) => `<svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="${titel}">${inhalt}</svg>`;
-const rahmen = (x, y, b, h) => `<rect x="${x}" y="${y}" width="${b}" height="${h}" fill="currentColor" fill-opacity=".35"/>`;
-const fluegel = (x, y, b, h) => `<rect x="${x}" y="${y}" width="${b}" height="${h}" fill="currentColor" fill-opacity=".08"/>`;
-const netz = (x1, y1, x2, y2) => `<path d="M${x1} ${y1}L${x2} ${y2}" stroke-dasharray="4 4"/>`;
-const pfeil = (x1, y1, x2, y2) => `<path d="M${x1} ${y1}L${x2} ${y2}"/><path d="M${x2} ${y2}l${x1 < x2 ? -6 : x1 > x2 ? 6 : -4} ${y1 < y2 ? -6 : y1 > y2 ? 6 : -4}"/>`;
-const mass = (x1, y1, x2, y2) => `<path d="M${x1} ${y1}L${x2} ${y2}" stroke-width="1.5"/><circle cx="${x1}" cy="${y1}" r="2" fill="currentColor"/><circle cx="${x2}" cy="${y2}" r="2" fill="currentColor"/>`;
-const text = (x, y, t, groesse = 10) => `<text x="${x}" y="${y}" font-size="${groesse}" fill="currentColor" stroke="none" font-family="Arial,sans-serif">${t}</text>`;
-const wand = (x, y, b, h) => `<rect x="${x}" y="${y}" width="${b}" height="${h}" fill="currentColor" fill-opacity=".15" stroke-dasharray="2 3"/>`;
+const svg = (inhalt, titel) => `<svg viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="${titel}">${inhalt}</svg>`;
+
+// ---------- Bausteine ----------
+const wand = (x, y, b, h) => `<rect x="${x}" y="${y}" width="${b}" height="${h}" fill="currentColor" fill-opacity=".12" stroke-width="1.2" stroke-dasharray="3 3"/>`;
+const rahmen = (x, y, b, h) => `<rect x="${x}" y="${y}" width="${b}" height="${h}" rx="1.5" fill="currentColor" fill-opacity=".38" stroke-width="1.6"/>`;
+const fluegel = (x, y, b, h) => `<rect x="${x}" y="${y}" width="${b}" height="${h}" rx="1.5" fill="currentColor" fill-opacity=".10" stroke-width="1.6"/>`;
+const netz = (x1, y1, x2, y2) => `<path d="M${x1} ${y1}L${x2} ${y2}" stroke-width="2.6" stroke-dasharray="5 4"/>`;
+const gewebe = (x, y, b, h) => `<rect x="${x}" y="${y}" width="${b}" height="${h}" stroke-width="1.4" stroke-dasharray="4 3"/>`;
+const text = (x, y, t, groesse = 9) => `<text x="${x}" y="${y}" font-size="${groesse}" fill="currentColor" stroke="none" font-family="Arial,Helvetica,sans-serif">${t}</text>`;
+const pfeil = (x1, y1, x2, y2) => `<path d="M${x1} ${y1}L${x2} ${y2}" stroke-width="2"/><path d="M${x2} ${y2}l${x1 < x2 ? -5 : x1 > x2 ? 5 : -3.5} ${y1 < y2 ? -5 : y1 > y2 ? 5 : -3.5}" stroke-width="2"/>`;
+
+// Maßlinie mit Endstrichen; „waagerecht“ legt fest, wie die Striche stehen
+const mass = (x1, y1, x2, y2, beschriftung = null) => {
+    const senkrecht = x1 === x2;
+    const enden = senkrecht
+        ? `<path d="M${x1 - 3} ${y1}h6M${x2 - 3} ${y2}h6" stroke-width="1.2"/>`
+        : `<path d="M${x1} ${y1 - 3}v6M${x2} ${y2 - 3}v6" stroke-width="1.2"/>`;
+    let schrift = '';
+    if (beschriftung) {
+        const breite = beschriftung.length * 4.6;
+        // senkrechte Maße: Text daneben, aber immer im Bild; waagerechte: mittig darüber
+        let tx = senkrecht ? (x1 > 60 ? x1 - breite - 5 : x1 + 5) : (x1 + x2) / 2 - breite / 2;
+        const ty = senkrecht ? (y1 + y2) / 2 + 3 : Math.max(y1 - 5, 9);
+        tx = Math.min(Math.max(tx, 3), 117 - breite);
+        schrift = text(tx, ty, beschriftung, 8.5);
+    }
+    return `<path d="M${x1} ${y1}L${x2} ${y2}" stroke-width="1.2"/>${enden}${schrift}`;
+};
+
+// Seitenangabe im Schnitt: außen oben, innen unten
+const seiten = (x = 4) => text(x, 10, 'außen', 8.5) + text(x, 87, 'innen', 8.5);
+// Bildunterschrift links unten. Länger als 20 Zeichen wird im 120er-Feld abgeschnitten.
+const unterschrift = (t) => text(4, 87, t.length > 20 ? `${t.slice(0, 19)}…` : t, 8.5);
 
 const H2Skizzen = {
-    fenster: svg('<rect x="22" y="10" width="76" height="70" rx="2"/><path d="M60 10v70M22 45h76"/>', 'Fenster'),
-    tuer: svg('<rect x="36" y="6" width="48" height="80" rx="2"/><path d="M74 46h4"/><path d="M20 86h80"/>', 'Tür'),
-    lichtschacht: svg(`${wand(10, 8, 100, 14)}<rect x="18" y="26" width="84" height="54" rx="2"/><path d="M18 40h84M18 54h84M18 68h84M34 26v54M50 26v54M66 26v54M82 26v54" stroke-width="1.5"/>`, 'Lichtschacht'),
-    dachfenster: svg('<path d="M6 70L78 12L114 40"/><path d="M40 43l30-24 14 18-30 24z" fill="currentColor" fill-opacity=".1"/><path d="M47 49l30-24" stroke-width="1.5"/>', 'Dachfenster'),
-    stulp: svg('<rect x="14" y="10" width="92" height="70"/><rect x="18" y="14" width="41" height="62" fill="currentColor" fill-opacity=".08"/><rect x="61" y="14" width="41" height="62" fill="currentColor" fill-opacity=".08"/><path d="M60 14v62" stroke-width="4"/>' + text(44, 88, 'kein Pfosten', 9), 'Stulp: zwei Flügel ohne Mittelpfosten'),
-    schiebetuer: svg('<rect x="10" y="8" width="100" height="74"/><rect x="14" y="12" width="50" height="66" fill="currentColor" fill-opacity=".08"/><rect x="56" y="16" width="50" height="62" fill="currentColor" fill-opacity=".15"/>' + pfeil(40, 45, 20, 45), 'Schiebetür'),
+    // ---------- Elemente ----------
+    fenster: svg(`${rahmen(18, 12, 84, 66)}${fluegel(24, 18, 72, 54)}<path d="M60 18v54M24 45h72" stroke-width="1.4"/>`, 'Fenster'),
+    tuer: svg(`${rahmen(34, 6, 52, 78)}${fluegel(39, 11, 42, 73)}<path d="M74 48h5" stroke-width="3"/><path d="M18 84h84" stroke-width="2.4"/>`, 'Tür'),
+    lichtschacht: svg(`${wand(8, 6, 104, 12)}${rahmen(16, 24, 88, 56)}<path d="M16 38h88M16 52h88M16 66h88M38 24v56M60 24v56M82 24v56" stroke-width="1.3"/>`, 'Lichtschacht mit Gitterrost'),
+    dachfenster: svg(`<path d="M6 72L76 12L114 42" stroke-width="2.4"/>${'<path d="M40 44l30-24 15 19-30 24z" fill="currentColor" fill-opacity=".10" stroke-width="1.6"/>'}<path d="M47 50l30-24" stroke-width="1.3"/>`, 'Dachfenster'),
+    stulp: svg(`${rahmen(14, 12, 92, 62)}${fluegel(19, 17, 40, 52)}${fluegel(61, 17, 40, 52)}<path d="M60 17v52" stroke-width="3.4"/>` + unterschrift('kein Mittelpfosten'), 'Stulp: zwei Flügel ohne Mittelpfosten'),
+    schiebetuer: svg(`${rahmen(10, 10, 100, 66)}${fluegel(15, 15, 46, 56)}${fluegel(57, 19, 48, 48)}${pfeil(44, 44, 22, 44)}`, 'Schiebetür'),
 
-    fluegellage: svg(`${rahmen(6, 40, 24, 26)}${fluegel(30, 40, 20, 26)}<path d="M2 40h52" stroke-dasharray="3 4" stroke-width="1.2"/>${rahmen(66, 40, 24, 26)}${fluegel(90, 54, 24, 22)}<path d="M62 40h56" stroke-dasharray="3 4" stroke-width="1.2"/>` + text(8, 86, 'bündig', 10) + text(70, 86, 'zurück', 10) + text(2, 18, 'außen', 9), 'Flügellage im Schnitt: bündig und zurückversetzt, von außen gesehen'),
-    buendig: svg(`${rahmen(14, 36, 44, 34)}${fluegel(58, 36, 48, 34)}<path d="M6 36h108" stroke-dasharray="3 4" stroke-width="1.2"/>` + text(8, 28, 'außen', 10) + text(8, 86, 'innen', 10), 'flächenbündig: Flügel und Blendrahmen in einer Ebene, von außen gesehen'),
-    versetzt: svg(`${rahmen(14, 24, 44, 40)}${fluegel(58, 48, 48, 32)}<path d="M6 24h108" stroke-dasharray="3 4" stroke-width="1.2"/>${mass(110, 24, 110, 48)}` + text(8, 18, 'außen', 10) + text(8, 88, 'innen', 10) + text(62, 44, 'Versatz', 9), 'flächenversetzt: der Flügel liegt hinter dem Blendrahmen, von außen gesehen'),
-    halbversetzt: svg(`${rahmen(14, 28, 44, 44)}${fluegel(58, 40, 48, 36)}<path d="M6 28h108" stroke-dasharray="3 4" stroke-width="1.2"/>${mass(110, 28, 110, 40)}` + text(8, 22, 'außen', 10) + text(8, 88, 'innen', 10) + text(62, 38, 'Versatz', 9), 'halbflächenversetzt: der Flügel liegt etwas hinter dem Blendrahmen, von außen gesehen'),
+    // ---------- Flügellage (Horizontalschnitt, oben = außen) ----------
+    fluegellage: svg(`${rahmen(8, 34, 22, 30)}${fluegel(30, 34, 22, 30)}<path d="M4 34h52" stroke-width="1" stroke-dasharray="3 3"/>`
+        + `${rahmen(68, 28, 22, 30)}${fluegel(90, 42, 22, 24)}<path d="M64 28h52" stroke-width="1" stroke-dasharray="3 3"/>`
+        + text(12, 80, 'bündig') + text(74, 80, 'zurück') + text(4, 12, 'außen', 8.5), 'Flügellage im Schnitt: bündig und zurückversetzt, von außen gesehen'),
+    buendig: svg(`${rahmen(14, 32, 44, 34)}${fluegel(58, 32, 46, 34)}<path d="M8 32h104" stroke-width="1" stroke-dasharray="3 3"/>` + seiten(), 'flächenbündig: Flügel und Blendrahmen in einer Ebene, von außen gesehen'),
+    versetzt: svg(`${rahmen(14, 24, 44, 42)}${fluegel(58, 46, 46, 30)}<path d="M8 24h104" stroke-width="1" stroke-dasharray="3 3"/>${mass(110, 24, 110, 46, 'Versatz')}` + seiten(), 'flächenversetzt: der Flügel liegt hinter dem Blendrahmen, von außen gesehen'),
+    halbversetzt: svg(`${rahmen(14, 24, 44, 42)}${fluegel(58, 35, 46, 34)}<path d="M8 24h104" stroke-width="1" stroke-dasharray="3 3"/>${mass(110, 24, 110, 35, 'halb')}` + seiten(), 'halbflächenversetzt: der Flügel liegt etwas hinter dem Blendrahmen, von außen gesehen'),
 
-    ueberschlag: svg('<path d="M8 70V30h26v40"/><path d="M46 70V30h14l12 12v28"/><path d="M84 70V30h8q20 0 20 22v18"/>' + text(10, 84, 'gerade', 8) + text(46, 84, 'schräg', 8) + text(82, 84, 'sehr schräg', 8), 'Überschlag: gerade, schräg, sehr schräg'),
-    'ueberschlag-gerade': svg('<path d="M30 78V22h56v56" fill="currentColor" fill-opacity=".35"/>', 'gerader Überschlag'),
-    'ueberschlag-schraeg': svg('<path d="M30 78V22h34l22 22v34" fill="currentColor" fill-opacity=".35"/>', 'schräger Überschlag'),
-    'ueberschlag-sehrschraeg': svg('<path d="M30 78V22h10q46 0 46 44v12" fill="currentColor" fill-opacity=".35"/>', 'sehr schräger oder abgerundeter Überschlag'),
+    // ---------- Überschlag (Profilkante des Blendrahmens) ----------
+    ueberschlag: svg('<path d="M10 72V28h22v44" fill="currentColor" fill-opacity=".38" stroke-width="1.6"/>'
+        + '<path d="M48 72V28h12l12 12v32" fill="currentColor" fill-opacity=".38" stroke-width="1.6"/>'
+        + '<path d="M86 72V28h6q18 0 18 20v24" fill="currentColor" fill-opacity=".38" stroke-width="1.6"/>'
+        + text(12, 84, 'gerade', 8) + text(48, 84, 'schräg', 8) + text(84, 84, 'sehr schräg', 8), 'Überschlag: gerade, schräg, sehr schräg'),
+    'ueberschlag-gerade': svg('<path d="M32 78V22h52v56" fill="currentColor" fill-opacity=".38" stroke-width="2"/>' + text(4, 14, 'außen', 8.5), 'gerader Blendrahmenüberschlag'),
+    'ueberschlag-schraeg': svg('<path d="M32 78V22h30l22 22v34" fill="currentColor" fill-opacity=".38" stroke-width="2"/>' + text(4, 14, 'außen', 8.5), 'schräger Blendrahmenüberschlag'),
+    'ueberschlag-sehrschraeg': svg('<path d="M32 78V22h8q44 0 44 42v14" fill="currentColor" fill-opacity=".38" stroke-width="2"/>' + text(4, 14, 'außen', 8.5), 'sehr schräger oder abgerundeter Blendrahmenüberschlag'),
 
-    rollladen: svg('<rect x="16" y="6" width="88" height="16" rx="2" fill="currentColor" fill-opacity=".2"/><path d="M22 22v60M98 22v60" stroke-width="4"/><path d="M26 30h68M26 38h68M26 46h68M26 54h68M26 62h68" stroke-width="1.5"/>', 'Rollladen mit Kasten und Führungsschienen'),
-    panzer: svg(`${rahmen(20, 44, 30, 36)}${fluegel(50, 52, 50, 28)}<path d="M46 34h56" stroke-width="5" stroke-dasharray="6 2"/>${mass(106, 38, 106, 52)}` + text(8, 26, 'Rollladenpanzer', 9) + text(8, 14, 'außen', 9) + text(8, 88, 'innen', 9), 'Rollladenpanzer eng vor dem Flügel, von außen gesehen'),
-    fuehrung: svg('<rect x="24" y="10" width="72" height="72"/><rect x="30" y="16" width="60" height="60" fill="currentColor" fill-opacity=".08"/><path d="M16 10v72M104 10v72" stroke-width="6"/>' + pfeil(8, 50, 16, 50) + pfeil(112, 50, 104, 50) + text(24, 8, 'von außen gesehen', 8), 'Führungsschienen eng am Rahmen, von außen gesehen'),
-    haengend: svg('<rect x="16" y="6" width="88" height="14" rx="2" fill="currentColor" fill-opacity=".2"/><path d="M22 20v64M98 20v64" stroke-width="4"/><path d="M26 26h68M26 32h68" stroke-width="2"/><rect x="26" y="40" width="68" height="44" stroke-dasharray="4 4"/>' + pfeil(60, 34, 60, 46), 'Rollladen hängt in die Öffnung'),
+    // ---------- Rollladen und Platz ----------
+    rollladen: svg(`<rect x="14" y="6" width="92" height="15" rx="2" fill="currentColor" fill-opacity=".22" stroke-width="1.6"/><path d="M20 21v60M100 21v60" stroke-width="3.4"/><path d="M26 30h68M26 39h68M26 48h68M26 57h68M26 66h68" stroke-width="1.3"/>` + unterschrift('Kasten und Schienen'), 'Rollladen mit Kasten und Führungsschienen'),
+    platz: svg(`${rahmen(10, 8, 100, 62)}${fluegel(34, 26, 52, 36)}`
+        + `${mass(12, 44, 32, 44, null)}${mass(88, 44, 108, 44, null)}${mass(60, 10, 60, 24, null)}`
+        + text(16, 41, '?', 10) + text(96, 41, '?', 10) + text(63, 20, '?', 10)
+        + unterschrift('ringsum frei?'), 'Freie Fläche ringsum auf dem Blendrahmen'),
+    panzer: svg(`${rahmen(16, 40, 34, 38)}${fluegel(50, 50, 54, 28)}<path d="M44 30h64" stroke-width="4.5" stroke-dasharray="7 3"/>${mass(106, 34, 106, 50, null)}` + text(46, 22, 'Panzer', 8.5) + seiten(), 'Rollladenpanzer eng vor dem Flügel, von außen gesehen'),
+    fuehrung: svg(`${rahmen(22, 6, 76, 64)}${fluegel(32, 16, 56, 44)}<path d="M14 6v64M106 6v64" stroke-width="5"/>${pfeil(6, 40, 14, 40)}${pfeil(114, 40, 106, 40)}` + unterschrift('von außen gesehen'), 'Führungsschienen eng am Blendrahmen, von außen gesehen'),
+    haengend: svg(`<rect x="14" y="6" width="92" height="13" rx="2" fill="currentColor" fill-opacity=".22" stroke-width="1.6"/><path d="M20 19v62M100 19v62" stroke-width="3.4"/><path d="M26 25h68M26 32h68" stroke-width="1.8"/>${gewebe(26, 42, 68, 32)}${pfeil(60, 34, 60, 46)}` + unterschrift('hängt herunter'), 'Rollladen hängt in die Öffnung'),
 
-    regenschiene: svg(`${fluegel(46, 10, 30, 44)}${rahmen(14, 54, 90, 16)}<path d="M40 56h40v8h8" stroke-width="3.5"/>` + text(8, 86, 'Regenschiene am Blendrahmen', 9), 'Regenschiene unten am Blendrahmen'),
-    wetterschenkel: svg(`${fluegel(46, 10, 30, 48)}${rahmen(14, 60, 90, 14)}<path d="M76 40h16l-4 12H76z" fill="currentColor" fill-opacity=".35"/>` + text(8, 86, 'Wetterschenkel am Flügel', 9), 'Wetterschenkel unten am Flügel'),
-    schwelle: svg('<path d="M4 70h40M76 70h40"/><rect x="44" y="60" width="32" height="10" fill="currentColor" fill-opacity=".35"/><rect x="50" y="10" width="20" height="50" fill="currentColor" fill-opacity=".08"/>' + text(30, 86, 'Schwelle', 10), 'Türschwelle'),
-    trittschutz: svg('<path d="M4 76h112"/><rect x="36" y="62" width="48" height="14" fill="currentColor" fill-opacity=".35"/><path d="M40 62h40v-6H40z" fill="currentColor" fill-opacity=".6"/><rect x="50" y="8" width="20" height="48" fill="currentColor" fill-opacity=".08"/>' + text(28, 90, 'Trittschutz', 10), 'Trittschutzprofil unten an der Tür'),
-    mauerleibung: svg(`${wand(4, 20, 30, 60)}${wand(86, 20, 30, 60)}${rahmen(34, 44, 52, 12)}<path d="M34 20v24M86 20v24" stroke-width="4"/>` + text(8, 14, 'außen', 10) + text(8, 88, 'innen', 10), 'Mauerleibung: Wandfläche neben dem Rahmen, von außen gesehen'),
+    // ---------- Unterer Anschluss ----------
+    regenschiene: svg(`${fluegel(44, 8, 34, 44)}${rahmen(14, 52, 92, 18)}<path d="M38 54h42v8h10" stroke-width="3.4"/>` + unterschrift('am Blendrahmen'), 'Regenschiene unten am Blendrahmen'),
+    wetterschenkel: svg(`${fluegel(44, 8, 34, 48)}${rahmen(14, 58, 92, 16)}<path d="M78 38h16l-5 14H78z" fill="currentColor" fill-opacity=".38" stroke-width="1.6"/>` + unterschrift('am Flügel unten'), 'Wetterschenkel unten am Flügel'),
+    schwelle: svg(`<path d="M4 68h42M74 68h42" stroke-width="2.4"/>${rahmen(46, 58, 28, 10)}${fluegel(52, 10, 18, 48)}` + unterschrift('Schwelle'), 'Türschwelle'),
+    trittschutz: svg(`<path d="M4 74h112" stroke-width="2.4"/>${rahmen(36, 60, 48, 14)}<path d="M40 60h40v-7H40z" fill="currentColor" fill-opacity=".55" stroke-width="1.6"/>${fluegel(50, 8, 20, 45)}` + unterschrift('Trittschutzprofil'), 'Trittschutzprofil unten an der Tür'),
+    mauerleibung: svg(`${wand(4, 16, 30, 54)}${wand(86, 16, 30, 54)}${rahmen(34, 40, 52, 14)}<path d="M34 16v24M86 16v24" stroke-width="3"/>${mass(34, 28, 20, 28, null)}${mass(86, 28, 100, 28, null)}` + unterschrift('Wandfläche daneben') + text(4, 12, 'außen', 8.5), 'Mauerleibung: Wandfläche neben dem Blendrahmen, von außen gesehen'),
 
-    innenfutter: svg('<path d="M10 20L100 20" stroke-width="1.5"/><path d="M30 40l40 20" stroke-width="6"/><path d="M30 40v44M70 60l40 0" /><path d="M30 40L14 30" stroke-dasharray="4 4"/>' + text(60, 84, 'Innenfutter', 10), 'Innenfutter am Dachfenster'),
+    // ---------- Dachfenster ----------
+    innenfutter: svg('<path d="M12 18h96" stroke-width="1.3"/><path d="M30 38l42 22" stroke-width="5"/><path d="M30 38v44M72 60h38" stroke-width="2"/><path d="M30 38L14 28" stroke-width="1.3" stroke-dasharray="4 3"/>' + unterschrift('Innenfutter'), 'Innenfutter am Dachfenster'),
 
-    auflage: svg(`${wand(8, 6, 104, 14)}<rect x="16" y="26" width="88" height="56" stroke-width="4"/><path d="M28 38h64v32H28z" stroke-dasharray="4 4"/>`, 'Auflage der Lichtschachtabdeckung'),
-    'auflage-4': svg('<rect x="14" y="14" width="92" height="66" stroke-width="5"/><path d="M26 26h68v42H26z" stroke-dasharray="4 4"/>' + text(46, 50, '4 Seiten', 10), 'Auflage auf 4 Seiten'),
-    'auflage-3': svg(`${wand(8, 4, 104, 16)}<path d="M14 20v60h92V20" stroke-width="5"/><path d="M26 22h68v46H26z" stroke-dasharray="4 4"/>` + text(40, 50, '3 Seiten', 10), 'Auflage auf 3 Seiten, hinten Hauswand'),
-    kellerfenster: svg(`${wand(4, 4, 22, 82)}<rect x="26" y="30" width="22" height="30" fill="currentColor" fill-opacity=".2"/><path d="M26 22h90" stroke-width="4"/>${mass(26, 70, 48, 70)}` + text(56, 72, 'Überstand', 10), 'Kellerfenster steht in den Schacht'),
+    // ---------- Lichtschacht ----------
+    auflage: svg(`${wand(8, 6, 104, 13)}${rahmen(14, 24, 92, 56)}${gewebe(26, 36, 68, 32)}`, 'Auflage der Lichtschachtabdeckung'),
+    'auflage-4': svg(`${rahmen(12, 12, 96, 68)}${gewebe(26, 26, 68, 40)}` + text(40, 50, '4 Seiten', 10), 'Auflage auf 4 Seiten'),
+    'auflage-3': svg(`${wand(8, 4, 104, 14)}<path d="M14 18v62h92V18" stroke-width="4"/>${gewebe(26, 24, 68, 44)}` + text(36, 50, '3 Seiten', 10), 'Auflage auf 3 Seiten, hinten Hauswand'),
+    kellerfenster: svg(`${wand(4, 4, 20, 72)}${fluegel(24, 26, 24, 30)}<path d="M24 18h92" stroke-width="3.4"/>${mass(24, 66, 48, 66, null)}` + unterschrift('Überstand'), 'Kellerfenster steht in den Schacht'),
 
-    spannrahmen: svg('<rect x="20" y="8" width="80" height="74" rx="2" stroke-width="5"/><path d="M28 16h64v58H28z" stroke-dasharray="3 3" stroke-width="1.5"/><path d="M36 16v58M48 16v58M60 16v58M72 16v58M84 16v58" stroke-width=".8"/>', 'Spannrahmen, fest eingesetzt'),
-    rollo: svg('<rect x="18" y="6" width="84" height="14" rx="3" fill="currentColor" fill-opacity=".2"/><path d="M24 20v66M96 20v66" stroke-width="4"/><path d="M28 20h64v44H28z" stroke-dasharray="3 3" stroke-width="1.5"/><path d="M28 64h64" stroke-width="4"/>' + pfeil(60, 76, 60, 60), 'Rollo zum Aufrollen'),
-    pendel: svg('<path d="M10 84h100"/><rect x="40" y="10" width="40" height="74"/>' + pfeil(60, 48, 24, 48) + pfeil(60, 48, 96, 48), 'Pendelflügel öffnet in beide Richtungen'),
-    dreh: svg('<path d="M10 84h100"/><rect x="30" y="10" width="40" height="74"/><path d="M70 30q30 10 30 44" stroke-dasharray="4 4"/>' + pfeil(96, 60, 100, 74), 'Drehrahmen öffnet in eine Richtung'),
-    plissee: svg('<rect x="10" y="8" width="100" height="74"/><path d="M16 12l6 70 6-70 6 70 6-70 6 70" stroke-width="1.5"/><path d="M52 12v70" stroke-width="4"/>' + pfeil(64, 46, 96, 46), 'Plissee zum seitlichen Falten'),
-    schiebe: svg('<path d="M6 82h108M6 8h108"/><rect x="12" y="12" width="52" height="66" fill="currentColor" fill-opacity=".08"/><rect x="56" y="16" width="52" height="62" stroke-dasharray="4 3"/>' + pfeil(88, 46, 108, 46), 'Schiebeanlage'),
-    schieberahmen: svg('<path d="M6 76L86 14"/><path d="M34 70l52-40 8 10-52 40z" stroke-dasharray="4 3"/>' + pfeil(64, 62, 84, 46), 'Schieberahmen am Dachfenster'),
+    // ---------- Bedienarten ----------
+    spannrahmen: svg(`${rahmen(18, 8, 84, 74)}${gewebe(26, 16, 68, 58)}<path d="M34 16v58M50 16v58M66 16v58M82 16v58" stroke-width=".8"/>`, 'Spannrahmen, fest eingesetzt'),
+    rollo: svg(`<rect x="16" y="6" width="88" height="15" rx="3" fill="currentColor" fill-opacity=".22" stroke-width="1.6"/><path d="M22 21v62M98 21v62" stroke-width="3.4"/>${gewebe(26, 21, 68, 42)}<path d="M26 63h68" stroke-width="3.4"/>${pfeil(60, 76, 60, 60)}`, 'Rollo zum Aufrollen'),
+    pendel: svg(`<path d="M8 82h104" stroke-width="2.4"/>${rahmen(40, 10, 40, 72)}${pfeil(60, 46, 26, 46)}${pfeil(60, 46, 94, 46)}`, 'Pendelflügel öffnet in beide Richtungen'),
+    dreh: svg(`<path d="M8 82h104" stroke-width="2.4"/>${rahmen(28, 10, 40, 72)}<path d="M68 28q30 10 30 44" stroke-width="1.4" stroke-dasharray="4 3"/>${pfeil(94, 58, 98, 74)}`, 'Drehrahmen öffnet in eine Richtung'),
+    plissee: svg(`${rahmen(10, 8, 100, 72)}<path d="M16 12l6 66 6-66 6 66 6-66 6 66" stroke-width="1.4"/><path d="M52 12v66" stroke-width="3.4"/>${pfeil(64, 44, 96, 44)}`, 'Plissee zum seitlichen Falten'),
+    schiebe: svg(`<path d="M6 80h108M6 10h108" stroke-width="2"/>${fluegel(12, 14, 52, 62)}${gewebe(56, 18, 52, 54)}${pfeil(88, 44, 108, 44)}`, 'Schiebeanlage'),
+    schieberahmen: svg(`<path d="M6 76L86 14" stroke-width="2.4"/><path d="M34 70l52-40 8 10-52 40z" stroke-width="1.6" stroke-dasharray="4 3"/>${pfeil(64, 62, 84, 46)}`, 'Schieberahmen am Dachfenster'),
 
-    einbauweise: svg(`${wand(2, 30, 18, 40)}${rahmen(20, 50, 18, 10)}<path d="M20 44h18" stroke-dasharray="3 3"/>${wand(42, 30, 12, 40)}${wand(70, 30, 12, 40)}${rahmen(54, 50, 16, 10)}<path d="M56 50h12" stroke-dasharray="3 3" stroke-width="3"/>${wand(86, 30, 6, 40)}${wand(114, 30, 6, 40)}${rahmen(92, 56, 22, 10)}<path d="M92 40h22" stroke-dasharray="3 3" stroke-width="3"/>` + text(8, 84, 'AMB', 9) + text(50, 84, 'LMB', 9) + text(92, 84, 'LMM', 9), 'Einbauweisen AMB, LMB, LMM'),
-    amb: svg(`${wand(4, 20, 26, 60)}${wand(90, 20, 26, 60)}${rahmen(30, 50, 60, 14)}<path d="M24 40h72" stroke-dasharray="5 4" stroke-width="3.5"/>` + text(8, 14, 'außen', 10) + text(8, 88, 'innen', 10), 'AMB: auf dem Blendrahmen, von außen gesehen'),
-    lmb: svg(`${wand(4, 20, 26, 60)}${wand(90, 20, 26, 60)}${rahmen(30, 50, 14, 14)}${rahmen(76, 50, 14, 14)}<path d="M44 52h32" stroke-dasharray="5 4" stroke-width="3.5"/>` + text(8, 14, 'außen', 10) + text(8, 88, 'innen', 10), 'LMB: in der Öffnung des Blendrahmens, von außen gesehen'),
-    lmm: svg(`${wand(4, 20, 26, 60)}${wand(90, 20, 26, 60)}${rahmen(30, 58, 60, 14)}<path d="M30 32h60" stroke-dasharray="5 4" stroke-width="3.5"/>` + text(8, 14, 'außen', 10) + text(8, 88, 'innen', 10), 'LMM: in der Mauerleibung, von außen gesehen'),
+    // ---------- Einbauweisen ----------
+    einbauweise: svg(`${wand(2, 28, 16, 44)}${rahmen(18, 48, 18, 12)}${netz(18, 42, 36, 42)}`
+        + `${wand(42, 28, 10, 44)}${wand(70, 28, 10, 44)}${rahmen(52, 48, 18, 12)}${netz(54, 50, 68, 50)}`
+        + `${wand(86, 28, 6, 44)}${wand(114, 28, 6, 44)}${rahmen(92, 54, 22, 12)}${netz(92, 38, 114, 38)}`
+        + text(16, 84, 'auf', 8) + text(50, 84, 'im', 8) + text(88, 84, 'Leibung', 8), 'Einbauweisen: auf dem Blendrahmen, im Blendrahmen, in der Mauerleibung'),
+    amb: svg(`${wand(4, 18, 26, 62)}${wand(90, 18, 26, 62)}${rahmen(30, 48, 60, 16)}${netz(24, 38, 96, 38)}` + seiten(), 'auf den Blendrahmen gesetzt, von außen gesehen'),
+    lmb: svg(`${wand(4, 18, 26, 62)}${wand(90, 18, 26, 62)}${rahmen(30, 48, 15, 16)}${rahmen(75, 48, 15, 16)}${netz(45, 52, 75, 52)}` + seiten(), 'in den Blendrahmen eingesetzt, von außen gesehen'),
+    lmm: svg(`${wand(4, 18, 26, 62)}${wand(90, 18, 26, 62)}${rahmen(30, 56, 60, 16)}${netz(30, 32, 90, 32)}` + seiten(), 'in die Mauerleibung gesetzt, von außen gesehen'),
 
-    'mass-seitlich': svg(`<path d="M20 20v60" stroke-width="7"/>${rahmen(24, 20, 28, 60)}${fluegel(52, 20, 50, 60)}${mass(26, 50, 50, 50)}` + text(28, 14, 'Auflage', 10), 'freie Auflagefläche seitlich'),
-    'mass-fuehrung': svg(`<path d="M22 14v66" stroke-width="7"/>${rahmen(40, 14, 26, 66)}${fluegel(66, 14, 44, 66)}${mass(26, 48, 40, 48)}` + text(8, 90, 'Führung ↔ Rahmen', 9), 'Abstand Führungsschiene zum Blendrahmen'),
-    'mass-oben': svg(`<rect x="10" y="6" width="100" height="14" fill="currentColor" fill-opacity=".2"/>${rahmen(10, 20, 100, 22)}${fluegel(22, 42, 76, 42)}${mass(60, 22, 60, 42)}` + text(66, 36, 'oben frei', 9), 'freie Blendrahmenfläche oben'),
-    'mass-tiefe': svg(`${rahmen(10, 58, 100, 16)}<path d="M8 20h104" stroke-width="5" stroke-dasharray="7 2"/>${mass(60, 24, 60, 56)}` + text(66, 44, 'Einbautiefe', 9), 'Platz vor dem Blendrahmen'),
+    // ---------- Maße ----------
+    'mass-seitlich': svg(`<path d="M18 20v58" stroke-width="6"/>${rahmen(24, 20, 30, 58)}${fluegel(54, 20, 50, 58)}${mass(26, 52, 52, 52, null)}` + text(8, 14, 'Schiene', 8) + text(62, 14, 'Flügel', 8) + unterschrift('seitliche Auflage'), 'freie Auflagefläche seitlich am Blendrahmen'),
+    'mass-fuehrung': svg(`<path d="M20 14v64" stroke-width="6"/>${rahmen(40, 14, 28, 64)}${fluegel(68, 14, 42, 64)}${mass(24, 46, 40, 46, null)}` + text(8, 12, 'Schiene', 8) + unterschrift('Abstand zum Rahmen'), 'Abstand der Führungsschiene zum Blendrahmen'),
+    'mass-oben': svg(`<rect x="10" y="4" width="66" height="13" rx="2" fill="currentColor" fill-opacity=".20" stroke-width="1.4" stroke-dasharray="3 3"/>${rahmen(10, 19, 100, 20)}${fluegel(22, 39, 76, 38)}${mass(66, 19, 66, 39, null)}` + text(80, 14, 'Kasten', 8) + unterschrift('freie Fläche oben'), 'freie Blendrahmenfläche oben über dem Flügel'),
+    'mass-tiefe': svg(`${rahmen(10, 56, 100, 18)}<path d="M8 22h104" stroke-width="4.5" stroke-dasharray="7 3"/>${mass(60, 26, 60, 54, 'Tiefe')}` + text(8, 14, 'Rollladen', 8) + unterschrift('Platz davor'), 'Platz vor dem Blendrahmen bis zum Rollladen'),
 };
 
 globalThis.H2Skizzen = H2Skizzen;

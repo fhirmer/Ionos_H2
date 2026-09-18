@@ -1,4 +1,4 @@
-/* H2 Produktfinder 3.2 – mobil zuerst (360 px), ohne Framework und ohne externe Abhängigkeiten */
+/* H2 Produktfinder 3.3 – mobil zuerst (360 px), ohne Framework und ohne externe Abhängigkeiten */
 :root {
   --primaer: #008080;
   --primaer-dunkel: #006666;
@@ -248,3 +248,10 @@ small { font-size: 16px; }
 .eigenschaften li { padding-left: .9rem; position: relative; }
 .eigenschaften li::before { content: "·"; position: absolute; left: 0; font-weight: 700; }
 .eigenschaften small { display: inline; }
+
+/* Warum steht diese Lösung vorn */
+.warum-zuerst { margin: .8rem 0 0; padding: .7rem .9rem; border-left: 3px solid var(--primaer); background: var(--primaer-hell); border-radius: 0 var(--radius) var(--radius) 0; }
+.warum-zuerst h3 { margin: 0 0 .3rem; font-size: 1rem; }
+.warum-zuerst p { margin: .2rem 0; font-size: .95rem; }
+.weg-liste { margin: .4rem 0 .6rem; padding-left: 1.3rem; display: grid; gap: .5rem; }
+.weg-liste li { line-height: 1.45; }

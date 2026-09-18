@@ -236,7 +236,9 @@ function erstelleFinder(daten, katalog) {
                     gesehen.add(frage.id);
                     if (!sichtbar(frage, a)) continue; // für dieses Element nicht abfragbar
                     if (!beantwortet(a, frage.id)) {
-                        offen++;
+                        // Eine grobe Vorfrage („insgesamt genug Platz?“) ersetzt die Detailfragen,
+                        // sie macht Rudis Zuordnung aber nicht unsicher, solange sie offen ist.
+                        if (!frage.grob) offen++;
                         continue;
                     }
                     const b = beziehung(frage, antwortVon(a, frage), labels);
@@ -418,6 +420,45 @@ function erstelleFinder(daten, katalog) {
             || x.variante.seite - y.variante.seite;
     }
 
+    // Warum steht diese Lösung vorn? Die Antwort ist genau der erste Schritt der Sortierung,
+    // bei dem sich die beiden vordersten Lösungen unterscheiden (gleiche Reihenfolge wie vergleiche()).
+    const STUFE_GRUND = {
+        1: 'Rudi empfiehlt genau diese Lösung für deine Situation',
+        2: 'Rudi empfiehlt sie für diese Situation; einzelne Angaben fehlen noch',
+        3: 'der Einsatzzweck im Hauptkatalog passt zu deinen Angaben',
+        4: 'sie ist laut Hauptkatalog technisch möglich',
+        5: 'Sonderlösung aus dem Masterkatalog',
+    };
+
+    function warumZuerst(x, y) {
+        if (!x) return null;
+        const rudiWeg = x.rudi ? [x.rudi.gruppe, x.rudi.untergruppe, x.rudi.situation].filter(Boolean).join(' › ') : null;
+        const stufe = x.stufe <= 2 && rudiWeg
+            ? `${STUFE_GRUND[x.stufe]} (Rudi führt sie unter „${rudiWeg}“)`
+            : (STUFE_GRUND[x.stufe] || '');
+        if (!y) return {stufe, gegen: null, grund: 'Es bleibt nur diese eine Lösung übrig.'};
+        const nutzen = (b) => b.treffer * 2 - b.konflikte;
+        const sichtbar_ = (b) => sichtbareBefestigung(b.variante);
+        const schritte = [
+            [x.stufe !== y.stufe, `sie steht eine Stufe höher als ${y.variante.code}`],
+            [Boolean(x.rudi?.nachrangig) !== Boolean(y.rudi?.nachrangig), 'Rudi führt sie vor der anderen'],
+            [x.zweckTreffer !== y.zweckTreffer, `der Einsatzzweck im Hauptkatalog trifft ${x.zweckTreffer} deiner Angaben, bei ${y.variante.code} sind es ${y.zweckTreffer}`],
+            [x.zweckOffen !== y.zweckOffen, `zu ihr sind weniger Merkmale offen (${x.zweckOffen} gegen ${y.zweckOffen})`],
+            [Boolean(x.variante.hk?.zusatz) !== Boolean(y.variante.hk?.zusatz), `${y.variante.code} ist im Hauptkatalog nur eine Zusatzvariante`],
+            [nutzen(x) !== nutzen(y), `sie passt zu mehr deiner Angaben (${x.treffer} Treffer, ${x.konflikte} Abweichungen gegen ${y.treffer} und ${y.konflikte})`],
+            [x.spezifitaet !== y.spezifitaet, 'ihr Grenzwert passt genauer zu deinem gemessenen Maß'],
+            [x.pruefpunkte.length !== y.pruefpunkte.length, `sie lässt weniger beim Aufmaß offen (${x.pruefpunkte.length} gegen ${y.pruefpunkte.length} Prüfpunkte)`],
+            [x.qualitaet !== y.qualitaet, 'Rudi nennt sie die hochwertigere Lösung'],
+            [sichtbar_(x) !== sichtbar_(y), 'bei ihr ist weniger Befestigung sichtbar'],
+        ];
+        const treffer = schritte.find(([anders]) => anders);
+        return {
+            stufe,
+            gegen: y.variante.code,
+            grund: treffer ? treffer[1] : 'beide sind gleichwertig; sie steht im Katalog weiter vorn',
+        };
+    }
+
     function auswerten(a) {
         const bewertet = varianten.filter((v) => imPool(v, a)).map((v) => bewerte(v, a));
         const passend = bewertet.filter((b) => !b.ausgeschlossen).sort(vergleiche);
@@ -548,7 +589,10 @@ function erstelleFinder(daten, katalog) {
                 const poolOhne = istBeantwortet ? auswerten(ohne).passend.map((b) => b.variante) : alle;
                 const antworten = antwortenFuer(frage, ohne, poolOhne);
                 if (!istBeantwortet && !frage.pflicht) {
-                    const pool = frage.id === 'system' ? alle : frage.typ === 'mass' ? alle.slice(0, VORNE_MASS) : vorne;
+                    // Die billige Vorprüfung fragt nur: Reagiert überhaupt eine Variante darauf?
+                    // Sie darf nicht auf die vordersten Lösungen schauen – sonst fiele genau die
+                    // Frage weg, die eine andere Variante nach vorn holt (z. B. „welche Seite ist eng?“).
+                    const pool = frage.typ === 'mass' ? alle.slice(0, VORNE_MASS) : alle;
                     if (wirkung(frage, a, pool) <= 0) continue;
                     // Maße sind freiwillig und schließen erst mit gemessenem Wert aus: Prüfung entfällt hier
                     if (frage.typ !== 'mass' && !frage.immerZeigen && frage.id !== 'system' && !aendertEmpfehlung(frage, a, jetzt, antworten)) continue;
@@ -574,6 +618,7 @@ function erstelleFinder(daten, katalog) {
         }
         return {
             empfehlung: passend[0] || null,
+            warumZuerst: warumZuerst(passend[0], passend[1]),
             weitere: passend.slice(1, 3),
             alle: passend,
             ausgeschlossen,
@@ -581,7 +626,7 @@ function erstelleFinder(daten, katalog) {
         };
     }
 
-    return {varianten, fragen, bloecke, abschnitte, auswerten, bewerte, ergebnis, naechsteFrage, offeneFragen, antwortenFuer, nurSortierung, KONFLIKTE, SYSTEM_TEXT, UNBEKANNT, SPAETER};
+    return {varianten, fragen, bloecke, abschnitte, auswerten, bewerte, ergebnis, warumZuerst, naechsteFrage, offeneFragen, antwortenFuer, nurSortierung, KONFLIKTE, SYSTEM_TEXT, UNBEKANNT, SPAETER};
 }
 
 globalThis.H2Engine = {erstelleFinder, UNBEKANNT, SPAETER};
