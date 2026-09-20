@@ -163,8 +163,8 @@ const fragen = [
         frage: 'Ist das Fenster rechteckig?',
         labels: ['serie.biegbar'],
         antworten: [
-            {id: 'rechteckig', text: 'Ja, rechteckig'},
-            {id: 'sonderform', text: 'Nein: Bogen oder schiefwinklig', setzt: {'serie.biegbar': true}},
+            {id: 'rechteckig', text: 'Ja, rechteckig', skizze: 'rechteckig'},
+            {id: 'sonderform', text: 'Nein: Bogen oder schiefwinklig', skizze: 'bogen', setzt: {'serie.biegbar': true}},
         ],
     },
 
@@ -249,7 +249,7 @@ const fragen = [
         frage: 'Ist der Rollladen geteilt (zwei Rollläden nebeneinander)?',
         labels: ['platz.rollladen_geteilt'],
         antworten: [
-            {id: 'ja', text: 'Ja, geteilt', setzt: {'platz.rollladen_geteilt': true}},
+            {id: 'ja', text: 'Ja, geteilt', skizze: 'geteilt', setzt: {'platz.rollladen_geteilt': true}},
             {id: 'nein', text: 'Nein', setzt: {'platz.rollladen_geteilt': false}},
         ],
     },
@@ -331,13 +331,13 @@ const fragen = [
         }),
         labels: ['geometrie.boden_eben', 'geometrie.boden_uneben', 'geometrie.abdichtung_zum_blendrahmen'],
         antworten: [
-            {id: 'eben', text: 'Eben', setzt: {'geometrie.boden_eben': true, 'geometrie.boden_uneben': false,
+            {id: 'eben', text: 'Eben', skizze: 'boden-eben', setzt: {'geometrie.boden_eben': true, 'geometrie.boden_uneben': false,
                 'geometrie.abdichtung_zum_blendrahmen': false}},
-            {id: 'uneben', text: 'Uneben oder ansteigend', setzt: {'geometrie.boden_uneben': true,
+            {id: 'uneben', text: 'Uneben oder ansteigend', skizze: 'boden-uneben', setzt: {'geometrie.boden_uneben': true,
                 'geometrie.boden_eben': false, 'geometrie.abdichtung_zum_blendrahmen': false}},
             // RO4/9 und RO5/9 dichten nicht nach unten, sondern nach hinten zum Blendrahmen ab –
             // die Lösung für Fensterbänke, auf denen unten nichts aufsitzen soll.
-            {id: 'blendrahmen', text: 'Unten soll nichts aufsitzen', hinweis: 'Abdichtung nach hinten zum Blendrahmen',
+            {id: 'blendrahmen', text: 'Unten soll nichts aufsitzen', hinweis: 'Abdichtung nach hinten zum Blendrahmen', skizze: 'boden-blendrahmen',
                 nur: (a) => a.system === 'rollo',
                 setzt: {'geometrie.abdichtung_zum_blendrahmen': true, 'geometrie.boden_eben': false,
                     'geometrie.boden_uneben': false}},
@@ -380,8 +380,8 @@ const fragen = [
         skizze: 'innenfutter',
         labels: ['dachfenster.innenfutter_unten_gerade_oben_gerade', 'dachfenster.innenfutter_unten_senkrecht'],
         antworten: [
-            {id: 'gerade', text: 'Im rechten Winkel zum Fenster', setzt: {'dachfenster.innenfutter_unten_gerade_oben_gerade': true, 'dachfenster.innenfutter_unten_senkrecht': false}},
-            {id: 'senkrecht', text: 'Senkrecht nach unten', setzt: {'dachfenster.innenfutter_unten_senkrecht': true, 'dachfenster.innenfutter_unten_gerade_oben_gerade': false}},
+            {id: 'gerade', text: 'Im rechten Winkel zum Fenster', skizze: 'innenfutter-gerade', setzt: {'dachfenster.innenfutter_unten_gerade_oben_gerade': true, 'dachfenster.innenfutter_unten_senkrecht': false}},
+            {id: 'senkrecht', text: 'Senkrecht nach unten', skizze: 'innenfutter-senkrecht', setzt: {'dachfenster.innenfutter_unten_senkrecht': true, 'dachfenster.innenfutter_unten_gerade_oben_gerade': false}},
         ],
     },
     {
@@ -391,8 +391,8 @@ const fragen = [
         skizze: 'innenfutter',
         labels: ['dachfenster.innenfutter_unten_gerade_oben_gerade', 'dachfenster.innenfutter_oben_waagerecht'],
         antworten: [
-            {id: 'gerade', text: 'Im rechten Winkel zum Fenster', setzt: {'dachfenster.innenfutter_unten_gerade_oben_gerade': true, 'dachfenster.innenfutter_oben_waagerecht': false}},
-            {id: 'waagerecht', text: 'Waagerecht', setzt: {'dachfenster.innenfutter_oben_waagerecht': true, 'dachfenster.innenfutter_unten_gerade_oben_gerade': false}},
+            {id: 'gerade', text: 'Im rechten Winkel zum Fenster', skizze: 'innenfutter-oben-gerade', setzt: {'dachfenster.innenfutter_unten_gerade_oben_gerade': true, 'dachfenster.innenfutter_oben_waagerecht': false}},
+            {id: 'waagerecht', text: 'Waagerecht', skizze: 'innenfutter-waagerecht', setzt: {'dachfenster.innenfutter_oben_waagerecht': true, 'dachfenster.innenfutter_unten_gerade_oben_gerade': false}},
         ],
     },
     {
@@ -401,7 +401,7 @@ const fragen = [
         frage: 'Kann direkt im Innenfutter montiert werden?',
         labels: ['lage.innenfutter', 'dachfenster.ohne_innenfutter_montage'],
         antworten: [
-            {id: 'ja', text: 'Ja', setzt: {'lage.innenfutter': true}},
+            {id: 'ja', text: 'Ja', skizze: 'innenfutter-montage', setzt: {'lage.innenfutter': true}},
             {id: 'nein', text: 'Nein, nur auf den Abdeckleisten', setzt: {'dachfenster.ohne_innenfutter_montage': true, 'lage.innenfutter': false},
                 schliesstAus: [{art: 'A4', label: 'lage.innenfutter', grund: 'wird im Innenfutter montiert, das geht hier nicht'}]},
         ],
@@ -428,7 +428,7 @@ const fragen = [
         skizze: 'kellerfenster',
         labels: ['lichtschacht.kellerfenster_ueberstehend'],
         antworten: [
-            {id: 'ja', text: 'Ja', setzt: {'lichtschacht.kellerfenster_ueberstehend': true}},
+            {id: 'ja', text: 'Ja', skizze: 'kellerfenster', setzt: {'lichtschacht.kellerfenster_ueberstehend': true}},
             {id: 'nein', text: 'Nein', setzt: {'lichtschacht.kellerfenster_ueberstehend': false}},
         ],
     },
@@ -436,6 +436,7 @@ const fragen = [
         id: 'gitterrost', abschnitt: 2, block: 'F',
         zeigen: (a) => a.element === 'lichtschacht',
         frage: 'Ist der Gitterrost tragfähig, formstabil und nicht verrostet?',
+        skizze: 'gitterrost',
         antworten: [
             {id: 'ja', text: 'Ja'},
             {id: 'nein', text: 'Nein',
@@ -470,10 +471,10 @@ const fragen = [
         }),
         labels: ['bedienung.oeffnet_nach_aussen', 'bedienung.oeffnet_nach_innen'],
         antworten: [
-            {id: 'aussen', text: 'Nach außen', hinweis: 'ins Freie; der Rahmen sitzt dann außen',
+            {id: 'aussen', text: 'Nach außen', hinweis: 'ins Freie; der Rahmen sitzt dann außen', skizze: 'richtung-aussen',
                 richtung: 'bedienung.oeffnet_nach_aussen',
                 setzt: {'bedienung.oeffnet_nach_aussen': true, 'bedienung.oeffnet_nach_innen': false}},
-            {id: 'innen', text: 'Nach innen', hinweis: 'in den Raum; der Rahmen sitzt dann innen',
+            {id: 'innen', text: 'Nach innen', hinweis: 'in den Raum; der Rahmen sitzt dann innen', skizze: 'richtung-innen',
                 richtung: 'bedienung.oeffnet_nach_innen',
                 setzt: {'bedienung.oeffnet_nach_innen': true, 'bedienung.oeffnet_nach_aussen': false}},
             {id: 'egal', text: 'Egal'},
@@ -483,8 +484,9 @@ const fragen = [
         id: 'tuerschliesser', abschnitt: 1, block: 'G',
         zeigen: (a) => alsTuer(a) && system(a, 'dreh'),
         frage: 'Soll die Tür einen Türschließer bekommen?',
+        skizze: 'tuerschliesser',
         antworten: [
-            {id: 'ja', text: 'Ja', setzt: {'zubehoer.tuerschliesser': true},
+            {id: 'ja', text: 'Ja', skizze: 'tuerschliesser', setzt: {'zubehoer.tuerschliesser': true},
                 schliesstAus: [{art: 'A2', label: 'verbot.tuerschliesser',
                     grund: 'Der Katalog schreibt auf der Seite dieser Variante: Türschließer nicht möglich'}]},
             {id: 'nein', text: 'Nein'},
@@ -539,8 +541,8 @@ const fragen = [
         }),
         labels: ['rahmen.unten_geschlossen', 'rahmen.unten_offen'],
         antworten: [
-            {id: 'geschlossen', text: 'Unten geschlossen', setzt: {'rahmen.unten_geschlossen': true, 'rahmen.unten_offen': false}},
-            {id: 'offen', text: 'Unten offen', setzt: {'rahmen.unten_offen': true, 'rahmen.unten_geschlossen': false}},
+            {id: 'geschlossen', text: 'Unten geschlossen', skizze: 'abschluss-geschlossen', setzt: {'rahmen.unten_geschlossen': true, 'rahmen.unten_offen': false}},
+            {id: 'offen', text: 'Unten offen', skizze: 'abschluss-offen', setzt: {'rahmen.unten_offen': true, 'rahmen.unten_geschlossen': false}},
             {id: 'egal', text: 'Egal'},
         ],
     },
@@ -551,8 +553,8 @@ const fragen = [
         hilfe: 'Zweiflügelig: je Türflügel ein Insektenschutzflügel. Einflügelig: ein Flügel über die ganze Breite oder nur für den Gehflügel.',
         labels: ['geometrie.zweifluegelig'],
         antworten: [
-            {id: 'einer', text: 'Ein Flügel', setzt: {'geometrie.zweifluegelig': false}},
-            {id: 'zwei', text: 'Zwei Flügel', setzt: {'geometrie.zweifluegelig': true}},
+            {id: 'einer', text: 'Ein Flügel', skizze: 'einfluegelig', setzt: {'geometrie.zweifluegelig': false}},
+            {id: 'zwei', text: 'Zwei Flügel', skizze: 'zweifluegelig', setzt: {'geometrie.zweifluegelig': true}},
             {id: 'egal', text: 'Egal'},
         ],
     },
@@ -563,8 +565,8 @@ const fragen = [
         hilfe: 'Sprossenfreie Varianten sehen ruhiger aus; bei großen Elementen kann eine Sprosse nötig sein (Sprossengrenzen im Katalog).',
         labels: ['geometrie.sprossenfrei'],
         antworten: [
-            {id: 'ohne', text: 'Ohne Sprosse', setzt: {'geometrie.sprossenfrei': true}},
-            {id: 'mit', text: 'Sprosse ist in Ordnung', setzt: {'geometrie.sprossenfrei': false}},
+            {id: 'ohne', text: 'Ohne Sprosse', skizze: 'ohne-sprosse', setzt: {'geometrie.sprossenfrei': true}},
+            {id: 'mit', text: 'Sprosse ist in Ordnung', skizze: 'mit-sprosse', setzt: {'geometrie.sprossenfrei': false}},
             {id: 'egal', text: 'Egal'},
         ],
     },
@@ -575,8 +577,8 @@ const fragen = [
         hilfe: 'Ohne Rahmen wird der Drehrahmen direkt am Blendrahmen befestigt.',
         labels: ['montagerahmen.vorhanden', 'montagerahmen.ohne'],
         antworten: [
-            {id: 'ohne', text: 'Ohne Montagerahmen', setzt: {'montagerahmen.ohne': true, 'montagerahmen.vorhanden': false}},
-            {id: 'mit', text: 'Mit Montagerahmen', setzt: {'montagerahmen.vorhanden': true, 'montagerahmen.ohne': false}},
+            {id: 'ohne', text: 'Ohne Montagerahmen', skizze: 'ohne-montagerahmen', setzt: {'montagerahmen.ohne': true, 'montagerahmen.vorhanden': false}},
+            {id: 'mit', text: 'Mit Montagerahmen', skizze: 'mit-montagerahmen', setzt: {'montagerahmen.vorhanden': true, 'montagerahmen.ohne': false}},
             {id: 'egal', text: 'Egal'},
         ],
     },
@@ -585,9 +587,9 @@ const fragen = [
     {
         id: 'mass_seitlich', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
         klassen: [
-            {id: 'eng', text: 'Sehr wenig', hinweis: 'schmaler als ein Finger, unter ca. 15 mm', bis: 15},
-            {id: 'normal', text: 'Fingerbreit', hinweis: 'ungefähr 15 bis 25 mm', ab: 15, bis: 25},
-            {id: 'viel', text: 'Viel Platz', hinweis: 'breiter als ein Daumen, über ca. 25 mm', ab: 25},
+            {skizze: 'spalt-eng', id: 'eng', text: 'Sehr wenig', hinweis: 'schmaler als ein Finger, unter ca. 15 mm', bis: 15},
+            {skizze: 'spalt-mittel', id: 'normal', text: 'Fingerbreit', hinweis: 'ungefähr 15 bis 25 mm', ab: 15, bis: 25},
+            {skizze: 'spalt-weit', id: 'viel', text: 'Viel Platz', hinweis: 'breiter als ein Daumen, über ca. 25 mm', ab: 25},
         ], blick: 'aussen',
         zeigen: (a) => fassade(a) && a.platz !== 'genug',
         frage: 'Wie breit ist die freie Auflagefläche seitlich am Blendrahmen?',
@@ -598,9 +600,9 @@ const fragen = [
     {
         id: 'mass_fuehrung', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
         klassen: [
-            {id: 'eng', text: 'Schiene klebt am Rahmen', hinweis: 'unter ca. 15 mm', bis: 15},
-            {id: 'normal', text: 'Etwas Luft', hinweis: 'ungefähr 15 bis 25 mm', ab: 15, bis: 25},
-            {id: 'viel', text: 'Deutlich Abstand', hinweis: 'über ca. 25 mm', ab: 25},
+            {skizze: 'spalt-eng', id: 'eng', text: 'Schiene klebt am Rahmen', hinweis: 'unter ca. 15 mm', bis: 15},
+            {skizze: 'spalt-mittel', id: 'normal', text: 'Etwas Luft', hinweis: 'ungefähr 15 bis 25 mm', ab: 15, bis: 25},
+            {skizze: 'spalt-weit', id: 'viel', text: 'Deutlich Abstand', hinweis: 'über ca. 25 mm', ab: 25},
         ], blick: 'aussen',
         zeigen: (a) => mitRollladen(a) && a.platz !== 'genug',
         frage: 'Wie weit ist die Führungsschiene vom Blendrahmen entfernt?',
@@ -611,9 +613,9 @@ const fragen = [
     {
         id: 'mass_oben', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
         klassen: [
-            {id: 'eng', text: 'Fast nichts frei', hinweis: 'unter ca. 18 mm', bis: 18},
-            {id: 'normal', text: 'Ein Finger passt', hinweis: 'ungefähr 18 bis 30 mm', ab: 18, bis: 30},
-            {id: 'viel', text: 'Reichlich Platz', hinweis: 'über ca. 30 mm', ab: 30},
+            {skizze: 'spalt-eng', id: 'eng', text: 'Fast nichts frei', hinweis: 'unter ca. 18 mm', bis: 18},
+            {skizze: 'spalt-mittel', id: 'normal', text: 'Ein Finger passt', hinweis: 'ungefähr 18 bis 30 mm', ab: 18, bis: 30},
+            {skizze: 'spalt-weit', id: 'viel', text: 'Reichlich Platz', hinweis: 'über ca. 30 mm', ab: 30},
         ], blick: 'aussen',
         zeigen: (a) => alsFenster(a) && a.platz !== 'genug',
         frage: 'Wie viel Blendrahmenfläche ist oben über dem Flügel frei?',
@@ -624,9 +626,9 @@ const fragen = [
     {
         id: 'mass_tiefe', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
         klassen: [
-            {id: 'eng', text: 'Kaum Luft nach außen', hinweis: 'unter ca. 25 mm', bis: 25},
-            {id: 'normal', text: 'Eine Handbreit knapp', hinweis: 'ungefähr 25 bis 65 mm', ab: 25, bis: 65},
-            {id: 'viel', text: 'Viel Platz nach außen', hinweis: 'über ca. 65 mm', ab: 65},
+            {skizze: 'spalt-eng', id: 'eng', text: 'Kaum Luft nach außen', hinweis: 'unter ca. 25 mm', bis: 25},
+            {skizze: 'spalt-mittel', id: 'normal', text: 'Eine Handbreit knapp', hinweis: 'ungefähr 25 bis 65 mm', ab: 25, bis: 65},
+            {skizze: 'spalt-weit', id: 'viel', text: 'Viel Platz nach außen', hinweis: 'über ca. 65 mm', ab: 65},
         ], blick: 'aussen',
         zeigen: (a) => fassade(a) && a.platz !== 'genug',
         frage: 'Wie viel Platz ist vor dem Blendrahmen bis zum Rollladen?',
@@ -637,9 +639,9 @@ const fragen = [
     {
         id: 'mass_versatz', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
         klassen: [
-            {id: 'kaum', text: 'Kaum zurückversetzt', hinweis: 'unter ca. 8 mm', bis: 8},
-            {id: 'deutlich', text: 'Deutlich zurückversetzt', hinweis: 'ungefähr 8 bis 20 mm', ab: 8, bis: 20},
-            {id: 'stark', text: 'Weit zurückversetzt', hinweis: 'über ca. 20 mm', ab: 20},
+            {skizze: 'spalt-eng', id: 'kaum', text: 'Kaum zurückversetzt', hinweis: 'unter ca. 8 mm', bis: 8},
+            {skizze: 'spalt-mittel', id: 'deutlich', text: 'Deutlich zurückversetzt', hinweis: 'ungefähr 8 bis 20 mm', ab: 8, bis: 20},
+            {skizze: 'spalt-weit', id: 'stark', text: 'Weit zurückversetzt', hinweis: 'über ca. 20 mm', ab: 20},
         ], blick: 'aussen',
         zeigen: (a) => fassade(a) && a.fluegellage !== 'buendig',
         frage: 'Wie tief liegt der Flügel hinter dem Blendrahmen?',
@@ -654,9 +656,9 @@ const fragen = [
     {
         id: 'mass_regenschiene', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
         klassen: [
-            {id: 'buendig', text: 'Schließt bündig ab', hinweis: 'kein nennenswerter Überstand', bis: 3},
-            {id: 'wenig', text: 'Steht wenig vor', hinweis: 'ungefähr 3 bis 12 mm', ab: 3, bis: 12},
-            {id: 'viel', text: 'Steht deutlich vor', hinweis: 'über ca. 12 mm', ab: 12},
+            {skizze: 'spalt-eng', id: 'buendig', text: 'Schließt bündig ab', hinweis: 'kein nennenswerter Überstand', bis: 3},
+            {skizze: 'spalt-mittel', id: 'wenig', text: 'Steht wenig vor', hinweis: 'ungefähr 3 bis 12 mm', ab: 3, bis: 12},
+            {skizze: 'spalt-weit', id: 'viel', text: 'Steht deutlich vor', hinweis: 'über ca. 12 mm', ab: 12},
         ], blick: 'aussen',
         zeigen: (a) => alsFenster(a) && a.regenschiene === 'ja',
         frage: 'Wie weit steht die Regenschiene über den Blendrahmen vor?',
@@ -667,9 +669,9 @@ const fragen = [
     {
         id: 'mass_wetterschenkel', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
         klassen: [
-            {id: 'buendig', text: 'Schließt bündig ab', hinweis: 'kein nennenswerter Überstand', bis: 3},
-            {id: 'wenig', text: 'Steht wenig vor', hinweis: 'ungefähr 3 bis 12 mm', ab: 3, bis: 12},
-            {id: 'viel', text: 'Steht deutlich vor', hinweis: 'über ca. 12 mm', ab: 12},
+            {skizze: 'spalt-eng', id: 'buendig', text: 'Schließt bündig ab', hinweis: 'kein nennenswerter Überstand', bis: 3},
+            {skizze: 'spalt-mittel', id: 'wenig', text: 'Steht wenig vor', hinweis: 'ungefähr 3 bis 12 mm', ab: 3, bis: 12},
+            {skizze: 'spalt-weit', id: 'viel', text: 'Steht deutlich vor', hinweis: 'über ca. 12 mm', ab: 12},
         ], blick: 'aussen',
         zeigen: (a) => alsFenster(a) && a.wetterschenkel === 'ja',
         frage: 'Wie weit steht der Wetterschenkel vor?',
@@ -680,9 +682,9 @@ const fragen = [
     {
         id: 'mass_kellerfenster', abschnitt: 4, block: 'J', typ: 'mass', einheit: 'mm',
         klassen: [
-            {id: 'klein', text: 'Wenig', hinweis: 'bis etwa 90 mm, gut eine Handbreit', bis: 90},
-            {id: 'mittel', text: 'Mittel', hinweis: 'ungefähr 90 bis 110 mm', ab: 90, bis: 110},
-            {id: 'gross', text: 'Weit', hinweis: 'über ca. 110 mm', ab: 110},
+            {skizze: 'spalt-eng', id: 'klein', text: 'Wenig', hinweis: 'bis etwa 90 mm, gut eine Handbreit', bis: 90},
+            {skizze: 'spalt-mittel', id: 'mittel', text: 'Mittel', hinweis: 'ungefähr 90 bis 110 mm', ab: 90, bis: 110},
+            {skizze: 'spalt-weit', id: 'gross', text: 'Weit', hinweis: 'über ca. 110 mm', ab: 110},
         ],
         zeigen: (a) => a.element === 'lichtschacht' && a.kellerfenster === 'ja',
         frage: 'Wie weit steht das Kellerfenster über?',

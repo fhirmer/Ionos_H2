@@ -12,7 +12,7 @@ globalThis.H2Finder = {finder};
 if (typeof document === 'undefined') return;
 
 const SPEICHER = 'h2-produktfinder-3';
-const VERSION = '3.5';
+const VERSION = '3.6';
 const ART = {
     A1: 'Praxis-Ausschluss (Rudi)',
     A2: 'laut Katalog nicht geeignet',
@@ -115,13 +115,45 @@ function ueberspringe(nr) {
         if (String(abschnitt.nr) !== String(nr)) continue;
         for (const eintrag of abschnitt.eintraege) {
             if (eintrag.beantwortet || eintrag.frage.pflicht) continue;
-            const wert = eintrag.frage.typ === 'mehrfach' ? [] : eintrag.frage.typ === 'mass' ? SPAETER : UNBEKANNT;
-            state.antworten[eintrag.frage.id] = wert;
-            state.verlauf = [...state.verlauf.filter((x) => x !== eintrag.frage.id), eintrag.frage.id];
+            setzeOffen(eintrag.frage);
         }
     }
     speichern();
     zeichne(true);
+}
+
+// Der Wert, mit dem eine übersprungene Frage beantwortet wird. Keiner davon schließt je aus:
+// „Weiß ich nicht“ und „später messen“ erzeugen Prüfpunkte fürs Aufmaß.
+const offenerWert = (frage) => (frage.typ === 'mehrfach' ? [] : frage.typ === 'mass' ? SPAETER : UNBEKANNT);
+
+function setzeOffen(frage) {
+    state.antworten[frage.id] = offenerWert(frage);
+    state.verlauf = [...state.verlauf.filter((x) => x !== frage.id), frage.id];
+}
+
+// Alle Maßfragen auf einmal offen lassen. Der Verlauf geht danach mit den übrigen Fragen weiter.
+function ueberspringeMasse() {
+    // Eine beantwortete Frage kann die nächste sichtbar machen, deshalb mehrere Durchgänge.
+    for (let runde = 0; runde < 12; runde++) {
+        const masse = finder.offeneFragen(state.antworten).filter((x) => x.frage.typ === 'mass' && !x.frage.pflicht);
+        if (!masse.length) break;
+        for (const eintrag of masse) setzeOffen(eintrag.frage);
+    }
+    speichern();
+    zeichne(true);
+}
+
+// Die genaue Auswahl ganz umgehen: alles Freiwillige bleibt offen, das Ergebnis erscheint sofort.
+// Pflichtfragen (Element, Fenstertyp, Auflage) bleiben stehen – ohne sie gibt es keinen Pool.
+function ueberspringeAlles() {
+    for (let runde = 0; runde < 12; runde++) {
+        const offen = finder.offeneFragen(state.antworten).filter((x) => !x.frage.pflicht);
+        if (!offen.length) break;
+        for (const eintrag of offen) setzeOffen(eintrag.frage);
+    }
+    speichern();
+    zeichne();
+    zeigeStelle('ergebnis');
 }
 
 function neu() {
@@ -166,6 +198,7 @@ function frageHtml(eintrag, erste) {
         // Schätzen reicht: Die Klassen sortieren und warnen, ausschließen kann nur ein gemessener Wert.
         const klassen = (frage.klassen || []).map((k) => `<label class="karte ${alt === k.id ? 'aktiv' : ''}">
               <input type="radio" name="antwort" value="${k.id}" ${alt === k.id ? 'checked' : ''}>
+              ${skizze(k.skizze)}
               <span class="karte-text"><strong>${esc(k.text)}</strong><small>${esc(k.hinweis)}</small></span>
             </label>`).join('');
         const genau = `<details class="hilfe genau" ${typeof alt === 'number' ? 'open' : ''}><summary>Genau messen (freiwillig)</summary>
@@ -220,6 +253,29 @@ function frageHtml(eintrag, erste) {
       </fieldset></form>`;
 }
 
+// Zwei Abkürzungen, die überall im Verlauf erreichbar sind:
+// „Ohne genaue Maße“ überspringt nur die Maßfragen, „Direkt zum Ergebnis“ alles Freiwillige.
+function schnellwahlHtml() {
+    if (!state.antworten.element) return '';
+    const offen = finder.offeneFragen(state.antworten);
+    // Ohne Element, Fenstertyp oder Auflage gibt es keinen Pool – diese Fragen lassen sich nicht überspringen.
+    if (offen.some((x) => x.frage.pflicht)) return '';
+    const masse = offen.filter((x) => x.frage.typ === 'mass').length;
+    const rest = offen.length;
+    if (!rest) return '';
+    // Übersprungene Maße verschwinden aus dem Verlauf, bis ihr Abschnitt an der Reihe ist.
+    // Ohne diese Rückmeldung sähe der Knopf wirkungslos aus.
+    const bereitsOffen = state.verlauf.filter((id) => state.antworten[id] === SPAETER).length;
+    return `<div class="schnellwahl">
+        <p class="schnell-text">Keine Lust auf alle Fragen? Offen gelassene Angaben schließen nie eine Lösung aus – sie kommen auf die Prüfliste fürs Aufmaß.</p>
+        ${bereitsOffen ? `<p class="schnell-erledigt">${bereitsOffen} ${bereitsOffen === 1 ? 'Maß bleibt' : 'Maße bleiben'} offen und ${bereitsOffen === 1 ? 'steht' : 'stehen'} im Ergebnis auf der Prüfliste.</p>` : ''}
+        <div class="schnell-knoepfe">
+          ${masse ? `<button type="button" class="neben schnell-knopf" data-aktion="masse-ueberspringen">Ohne genaue Maße weiter<small>${masse} ${masse === 1 ? 'Maßfrage' : 'Maßfragen'} überspringen</small></button>` : ''}
+          <button type="button" class="haupt schnell-knopf" data-aktion="schnell">Direkt zum Ergebnis<small>alle ${rest} offenen Fragen später klären</small></button>
+        </div>
+      </div>`;
+}
+
 function verlaufHtml() {
     const abschnitte = finder.abschnitte(state.antworten);
     const sichtbare = abschnitte.filter((x) => x.bereit);
@@ -234,7 +290,9 @@ function verlaufHtml() {
             if (erste && !eintrag.beantwortet) erste = false;
             return html;
         }).join('');
-        const rest = abschnitt.eintraege.filter((e) => !e.beantwortet && !e.frage.pflicht).length;
+        const offeneEintraege = abschnitt.eintraege.filter((e) => !e.beantwortet && !e.frage.pflicht);
+        const rest = offeneEintraege.length;
+        const nurMasse = rest > 0 && offeneEintraege.every((e) => e.frage.typ === 'mass');
         return `<section class="abschnitt" id="abschnitt-${abschnitt.nr}">
             <div class="abschnitt-kopf">
               <p class="abschnitt-nr">Abschnitt ${abschnitt.nr} von ${abschnitte.length}</p>
@@ -242,7 +300,8 @@ function verlaufHtml() {
               ${abschnitt.hinweis ? `<p class="unterzeile">${esc(abschnitt.hinweis)}</p>` : ''}
             </div>
             ${fragen}
-            ${rest >= 1 ? `<button type="button" class="neben ueberspringen" data-aktion="ueberspringen" data-abschnitt="${abschnitt.nr}">Rest überspringen – kommt auf die Prüfliste</button>` : ''}
+            ${rest >= 1 ? `<button type="button" class="neben ueberspringen" data-aktion="${nurMasse ? 'masse-ueberspringen' : 'ueberspringen'}" data-abschnitt="${abschnitt.nr}">${
+                nurMasse ? 'Ohne genaue Maße weiter' : 'Rest überspringen'} – kommt auf die Prüfliste</button>` : ''}
           </section>`;
     }).join('');
     const naechster = abschnitte.find((x) => !x.bereit);
@@ -250,7 +309,7 @@ function verlaufHtml() {
         ? `<p class="ausblick">Danach kommt: ${esc(naechster.titel)}</p>`
         : '';
     return `<div class="balken" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${prozent}" aria-label="Fortschritt"><span style="width:${prozent}%"></span></div>
-      ${stuecke}${ausblick}`;
+      ${schnellwahlHtml()}${stuecke}${ausblick}`;
 }
 
 function antwortText(id) {
@@ -437,8 +496,12 @@ function vorschauHtml() {
 
 function leisteHtml() {
     const n = finder.ergebnis(state.antworten).alle.length;
-    const offen = finder.offeneFragen(state.antworten).length;
+    const offeneListe = finder.offeneFragen(state.antworten);
+    const offen = offeneListe.length;
+    // Der Sprung ans Ende ist nur sinnvoll, wenn keine Pflichtfrage mehr aussteht
+    const abkuerzen = offen > 0 && !offeneListe.some((x) => x.frage.pflicht);
     return `<span class="leiste-zahl" aria-live="polite"><b>${n}</b> passende Lösungen${offen ? ` · ${offen} Fragen offen` : ''}</span>
+      ${abkuerzen ? '<button type="button" class="neben leiste-schnell" data-aktion="schnell">Rest überspringen</button>' : ''}
       <button type="button" class="haupt" data-aktion="ergebnis" ${state.antworten.element ? '' : 'disabled'}>Zum Ergebnis</button>`;
 }
 
@@ -500,6 +563,8 @@ document.addEventListener('click', (event) => {
         else if (aktion === 'ergebnis') zeigeStelle('ergebnis');
         else if (aktion === 'bearbeiten') zeigeStelle(`frage-${ziel.dataset.frage}`);
         else if (aktion === 'ueberspringen') ueberspringe(ziel.dataset.abschnitt);
+        else if (aktion === 'masse-ueberspringen') ueberspringeMasse();
+        else if (aktion === 'schnell') ueberspringeAlles();
         else if (aktion === 'antwort') beantworte(ziel.dataset.frage, ziel.dataset.wert);
         else if (aktion === 'teilen') teilen(ziel);
     }
