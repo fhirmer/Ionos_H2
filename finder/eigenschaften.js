@@ -9,163 +9,159 @@
 // Ein Eintrag je Label. Reihenfolge innerhalb einer Gruppe = Reihenfolge in der Anzeige.
 const GRUPPEN = [
     {
-        titel: 'Bedienart',
+        titel: 'Produktart',
         labels: [
-            ['operation.fixed_screen', 'fest eingesetzter Rahmen'],
-            ['operation.rolls_up', 'wird aufgerollt'],
-            ['operation.swing_both_directions', 'pendelt in beide Richtungen'],
-            ['operation.hinged_outward', 'dreht nach außen auf'],
-            ['operation.hinged_inward', 'dreht nach innen auf'],
-            ['operation.pleats_left', 'faltet seitlich (Plissee)'],
-            ['element.sliding_frame_screen', 'wird hochgeschoben'],
-            ['operation.slides_left', 'wird seitlich geschoben'],
-            ['operation.opens_double_leaf', 'zweiflügelig'],
-            ['operation.opens_single_leaf', 'einflügelig'],
-            ['slide.two_leaf_counter_running', 'zwei gegenläufige Flügel'],
-            ['slide.single_leaf', 'ein Schiebeflügel'],
-            ['operation.primary_leaf_defined', 'mit festgelegtem Gehflügel'],
+            ['system.spannrahmen', 'Spannrahmen – fest eingesetzt, zum Aushängen'],
+            ['system.pendeltuer', 'Pendeltür – pendelt in beide Richtungen und fällt selbst zu'],
+            ['system.drehtuer', 'Drehrahmen für Türen – öffnet wie eine Tür'],
+            ['system.pendelfenster', 'Pendelfenster – pendelt und fällt selbst zu'],
+            ['system.drehfenster', 'Drehrahmen für Fenster – öffnet wie ein Flügel'],
+            ['system.schiebeanlage', 'Schiebeanlage – wird seitlich geschoben'],
+            ['system.plissee', 'Plissee – faltet seitlich zusammen'],
+            ['system.rollo', 'Rollo – wird aufgerollt'],
+            ['system.lichtschachtabdeckung', 'Lichtschachtabdeckung'],
+            ['geometrie.zweifluegelig', 'zweiflügelig'],
+            ['geometrie.seitenteile_fest', 'mit festen Seitenteilen'],
+            ['geometrie.sprossenfrei', 'ohne Sprosse'],
         ],
     },
     {
-        titel: 'Montageart',
+        titel: 'Wo sie sitzt',
         labels: [
-            ['mounting_frame.position_amb_exterior_on_frame', 'Montagerahmen außen auf dem Blendrahmen (AMB)'],
-            ['mounting_frame.position_lmb_in_clear_opening', 'Montagerahmen im Blendrahmen (LMB)'],
-            ['mounting_frame.position_lmm_in_clear_wall_reveal', 'Montagerahmen in der Mauerleibung (LMM)'],
-            ['mounting.on_house_wall', 'wird an der Hauswand befestigt'],
-            ['mounting.on_grating', 'liegt auf dem Gitterrost'],
-            ['mounting.in_light_well_rebate', 'sitzt im Falz des Lichtschachts'],
-            ['mounting.in_roof_window_inner_lining', 'sitzt im Innenfutter des Dachfensters'],
-            ['mounting.on_inner_lining_cover_strips', 'sitzt auf den Abdeckleisten'],
-            ['mounting.substrate_masonry', 'Untergrund Mauerwerk'],
+            ['lage.auf_blendrahmen', 'außen auf dem Blendrahmen'],
+            ['lage.im_blendrahmen', 'in der Rahmenöffnung'],
+            ['lage.mauerleibung', 'in der Mauerleibung'],
+            ['lage.innenfutter', 'im Innenfutter des Dachfensters'],
+            ['lage.auf_innenfutter', 'auf den Abdeckleisten des Innenfutters'],
+            ['lage.lichtschachtfalz', 'auf dem Lichtschachtfalz'],
+            ['lage.terrassenausschnitt', 'im Terrassenausschnitt'],
+            ['lage.amb_laut_darstellung', 'laut Katalog Außen-Montage-Blendrahmen (AMB)'],
+            ['lage.lmb_laut_darstellung', 'laut Katalog Lichte-Montage-Blendrahmen (LMB)'],
+            ['lage.lmm_laut_darstellung', 'laut Katalog Lichte-Montage-Mauerleibung (LMM)'],
         ],
     },
     {
-        titel: 'Rahmen',
+        titel: 'Wie sie hält',
         labels: [
-            ['mounting_frame.required', 'braucht einen Montagerahmen'],
-            ['mounting_frame.absent_confirmed', 'ohne Montagerahmen'],
-            ['mounting_frame.closed_bottom', 'Rahmen unten geschlossen'],
-            ['mounting_frame.open_bottom', 'Rahmen unten offen'],
-            ['roller.bottom_closed', 'unten geschlossen'],
-            ['roller.bottom_open', 'unten offen'],
-            ['mounting_frame.partial_profile_only', 'nur teilweise umlaufendes Profil'],
-            ['mounting_frame.profile_on_hinge_side', 'Profil auf der Bandseite'],
-            ['mounting_frame.profile_on_lock_side', 'Profil auf der Schlossseite'],
-            ['additional_profile.bottom_angle_profile_present', 'mit unterem Winkelprofil'],
-            ['additional_profile.bottom_threshold_profile_present', 'mit unterem Schwellenprofil'],
-            ['geometry.crossbar_present', 'mit Quersprosse'],
-            ['geometry.crossbar_absent', 'ohne Quersprosse'],
-            ['light_well.static_profile_present', 'mit Statikprofil'],
-            ['light_well.polycarbonate_panel_present', 'mit Polycarbonatplatte'],
+            ['befestigung.winkellaschen_gefedert', 'gefederte Winkellaschen – eingehängt, ohne Schraube'],
+            ['befestigung.winkellaschen_starr', 'starre Winkellaschen – von innen durch die Öffnung gedrückt, ohne Schraube'],
+            ['befestigung.federstifte', 'Federstifte – vier Löcher im Blendrahmen'],
+            ['befestigung.seitenarretierung', 'Seitenarretierung möglich'],
+            ['montagerahmen.vorhanden', 'mit Montagerahmen'],
+            ['montagerahmen.ohne', 'ohne Montagerahmen'],
+            ['rahmen.unten_geschlossen', 'Rahmen unten geschlossen'],
+            ['rahmen.unten_offen', 'Rahmen unten offen'],
+            ['rahmen.unteres_winkelprofil', 'unteres Winkelprofil – für Türen mit Trittschutz'],
+            ['rahmen.unteres_schwellenprofil', 'unteres Schwellenprofil – barriere- und schwellenfrei'],
         ],
     },
     {
-        titel: 'Befestigung',
+        titel: 'Wofür sie gedacht ist',
         labels: [
-            ['fastening.spring_bracket_present', 'gefederte Winkellaschen'],
-            ['fastening.rigid_bracket_present', 'starre Winkellaschen'],
-            ['fastening.rotatable_bracket_present', 'drehbare Laschen'],
-            ['fastening.spring_pin_present', 'Federstifte'],
-            ['fastening.hinge_present', 'Scharniere'],
-            ['fastening.grating_clamp_present', 'Klemmen am Gitterrost'],
-            ['fastening.clamp_present', 'Klemmbefestigung'],
-            ['fastening.screw_present', 'geschraubt'],
-            ['fastening.screw_into_reveal', 'in die Mauerleibung geschraubt'],
-            ['fastening.screw_into_door_frame', 'in den Türrahmen geschraubt'],
-            ['fastening.screw_into_window_frame', 'in den Fensterrahmen geschraubt'],
-            ['fastening.screw_from_exterior', 'von außen geschraubt'],
-            ['fastening.screw_from_interior', 'von innen geschraubt'],
-            ['fastening.mounting_adhesive_tape_available', 'Klebeband als Montagehilfe möglich'],
-            ['fastening.drilling_required', 'Bohren nötig'],
-            ['fastening.upper_side_lock_present', 'obere Seitenverriegelung'],
-            ['fastening.stainless_steel_rod_present', 'Edelstahlstab'],
+            ['fluegel.buendig', 'für flächenbündige Elemente'],
+            ['fluegel.halb_zurueckversetzt', 'für halbflächenversetzte Elemente'],
+            ['fluegel.zurueckversetzt', 'für flächenversetzte Elemente'],
+            ['geometrie.stulp', 'für Stulpelemente ohne Mittelpfosten'],
+            ['geometrie.schwellenfrei', 'barriere- und schwellenfrei'],
+            ['geometrie.boden_eben', 'für ebenen Boden oder Fensterbank'],
+            ['geometrie.boden_uneben', 'für unebenen Boden'],
+            ['geometrie.abdichtung_zum_blendrahmen', 'dichtet nach hinten zum Blendrahmen ab'],
+            ['geometrie.mauerleibung_vorhanden', 'setzt eine Mauerleibung voraus'],
+            ['geometrie.blendrahmen_umlaufend', 'für umlaufenden Blendrahmen'],
+            ['geometrie.ueberschlag_schraeg', 'für schrägen Blendrahmenüberschlag'],
+            ['geometrie.ueberschlag_sehr_schraeg', 'für sehr schrägen oder stark abgerundeten Überschlag'],
+            ['geometrie.breite_oeffnung', 'für besonders breite Öffnungen'],
+            ['material.holz', 'für Holzelemente'],
+            ['material.kunststoff', 'für Kunststoffelemente'],
+            ['bauteil.trittschutz', 'für Türen mit Trittschutz'],
+            ['bauteil.regenschiene_anliegend', 'für am Blendrahmen anliegende Regenschiene'],
+            ['bauteil.regenschiene_ueberstehend', 'für am Blendrahmen überstehende Regenschiene'],
+            ['bauteil.regenschiene', 'für Elemente mit Regenschiene'],
+            ['bauteil.wetterschenkel', 'für Elemente mit überstehendem Wetterschenkel'],
+            ['lichtschacht.auflage_3', 'für Lichtschächte mit 3-seitiger Auflage'],
+            ['lichtschacht.auflage_4', 'für Lichtschächte mit 4-seitiger Auflage'],
+            ['lichtschacht.kellerfenster_ueberstehend', 'für überstehendes Kellerfenster'],
+            ['dachfenster.innenfutter_unten_gerade_oben_gerade', 'Innenfutter unten und oben gerade'],
+            ['dachfenster.innenfutter_oben_waagerecht', 'Innenfutter oben waagerecht'],
+            ['dachfenster.innenfutter_unten_senkrecht', 'Innenfutter unten senkrecht'],
+            ['dachfenster.mit_innenfutter_montage', 'Montage im Innenfutter möglich'],
+            ['dachfenster.ohne_innenfutter_montage', 'Montage auf den Abdeckleisten'],
         ],
     },
     {
-        titel: 'Dichtung unten und seitlich',
+        titel: 'Rollladen',
         labels: [
-            ['brush_seal.present_bottom', 'Bürste unten'],
-            ['brush_seal.present_left', 'Bürste links'],
-            ['brush_seal.present_right', 'Bürste rechts'],
-            ['brush_seal.present_top', 'Bürste oben'],
-            ['component.rain_rail_contact_required', 'dichtet an der Regenschiene ab'],
-            ['component.rain_rail_may_project', 'Regenschiene darf überstehen'],
-            ['component.weather_bar_suitable', 'für Flügel mit Wetterschenkel'],
-            ['component.threshold_profile_8mm_available', 'Schwellenprofil 8 mm möglich'],
-            ['component.angle_profile_20x15_available', 'Winkelprofil 20 × 15 mm möglich'],
+            ['platz.fuehrung_eng', 'für eng anliegende Rollladenführungsschienen'],
+            ['platz.fuehrung_sehr_eng', 'für sehr eng anliegende Führungsschienen'],
+            ['platz.fuehrung_eng_links', 'Führungsschiene links (von innen gesehen)'],
+            ['platz.fuehrung_eng_rechts', 'Führungsschiene rechts (von innen gesehen)'],
+            ['platz.panzer_eng', 'für eng anliegenden Rollladenpanzer'],
+            ['platz.rollladen_geteilt', 'für geteilten Rollladen'],
+            ['platz.rollladen_haengt', 'für herunterhängenden Rollladenpanzer'],
         ],
     },
     {
-        titel: 'Bedienung und Zubehör',
+        titel: 'Bedienung',
         labels: [
-            ['operation.door_closer_available', 'Türschließer möglich'],
-            ['operation.door_closer_not_possible', 'Türschließer nicht möglich'],
-            ['operation.brush_damping_available', 'gedämpftes Schließen möglich'],
-            ['operation.increased_closing_force_available', 'erhöhte Schließkraft möglich'],
-            ['operation.handle_bar_available', 'mit Griffleiste'],
-            ['operation.handle_gi25_available', 'Griff GI25 möglich'],
-            ['operation.exterior_handle_ga20_available', 'Außengriff GA20 möglich'],
-            ['pleat.handle_bar_operation_from_interior', 'Griffleiste von innen bedienbar'],
-            ['roller.exterior_operation_available', 'von außen bedienbar'],
-            ['roller.one_hand_operation_available', 'Einhandbedienung möglich'],
-            ['roller.additional_detent_point_available', 'zusätzlicher Rastpunkt möglich'],
-            ['slide.foot_operated_recess_available', 'Fußmulde möglich'],
-            ['light_well.quick_release_lock_available', 'Schnellverschluss möglich'],
-            ['light_well.expanded_metal_available', 'Streckmetall möglich (begehbar)'],
-            ['use.pollen_mesh_available', 'Pollenschutzgewebe möglich'],
-            ['use.sun_protection_available', 'zusätzlicher Sonnenschutz möglich'],
-            ['roller.sun_and_insect_mesh_combination', 'Sonnen- und Insektenschutz kombiniert'],
+            ['bedienung.oeffnungsrichtung_waehlbar', 'Öffnungsrichtung links oder rechts wählbar'],
+            ['bedienung.oeffnet_nach_aussen', 'öffnet nach außen'],
+            ['bedienung.oeffnet_nach_innen', 'öffnet nach innen – die Tür lässt sich dann von außen nicht mehr schließen'],
+            ['zubehoer.tuerschliesser', 'Türschließer möglich (Aufpreis)'],
+            ['serie.selbstschliessend_standard', 'fällt im Standard von selbst zu'],
+            ['serie.selbstschliessend_optional', 'Türschließer auf Wunsch'],
+            ['serie.selbstschliessend_optional_mit_montagerahmen', 'Türschließer nur mit Montagerahmen'],
         ],
     },
     {
-        titel: 'Passt zu',
+        titel: 'Möglich in dieser Serie',
         labels: [
-            ['geometry.sash_flush_with_frame', 'flächenbündigen Flügeln'],
-            ['geometry.sash_offset_from_frame', 'flächenversetzten Flügeln'],
-            ['geometry.sash_half_offset_from_frame', 'halbflächenversetzten Flügeln'],
-            ['geometry.stulp_without_fixed_mullion', 'Stulp ohne Mittelpfosten'],
-            ['geometry.double_leaf', 'zweiflügeligen Elementen'],
-            ['geometry.kick_plate_present', 'Türen mit Trittschutzprofil'],
-            ['geometry.threshold_free_door', 'schwellenfreien Türen'],
-            ['geometry.barrier_free_door', 'barrierefreien Türen'],
-            ['geometry.wall_reveal_present', 'vorhandener Mauerleibung'],
-            ['geometry.bottom_surface_level', 'ebener Auflage unten'],
-            ['geometry.bottom_surface_uneven', 'unebener Auflage unten'],
-            ['geometry.special_form_curved_supported', 'Bogenformen'],
-            ['geometry.special_form_out_of_square_supported', 'schiefwinkligen Öffnungen'],
-            ['shutter.armour_close_to_sash', 'eng anliegendem Rollladenpanzer'],
-            ['shutter.guide_close_left', 'links eng anliegender Führungsschiene'],
-            ['shutter.guide_close_right', 'rechts eng anliegender Führungsschiene'],
-            ['shutter.armour_hanging_down', 'herunterhängendem Rollladen'],
-            ['shutter.split_roller_shutter', 'geteiltem Rollladen'],
-            ['material.wood_suitable', 'Holzrahmen'],
-            ['material.plastic_suitable', 'Kunststoffrahmen'],
-            ['material.aluminium_suitable', 'Aluminiumrahmen'],
-            ['light_well.support_4_sided', 'vierseitiger Auflage'],
-            ['light_well.support_3_sided', 'dreiseitiger Auflage'],
-            ['light_well.basement_window_projecting', 'überstehendem Kellerfenster'],
-            ['geometry.inner_lining_bottom_perpendicular_to_frame', 'Innenfutter unten im rechten Winkel'],
-            ['geometry.inner_lining_bottom_vertical', 'senkrechtem Innenfutter unten'],
-            ['geometry.inner_lining_top_perpendicular_to_frame', 'Innenfutter oben im rechten Winkel'],
-            ['geometry.inner_lining_top_horizontal', 'waagerechtem Innenfutter oben'],
+            ['serie.tierklappe_katze_und_hund', 'Katzen- und Hundeklappe möglich'],
+            ['serie.tierklappe_katze', 'nur Katzenklappe möglich – keine Hundeklappe'],
+            ['serie.tierklappe_keine', 'keine Tierklappe'],
+            ['serie.sprossenfrei_moeglich', 'sprossenfreie Ausführung möglich'],
+            ['serie.zusatzrahmen_moeglich', 'Zusatzrahmen zur Aufdoppelung möglich'],
+            ['serie.biegbar', 'gebogen oder außenwinklig lieferbar'],
+            ['serie.nicht_biegbar', 'nicht biegbar'],
         ],
     },
     {
-        titel: 'Achtung',
+        titel: 'Was der Katalog ausschließt',
         labels: [
-            ['operation.pendulum_path_clearance_required', 'Pendelweg muss frei bleiben'],
-            ['operation.secondary_leaf_rattle_risk', 'Standflügel kann klappern'],
-            ['operation.leaf_floor_scrape_risk_at_zero_dimension_z', 'Flügel kann am Boden schleifen'],
-            ['operation.increased_closing_force_required_for_wind_load', 'bei Windlast erhöhte Schließkraft nötig'],
-            ['use.heating_room_restriction_present', 'Einschränkung bei Heizräumen beachten'],
-            ['light_well.condensation_risk_in_damp_shaft', 'Schwitzwasser in feuchten Schächten möglich'],
-            ['light_well.no_insect_and_leaf_protection', 'kein Insekten- und Laubschutz'],
-            ['component.additional_drainage_on_site_required', 'zusätzliche Entwässerung bauseits nötig'],
-            ['component.water_drain_slot_must_remain_free', 'Wasserschlitz muss frei bleiben'],
-            ['fastening.screw_projects_into_clear_opening', 'Schraube ragt in die lichte Öffnung'],
-            ['component.h_profile_projects_into_clear_opening', 'H-Profil ragt in die lichte Öffnung'],
-            ['visible.mounting_screw_between_frames_possible', 'Montageschraube kann sichtbar sein'],
+            ['verbot.fluegel_buendig', 'nicht für flächenbündige Elemente'],
+            ['verbot.ueberschlag_gerade', 'nicht bei geradem Blendrahmenüberschlag'],
+            ['verbot.ueberschlag_extrem', 'nicht bei extrem schrägem Blendrahmenüberschlag'],
+            ['verbot.stulpfenster', 'nicht bei Stulpelementen'],
+            ['verbot.wetterschenkel', 'nur ohne Wetterschenkel am Flügel'],
+            ['verbot.ueber_1200mm', 'nicht über 1200 mm Breite oder Höhe'],
+            ['verbot.tuerschliesser', 'kein Türschließer möglich'],
+            ['verbot.seitenarretierung', 'keine Seitenarretierung möglich'],
+            ['verbot.nicht_befahrbar', 'nicht befahrbar'],
+            ['verbot.kein_insektenschutz', 'kein Insekten- und Laubschutz – nur in Kombination'],
+        ],
+    },
+    {
+        titel: 'Beim Aufmaß prüfen',
+        labels: [
+            ['pruefung.durchpendeln', 'muss durchpendeln können'],
+            ['pruefung.windbelastung', 'bei Windbelastung stärkere Schließfeder'],
+            ['pruefung.beschwerungsstab', 'Beschwerungsstab in der Rollladenendleiste'],
+            ['pruefung.rollladenstopper', 'Rollladenstopper bei Montage vor dem Rollladen'],
+            ['pruefung.wetterschenkel', 'auf den Wetterschenkel achten'],
+            ['pruefung.fluegelabdeckung', 'auf die Flügelabdeckung achten'],
+            ['pruefung.stulpversatz', 'Versatz an der Stulpleiste'],
+            ['pruefung.griffbedienung', 'Erreichbarkeit des Griffs prüfen'],
+            ['pruefung.knopf_stoesst_an', 'Griffknopf kann am Flügel anstoßen'],
+            ['pruefung.einbauluft', 'Einbauluft prüfen'],
+            ['pruefung.schwellenhoehe', 'Schwellenhöhe beim Durchpendeln'],
+            ['pruefung.trittschutz', 'Trittschutz prüfen'],
+            ['pruefung.fussmatte', 'Fußmatte oder ansteigender Boden'],
+            ['pruefung.entwaesserung', 'Entwässerung der Laufschiene'],
+            ['pruefung.gitterrost', 'Zustand und Stabstärke des Gitterrostes'],
+            ['pruefung.begangen', 'wird die Abdeckung betreten oder befahren?'],
+            ['pruefung.nicht_befahrbar', 'Abdeckung ist nicht befahrbar'],
+            ['pruefung.heizraum', 'Vorschriften bei Heizräumen beachten'],
+            ['pruefung.schwitzwasser', 'Schwitzwasser an der Polycarbonatplatte möglich'],
+            ['pruefung.kunststoffabschluss', 'überstehender Kunststoffabschluss der Regenschiene'],
         ],
     },
 ];
@@ -173,13 +169,20 @@ const GRUPPEN = [
 // Montageseite getrennt: Die 226 Spannrahmen-Seiten der Wissensbasis erben `mounting.on_exterior_side`
 // pauschal (Übergabe §5.3). Für diese Serie ist das Label deshalb kein Beleg; dort zählt Rudis Gruppe
 // („Spannrahmen innen“ / „Spannrahmen von außen“). Ohne Beleg wird nichts behauptet.
+// Von welcher Seite montiert und bedient wird. Der Hauptkatalog sagt es nur dort
+// ausdrücklich, wo er die Blickseite der Öffnungsrichtung nennt oder wo eine Variante
+// nach innen öffnet. Fehlt beides, bleibt es beim Aufmaß offen – geraten wird nicht.
 function montageseite(v) {
     const rudi = (v.rudi || []).map((r) => `${r.gruppe || ''} ${r.untergruppe || ''}`).join(' ').toLowerCase();
-    if (v.wahr.has('mounting.on_interior_side')) return {text: 'von innen', quelle: 'Katalog'};
+    if (v.wahr.has('element.dachfenster')) return {text: 'von innen', quelle: 'Katalog'};
+    if (v.wahr.has('bedienung.oeffnet_nach_innen')) return {text: 'von innen', quelle: 'Katalog'};
+    if (v.wahr.has('lage.im_blendrahmen') && v.wahr.has('befestigung.winkellaschen_starr')) {
+        // Der Katalog: „wird durch die Fensteröffnung von innen nach außen gedrückt“
+        return {text: 'von innen', quelle: 'Katalog'};
+    }
     if (/innen/.test(rudi)) return {text: 'von innen', quelle: 'Rudi'};
     if (/außen|aussen/.test(rudi)) return {text: 'von außen', quelle: 'Rudi'};
-    if (v.system === 'spannrahmen') return {text: 'beim Aufmaß festlegen', quelle: null};
-    if (v.wahr.has('mounting.on_exterior_side')) return {text: 'von außen', quelle: 'Katalog'};
+    if (v.wahr.has('bedienung.oeffnet_nach_aussen')) return {text: 'von außen', quelle: 'Katalog'};
     return {text: 'beim Aufmaß festlegen', quelle: null};
 }
 
@@ -219,11 +222,51 @@ function eigenschaften(v) {
     if (!zeilen.some((z) => z.titel === 'Montageseite')) {
         zeilen.unshift({titel: 'Montageseite', text: seite.text, quelle: seite.quelle, labels: []});
     }
+    if (v.geerbt) {
+        const h = herkunft(v);
+        zeilen.push({titel: 'Datenblatt', labels: [],
+            text: h.von ? `kein eigenes im Hauptkatalog – Maße von ${h.von} (${h.einordnung})`
+                        : 'kein eigenes im Hauptkatalog – Maße bitte nachfragen'});
+        if (h.unterschied) zeilen.push({titel: 'Besonderheit', text: h.unterschied, labels: []});
+    }
+    if (v.empfehlung) zeilen.push({titel: 'Einsatzzweck', text: String(v.empfehlung), labels: []});
+
     // Nur nachmessbare Grenzwerte; die übrigen stehen in der Prüfliste beim Aufmaß
     const masse = v.grenzen.filter((g) => g.messbar).map(grenzText);
     if (masse.length) zeilen.push({titel: 'Grenzmaße', text: masse.join(' · '), labels: []});
     return zeilen;
 }
 
-globalThis.H2Eigenschaften = {eigenschaften, montageseite, GRUPPEN};
+// Die Hinweistabelle „Worauf Sie unbedingt achten sollten“ der Katalogseite.
+// Jede Zeile trägt ihren Markerbuchstaben aus der Zeichnung und, wo der Katalog eine
+// nennt, die Ausweichlösung. Bei Varianten ohne eigenes Datenblatt stammen die Zeilen
+// von der Schwestervariante – das steht dann ausdrücklich dabei.
+function katalogHinweise(v) {
+    const tx = (n) => (typeof n === 'number' ? globalThis.H2Daten.texte[n] : '');
+    return (v.hkBedingungen || []).map(([text, alternativ, marker, verweis]) => ({
+        marker: marker || '',
+        text: tx(text),
+        alternativ: tx(alternativ),
+        verweis: verweis || '',
+    })).filter((z) => z.text);
+}
+
+// Woher die Maße dieser Variante kommen, wenn sie kein eigenes Datenblatt hat.
+function herkunft(v) {
+    if (!v.geerbt) return null;
+    const tx = (n) => (typeof n === 'number' ? globalThis.H2Daten.texte[n] : '');
+    const g = v.geerbt;
+    const sicher = {
+        baugleich: 'baugleich – die Maße gelten unverändert',
+        gleiche_serie: 'gleiche Serie und Bauart – die Maße sind übertragbar',
+        unsicher: 'andere Bauart oder Befestigung – die Maße sind ein Anhalt, kein Beleg',
+        keine: 'der Katalog nennt keine Schwestervariante – Maße bitte nachfragen',
+    }[g.sicherheit] || g.sicherheit;
+    return {
+        von: g.von, funktionWie: g.funktionWie, sicherheit: g.sicherheit, einordnung: sicher,
+        unterschied: tx(g.unterschied), beleg: tx(g.beleg),
+    };
+}
+
+globalThis.H2Eigenschaften = {eigenschaften, montageseite, katalogHinweise, herkunft, GRUPPEN};
 })();

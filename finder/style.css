@@ -255,3 +255,32 @@ small { font-size: 16px; }
 .warum-zuerst p { margin: .2rem 0; font-size: .95rem; }
 .weg-liste { margin: .4rem 0 .6rem; padding-left: 1.3rem; display: grid; gap: .5rem; }
 .weg-liste li { line-height: 1.45; }
+
+/* Varianten ohne eigenes Datenblatt: woher ihre Maße stammen */
+.herkunft {
+  margin: .8rem 0 0;
+  padding: .7rem .9rem;
+  border-left: 3px solid var(--rand);
+  background: var(--hintergrund);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: .95rem;
+}
+.herkunft.achtung { border-left-color: var(--warnung); background: var(--warnung-hell); }
+.herkunft small { color: var(--text-leise); }
+
+/* Hinweistabelle der Katalogseite */
+table.hinweise { width: 100%; border-collapse: collapse; font-size: .92rem; margin: .4rem 0 0; }
+table.hinweise th,
+table.hinweise td { text-align: left; vertical-align: top; padding: .35rem .5rem; border-bottom: 1px solid var(--rand); }
+table.hinweise th { color: var(--text-leise); font-weight: 600; }
+table.hinweise th:first-child,
+table.hinweise td:first-child { width: 4.5rem; white-space: nowrap; }
+.klein { font-size: .85rem; color: var(--text-leise); margin: .4rem 0 0; }
+
+@media (max-width: 520px) {
+  table.hinweise, table.hinweise tbody, table.hinweise tr, table.hinweise td { display: block; }
+  table.hinweise thead { display: none; }
+  table.hinweise tr { padding: .4rem 0; border-bottom: 1px solid var(--rand); }
+  table.hinweise td { border: 0; padding: .1rem 0; }
+  table.hinweise td:first-child { width: auto; font-weight: 600; }
+}

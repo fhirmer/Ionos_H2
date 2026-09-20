@@ -4,7 +4,9 @@
 // - Ausgeschlossen wird nur mit A1–A5 und Beleg. Alles andere bleibt und wird sortiert.
 // - Eine unbeantwortete Frage oder „Weiß ich nicht“ schließt nie aus.
 // - Sortierstufen: 1 Rudi passt · 2 Rudi teilweise offen · 3 Hauptkatalog-Einsatzzweck passt ·
-//   4 Hauptkatalog · 5 Masterkatalog (Sonderlösung, Rücksprache).
+//   4 Hauptkatalog mit eigenem Datenblatt · 5 Zusatzvariante ohne eigenes Datenblatt.
+//
+// Seit dem 20.09.2026 stammen alle Daten aus dem NEHER-Hauptkatalog 04/2025.
 (function () {
 'use strict';
 
@@ -13,7 +15,7 @@ const SPAETER = 'spaeter';
 
 const KONFLIKTE = {
     K1: 'Rudis Hinweis „Oder 5/11 innen“ ist noch nicht geklärt (wahrscheinlich SP5/11).',
-    K2: 'Nicht im Hauptkatalog; technische Daten aus dem Masterkatalog.',
+    K2: 'Kein eigenes Datenblatt im Hauptkatalog; die Maße stammen von der Schwestervariante.',
     K3: 'Rudi: „unten offen“. Laut Hauptkatalog ist der Montagerahmen unten geschlossen.',
     K4: 'Laut Hauptkatalog für Holzfenster empfohlen; andere Materialien bleiben möglich.',
     K5: 'Rudi: „von vorne“. Laut Hauptkatalog Montage in der Mauerleibung.',
@@ -22,7 +24,7 @@ const KONFLIKTE = {
     K8: 'Rudi schreibt „PT2/50 AMB“; Bestellbezeichnung ist PT2/50.',
     K9: 'Nicht auf Holztüren beschränkt; Tür lässt sich von außen nicht mehr schließen.',
     K10: 'LMM = Montage in der Mauerleibung.',
-    K11: 'Nicht im Hauptkatalog; technische Daten aus dem Masterkatalog S. 458.',
+    K11: 'Kein eigenes Datenblatt im Hauptkatalog; die Maße stammen von der Schwestervariante.',
     K12: 'Kellerfenster-Überstand höchstens 90 mm (sonst LI1/4 oder LI1/7).',
 };
 
@@ -33,8 +35,11 @@ const LAGE_TEXT = {
     mauerleibung: 'sitzt in der Mauerleibung',
     fuehrungsschienen: 'sitzt zwischen den Rollladenführungsschienen',
     innenfutter: 'sitzt im Innenfutter des Dachfensters',
+    auf_innenfutter: 'liegt auf den Abdeckleisten des Innenfutters',
     aussenkante: 'sitzt auf der Außenkante des Blendrahmens',
     lichtschacht: 'liegt auf dem Lichtschacht',
+    lichtschachtfalz: 'liegt auf dem Lichtschachtfalz',
+    terrassenausschnitt: 'liegt im Ausschnitt der Terrasse',
 };
 
 const SYSTEM_TEXT = {
@@ -123,7 +128,8 @@ function erstelleFinder(daten, katalog) {
         return false;
     }
     const opText = {gte: 'mind.', gt: 'mehr als', lte: 'höchstens', lt: 'weniger als'};
-    const quelle = (v, seite = v.seite) => `Masterkatalog S. ${seite}`;
+    const quelle = (v, seite = v.hk?.seite ?? v.seite) =>
+        (seite ? `Hauptkatalog S. ${seite}` : 'Hauptkatalog, Sammelseite Zusatzvarianten');
 
     // Eine Schätzung („sehr wenig“) sortiert und warnt, schließt aber nie aus (Plan §3.1 A3).
     const klasseVon = (frage, a) => (frage.klassen || []).find((k) => k.id === a[frage.id]) || null;
@@ -156,9 +162,10 @@ function erstelleFinder(daten, katalog) {
             gruende.push({art: 'A5', text: `${SYSTEM_TEXT[v.system]} statt ${SYSTEM_TEXT[a.system]}`, quelle: 'deine Antwort', frage: 'system'});
         const richtung = antwortVon(a, fragenById.get('richtung'));
         if (richtung?.richtung && v.system === 'dreh') {
-            const andere = richtung.richtung === 'operation.hinged_inward' ? 'operation.hinged_outward' : 'operation.hinged_inward';
+            const andere = richtung.richtung === 'bedienung.oeffnet_nach_innen'
+                ? 'bedienung.oeffnet_nach_aussen' : 'bedienung.oeffnet_nach_innen';
             if (v.wahr.has(andere) && !v.wahr.has(richtung.richtung))
-                gruende.push({art: 'A5', text: `öffnet ${andere.endsWith('inward') ? 'nach innen' : 'nach außen'}, gewünscht ist ${richtung.text.toLowerCase()}`, quelle: 'deine Antwort', frage: 'richtung'});
+                gruende.push({art: 'A5', text: `öffnet ${andere.endsWith('innen') ? 'nach innen' : 'nach außen'}, gewünscht ist ${richtung.text.toLowerCase()}`, quelle: 'deine Antwort', frage: 'richtung'});
         }
         const einbau = antwortVon(a, fragenById.get('einbauweise'));
         if (einbau?.lage && v.lage && v.lage !== einbau.lage && sichtbar(fragenById.get('einbauweise'), a))
@@ -362,8 +369,8 @@ function erstelleFinder(daten, katalog) {
         let stufe;
         if (rudi && !zweckWiderspruch) stufe = rudi.stufe; // Rudis Lösung, solange der Katalog-Einsatzzweck nicht widerspricht
         else if (v.hk && !zweckWiderspruch && (zweckTreffer || !zweckAbfragbar)) stufe = 3;
-        else if (v.hk) stufe = 4;
-        else stufe = 5;
+        else if (v.hkEigen) stufe = 4;
+        else stufe = 5;   // Zusatzvariante: Maße von der Schwestervariante übernommen
         const punkte = pruefpunkte(v, a);
         const qualitaet = qualitaetsBonus(v, a);
         // Gemessene und eingehaltene Grenzwerte: die genauer passende Variante zuerst (LI1/7 „größer 110 mm“ vor LI1/4 „größer 90 mm“)
@@ -427,7 +434,7 @@ function erstelleFinder(daten, katalog) {
         2: 'Rudi empfiehlt sie für diese Situation; einzelne Angaben fehlen noch',
         3: 'der Einsatzzweck im Hauptkatalog passt zu deinen Angaben',
         4: 'sie ist laut Hauptkatalog technisch möglich',
-        5: 'Sonderlösung aus dem Masterkatalog',
+        5: 'sie steht im Hauptkatalog nur auf einer Sammelseite – die Maße stammen von der Schwestervariante',
     };
 
     function warumZuerst(x, y) {

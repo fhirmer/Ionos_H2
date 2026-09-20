@@ -4,12 +4,15 @@
 'use strict';
 
 const {erstelleFinder, UNBEKANNT, SPAETER} = globalThis.H2Engine;
-const finder = erstelleFinder(globalThis.H2Daten, globalThis.H2Fragen);
+const rohdaten = globalThis.H2Daten;
+const finder = erstelleFinder(rohdaten, globalThis.H2Fragen);
+// Texte liegen einmal im Datensatz und werden über ihre Nummer angesprochen.
+const text = (nr) => (typeof nr === 'number' ? rohdaten.texte[nr] ?? '' : '');
 globalThis.H2Finder = {finder};
 if (typeof document === 'undefined') return;
 
 const SPEICHER = 'h2-produktfinder-3';
-const VERSION = '3.3';
+const VERSION = '3.5';
 const ART = {
     A1: 'Praxis-Ausschluss (Rudi)',
     A2: 'laut Katalog nicht geeignet',
@@ -22,7 +25,7 @@ const STUFE = {
     2: 'Rudis Lösung, noch nicht alle Angaben bekannt',
     3: 'Einsatzzweck laut Hauptkatalog passt',
     4: 'laut Hauptkatalog technisch möglich',
-    5: 'Sonderlösung aus dem Masterkatalog – Rücksprache',
+    5: 'Zusatzvariante – Maße von der Schwestervariante',
 };
 
 const state = {antworten: {}, verlauf: []};
@@ -307,6 +310,33 @@ function warumZuerstHtml(r) {
 }
 
 // Der Weg zur Empfehlung in vier Sätzen – damit nachvollziehbar ist, was der Finder tut
+function herkunftHtml(v) {
+    const h = globalThis.H2Eigenschaften?.herkunft?.(v);
+    if (!h) return '';
+    const warnung = h.sicherheit === 'unsicher' || h.sicherheit === 'keine';
+    return `<div class="herkunft${warnung ? ' achtung' : ''}">
+      <b>Diese Variante hat im Hauptkatalog kein eigenes Datenblatt.</b>
+      ${esc(h.unterschied)}
+      ${h.von ? `<br>Die Maße unten stammen von <b>${esc(h.von)}</b> – ${esc(h.einordnung)}.`
+              : `<br>${esc(h.einordnung)}`}
+      <br><small>${esc(h.beleg)}</small>
+    </div>`;
+}
+
+function katalogHinweiseHtml(v) {
+    const zeilen = globalThis.H2Eigenschaften?.katalogHinweise?.(v) || [];
+    if (!zeilen.length) return '';
+    const geerbt = zeilen.some((z) => z.verweis);
+    return `<details><summary>Worauf beim Aufmaß zu achten ist (${zeilen.length})</summary>
+      <table class="hinweise"><thead><tr><th>Marker</th><th>Bedingung laut Katalog</th><th>Wenn nicht erfüllt</th></tr></thead><tbody>
+      ${zeilen.map((z) => `<tr><td>${esc(z.marker || '–')}</td><td>${esc(z.text)}${
+          z.verweis ? ` <small>(über den Verweis auf ${esc(z.verweis)})</small>` : ''}</td><td>${esc(z.alternativ || '—')}</td></tr>`).join('')}
+      </tbody></table>
+      <p class="klein">Der Marker ist der rote Buchstabe in der Katalogzeichnung – er zeigt, wo gemessen wird.${
+          geerbt ? ' Zeilen mit Verweis stehen auf der Seite der Grundvariante.' : ''}</p>
+    </details>`;
+}
+
 function wegHtml(r) {
     const aus = r.ausgeschlossen.length;
     return `<details class="liste weg"><summary>Wie ich auf diese Lösung komme</summary>
@@ -327,8 +357,8 @@ function loesungHtml(b, rang, warumZuerst = '') {
     const konflikte = (rudi?.konflikte || []).map((k) => `<li><b>${esc(k)}:</b> ${esc(finder.KONFLIKTE[k] || '')}</li>`).join('');
     const quellen = [
         rudi ? 'Rudis Empfehlung' : null,
-        v.hk ? `Hauptkatalog S. ${v.hk.seite} (${v.hk.datei.replace(/\.pdf$/, '')})` : null,
-        `Masterkatalog S. ${v.seite}`,
+        v.hk?.seite ? `Hauptkatalog S. ${v.hk.seite}${
+            text(v.hk.datei) ? ` (${text(v.hk.datei).replace(/\.pdf$/, '')})` : ''}` : null,
     ].filter(Boolean).join(' · ');
     const titel = [v.titel, v.untertitel].filter(Boolean).join(' – ');
     const zweck = v.empfehlungWoertlich && v.empfehlung ? v.empfehlung : v.hk?.zweck;
@@ -341,7 +371,9 @@ function loesungHtml(b, rang, warumZuerst = '') {
       ${rudi ? `<p class="warum-rudi">Rudis Lösung für: ${esc([rudi.gruppe, rudi.untergruppe, rudi.situation].filter(Boolean).join(' › '))}</p>` : ''}
       ${warumZuerst}
       ${abgleichHtml(b)}
+      ${herkunftHtml(v)}
       ${eigenschaftenHtml(v)}
+      ${katalogHinweiseHtml(v)}
       ${v.darstellung ? `<p class="einbau">Einbauweise: ${esc(v.darstellung)}</p>` : ''}
       ${pruef.length ? `<h3>Beim Aufmaß prüfen</h3><ul class="pruefliste">${pruef.map((p) => `<li>${esc(p.text)}</li>`).join('')}</ul>` : ''}
       ${rudi?.hinweise?.length || rudi?.qualitaet ? `<h3>Rudis Hinweis</h3><ul class="warum">${(rudi.hinweise || []).map((h) => `<li>${esc(h)}</li>`).join('')}${rudi.qualitaet ? `<li>${esc(rudi.qualitaet)}</li>` : ''}</ul>` : ''}
