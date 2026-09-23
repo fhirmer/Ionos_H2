@@ -1541,6 +1541,31 @@ body.produkte-open .nav-toggle {
   font-weight: 600;
 }
 
+/* Orte mit eigener Seite: der ganze Chip wird zur Schaltflaeche */
+.service-area-list li.has-link {
+  padding: 0;
+  border-color: var(--color-primary);
+}
+
+.service-area-list li.has-link a {
+  display: block;
+  padding: 0.6rem 0.9rem;
+  color: var(--color-primary-dark);
+  border-radius: 999px;
+  transition: background var(--transition), color var(--transition);
+}
+
+.service-area-list li.has-link a::after {
+  content: "\2192";
+  margin-left: 0.4rem;
+}
+
+.service-area-list li.has-link a:hover,
+.service-area-list li.has-link a:focus-visible {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
 @media (min-width: 850px) {
   .service-area-box {
     grid-template-columns: minmax(0, 1.6fr) minmax(240px, 0.7fr);
@@ -1602,6 +1627,12 @@ body.produkte-open .nav-toggle {
 
 .site-footer a:hover {
   color: #ffffff;
+}
+
+/* Fliesstext-Links im Footer haben sonst die gleiche Farbe wie der Text */
+.site-footer p a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .footer-logo img {
