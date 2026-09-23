@@ -245,28 +245,133 @@ Wer so etwas verspricht, sagt nicht die Wahrheit.
 
 ## Die Liste zum Abhaken
 
-| Aufgabe | Wer macht das? | Wie wichtig? |
-|---|---|---|
-| Google-Profil vollständig ausfüllen | Rudolf / Florian | Sehr wichtig |
-| Jeden Monat Fotos hochladen | Rudolf / Florian | Sehr wichtig |
-| Kunden nach Bewertung fragen | Rudolf / Florian | Sehr wichtig |
-| Einen Namen festlegen | Gemeinsam entscheiden | Wichtig |
-| Namen auf der Seite ändern | Am Computer | Wichtig |
-| Adresse auf die Seite schreiben | Am Computer | Wichtig |
-| In Verzeichnisse eintragen | Rudolf / Florian | Mittel |
-| Mehr Orts-Seiten bauen | Am Computer | Später |
-| Adresse auf Auto und Rechnung | Rudolf / Florian | Mittel |
+Hier stehen alle Aufgaben.
+Sie sind nach Reihen-Folge sortiert.
+Fangen Sie oben an.
+
+---
+
+### Diese Woche
+
+Das sind kleine Aufgaben.
+Jede dauert nur ein paar Minuten.
+
+- [ ] **Die neue Amberg-Seite bei Google anmelden**
+
+  Gehen Sie zur Google Search Console.
+  Das ist ein Werkzeug von Google für Internet-Seiten.
+  Oben ist ein Such-Feld.
+  Tippen Sie dort ein: `https://h2insektenschutz.de/fliegengitter-amberg`
+  Warten Sie kurz.
+  Klicken Sie dann auf **Indexierung beantragen**.
+
+  Das bedeutet: Google soll sich die neue Seite anschauen.
+  Ohne diesen Schritt dauert es 1 bis 3 Wochen länger.
+
+- [ ] **Die Seiten-Liste neu abschicken**
+
+  In der Search Console links auf **Sitemaps** klicken.
+  Dort `sitemap.xml` eintragen und abschicken.
+
+  Eine Sitemap ist eine Liste von allen Seiten.
+  Google weiß dann: Es gibt eine neue Seite.
+
+- [ ] **Den Bericht aus dem Google-Profil holen**
+
+  Gehen Sie in das Google-Profil von der Firma.
+  Klicken Sie auf **Leistung**.
+  Stellen Sie den Zeitraum auf 6 Monate.
+  Laden Sie die Zahlen herunter.
+
+  In dem Bericht steht:
+  Wie viele Menschen haben uns über Google Maps gefunden?
+  Wie viele haben angerufen?
+  Diese Zahlen kennen wir noch nicht.
+
+- [ ] **Fotos aus Amberg suchen**
+
+  Haben wir Fotos von Montagen in Amberg?
+  Oder aus der Nähe von Amberg?
+  Dann können wir sie auf die neue Seite setzen.
+  Echte Fotos wirken besser als Katalog-Bilder.
+
+- [ ] **Eine Sache prüfen**
+
+  Auf der neuen Amberg-Seite steht:
+  Das Aufmaß ist kostenlos.
+  Stimmt das auch für Amberg?
+  Die Fahrt dorthin ist weiter als nach Weiden.
+  Wenn es nicht stimmt, ändern wir den Satz.
+
+---
+
+### Diesen Monat
+
+Das sind die wichtigsten Aufgaben.
+Sie brauchen mehr Zeit.
+
+- [ ] **Google-Profil vollständig ausfüllen**
+  Adresse, Telefon, Zeiten, Beschreibung.
+  Siehe Punkt 1 weiter oben.
+
+- [ ] **Einen Namen festlegen**
+  Heißen wir *H2 Insektenschutz*?
+  Oder *H2 Fliegengitter & Insektenschutz*?
+  Das müssen Rudolf und Florian gemeinsam entscheiden.
+
+- [ ] **Die 5 Angaben sammeln**
+  Welche Angaben das sind, steht unten.
+
+- [ ] **Kunden nach Bewertungen fragen**
+  Ab jetzt bei jeder Montage.
+
+---
+
+### Immer wieder
+
+- [ ] **Jeden Monat Fotos hochladen** ins Google-Profil
+- [ ] **Jeden Monat einen kurzen Beitrag** schreiben
+- [ ] **Nach jeder Montage** nach einer Bewertung fragen
+
+---
+
+### Später
+
+- [ ] In Verzeichnisse eintragen
+- [ ] Adresse auf Auto, Rechnung und Visiten-Karte
+- [ ] Mehr Orts-Seiten bauen
+- [ ] In 3 Monaten die Zahlen wieder anschauen
+
+---
+
+### Am Computer
+
+Diese Aufgaben macht der Computer-Teil.
+Sie gehen erst, wenn die 5 Angaben da sind.
+
+- [ ] Den Firmen-Namen auf allen 13 Seiten ändern
+- [ ] Die Adresse in die Seite einbauen
+- [ ] Den Link zum Google-Profil einbauen
 
 ---
 
 ## Was wir noch brauchen
 
-Für die Arbeit am Computer brauchen wir diese Angaben:
+Für die Arbeit am Computer brauchen wir diese 5 Angaben.
+Schreiben Sie sie bitte genau ab.
+Jedes Zeichen muss stimmen.
 
-1. Die genaue Adresse aus dem Google-Profil
-2. Die Telefon-Nummer aus dem Google-Profil
-3. Die Öffnungs-Zeiten
-4. Den Link zum Google-Profil
-5. Die Entscheidung: Welcher Name soll es sein?
+| Nummer | Was? | Wo steht das? |
+|---|---|---|
+| 1 | Die genaue Adresse | Im Google-Profil |
+| 2 | Die Telefon-Nummer | Im Google-Profil |
+| 3 | Die Öffnungs-Zeiten | Im Google-Profil |
+| 4 | Der Link zum Profil | In Google Maps auf *Teilen* klicken |
+| 5 | Der richtige Firmen-Name | Das müssen wir entscheiden |
 
-Ohne diese Angaben können wir Punkt 3 und Punkt 4 nicht machen.
+**Wichtig bei Nummer 4:**
+Wir brauchen den langen Link.
+Er fängt so an: `https://www.google.com/maps/place/...`
+Der kurze Link reicht nicht.
+
+Ohne diese Angaben können wir die Aufgaben am Computer nicht machen.
