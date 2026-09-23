@@ -1570,7 +1570,13 @@ body.produkte-open .nav-toggle {
 
 @media (min-width: 700px) {
   .footer-grid {
-    grid-template-columns: 1.5fr 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .footer-grid {
+    grid-template-columns: 1.6fr 1fr 1.2fr 1.4fr;
   }
 }
 
