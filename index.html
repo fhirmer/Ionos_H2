@@ -21,11 +21,13 @@
     .hero{background:none!important;overflow:hidden;padding-top:7rem!important;padding-bottom:7rem!important}
     .hero::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,rgba(0,70,70,.68),rgba(0,100,100,.53)),url('images/stimmung/hero_v20260516.jpg') center top/cover no-repeat;animation:hero-bg-zoom 14s linear forwards;will-change:transform}
     .hero .container{position:relative;z-index:1}
+    .hero-schild{display:block;width:96px;height:auto;margin:0 auto 1.75rem;animation:hero-fade .6s cubic-bezier(.22,1,.36,1) both}
+    @media(min-width:768px){.hero-schild{width:120px}}
     .hero h1{margin-bottom:1.25rem;animation:hero-fade-up .65s cubic-bezier(.22,1,.36,1) both}
     .hero p.lead{margin-top:0;animation:hero-fade-up .55s cubic-bezier(.22,1,.36,1) .15s both}
     .hero ul{animation:hero-fade-up .50s cubic-bezier(.22,1,.36,1) .25s both}
     .hero-actions{animation:hero-fade .50s cubic-bezier(.22,1,.36,1) .40s both}
-    @media(prefers-reduced-motion:reduce){.hero::before,.hero h1,.hero p.lead,.hero ul,.hero-actions{animation:none}}
+    @media(prefers-reduced-motion:reduce){.hero-schild,.hero::before,.hero h1,.hero p.lead,.hero ul,.hero-actions{animation:none}}
     @media(max-width:599px){.hero::before{animation:none}}
     .video-modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.82);align-items:center;justify-content:center}
     .video-modal-overlay.is-open{display:flex}
@@ -177,6 +179,7 @@
   <!-- ================== HERO ================== -->
   <section class="hero">
     <div class="container">
+      <img src="images/logo-schild-weiss.svg" alt="" class="hero-schild" width="96" height="117" />
       <h1>Fliegengitter nach Maß in Weiden und der Oberpfalz</h1>
       <p class="lead">Persönliche Beratung, exaktes Aufmaß und fachgerechte Montage für Ihr Zuhause.</p>
       <ul style="list-style:none;margin:.6rem 0 2.8rem;padding:0;display:flex;flex-direction:column;gap:.45rem;">
