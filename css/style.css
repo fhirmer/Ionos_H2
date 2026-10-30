@@ -2042,3 +2042,12 @@ body.produkte-open .nav-toggle {
   background: var(--color-primary);
   color: #ffffff;
 }
+
+/* Kontaktformular: Fallschirm, wenn der Versand nicht klappt (js/kontakt.js) */
+.kontakt-fallschirm {
+  margin-top: 1rem; padding: 1rem; border-radius: var(--radius-lg);
+  background: #fff8e6; border: 1px solid #f0c75e;
+}
+.kontakt-fallschirm p { margin: 0 0 .75rem; }
+.kontakt-fallschirm textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: .9rem; padding: .6rem; border-radius: 8px; border: 1px solid var(--color-border); }
+.kontakt-fallschirm-knoepfe { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
