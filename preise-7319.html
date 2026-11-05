@@ -88,23 +88,25 @@
     .zusatz-funktion b { color: var(--color-primary); white-space: nowrap; }
 
     /* ---- Vergleich: unsere Spalte groß, die der anderen klein ---- */
-    .vergleich-wrap { overflow-x: auto; max-width: 920px; margin: 0 auto; padding: 4.5rem 1.25rem .5rem; }
+    .vergleich-wrap { overflow-x: auto; max-width: 980px; margin: 0 auto; padding: 5.5rem 1.25rem .5rem; }
     .vergleich { width: 100%; border-collapse: separate; border-spacing: 0; }
     .vergleich th, .vergleich td { padding: 1rem 1.1rem; text-align: left; vertical-align: middle; border-bottom: 1px solid var(--color-border); }
     .vergleich tbody tr:last-child th, .vergleich tbody tr:last-child td { border-bottom: 0; }
     .vergleich thead th { border-bottom: 0; font-size: .85rem; font-weight: 600; color: var(--color-text-soft); }
-    .vergleich tbody th { font-weight: 600; font-size: .95rem; width: 26%; }
+    .vergleich tbody th { font-weight: 600; font-size: .95rem; width: 28%; text-align: right; }
+    .vergleich thead th:first-child { text-align: right; }
     /* Unsere Spalte: hervorgehobene Karte */
     .vergleich .wir { width: 44%; background: #fff; font-size: 1.12rem; font-weight: 600; color: var(--color-text); border-left: 3px solid var(--color-primary); border-right: 3px solid var(--color-primary); box-shadow: 0 0 0 0 transparent; }
     .vergleich thead th.wir { position: relative; background: var(--color-primary); color: #fff; font-size: 1.35rem; font-weight: 700; padding: 1.3rem 1.1rem; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
     .vergleich thead th.wir .unterzeile, .vergleich thead th.andere .unterzeile { display: block; font-size: .8rem; font-weight: 500; opacity: .85; margin-top: .15rem; }
-    .markt-hinweis { position: absolute; bottom: calc(100% + .4rem); left: -1rem; display: flex; align-items: center; gap: .55rem; color: var(--color-primary-dark); font-size: 1rem; font-weight: 700; white-space: nowrap; }
+    .markt-hinweis { position: absolute; z-index: 3; bottom: calc(100% + .2rem); left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: .1rem; color: var(--color-primary-dark); font-size: 1rem; font-weight: 700; white-space: nowrap; }
+    .markt-hinweis .zeile { display: flex; align-items: center; gap: .55rem; }
     .markt-hinweis img { width: 40px; height: 40px; border-radius: 6px; box-shadow: var(--shadow-sm); }
-    .markt-hinweis .pfeil { width: 46px; height: 40px; margin-left: -.1rem; transform: translateY(18px); color: var(--color-accent); }
+    .markt-hinweis .pfeil { display: block; width: 22px; height: 26px; color: var(--color-accent); }
     .vergleich-quelle { max-width: 920px; margin: 1.25rem auto 0; font-size: .78rem; color: #8a9c9c; text-align: center; }
     .vergleich tbody tr:last-child td.wir { border-bottom: 3px solid var(--color-primary); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
-    .vergleich td.wir { padding-left: 3rem; text-indent: -2rem; }
-    .vergleich td.wir .ja { text-indent: 0; display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: .9rem; margin-right: .45rem; vertical-align: middle; }
+    .vergleich td.wir { position: relative; padding-left: 3.6rem; }
+    .vergleich td.wir .ja { position: absolute; left: 1.1rem; top: calc(1rem + .1em); display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: .9rem; margin-right: .45rem; vertical-align: middle; }
     /* Spalte der anderen: klein und zurückgenommen */
     .vergleich .andere { width: 28%; font-size: .82rem; color: #8a9c9c; }
     .vergleich thead th.andere { font-size: .8rem; font-weight: 500; color: #8a9c9c; }
@@ -355,9 +357,8 @@
               <th scope="col">Leistung</th>
               <th scope="col" class="wir">
                 <div class="markt-hinweis" aria-hidden="true">
-                  <img src="images/marken/neher-logo.svg" alt="" width="40" height="40" />
-                  <span>Technologie vom Marktführer</span>
-                  <svg class="pfeil" viewBox="0 0 60 50" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4c18 2 34 14 38 36"/><path d="M37 33l9 9 7-11"/></svg>
+                  <span class="zeile"><img src="images/marken/neher-logo.svg" alt="" width="40" height="40" /><span>Technologie vom Marktführer</span></span>
+                  <svg class="pfeil" viewBox="0 0 22 26" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2v20"/><path d="M3 14l8 9 8-9"/></svg>
                 </div>
                 H2 Insektenschutz
                 <span class="unterzeile">Neher-Fachbetrieb</span>
@@ -392,9 +393,9 @@
               <td class="andere">Ausführung je nach Hersteller</td>
             </tr>
             <tr>
-              <th scope="row">Aufmaß und Montage</th>
-              <td class="wir"><span class="ja">✓</span> Inklusive, millimetergenau durch uns</td>
-              <td class="andere">oft lose mitgeliefert oder Selbstmontage</td>
+              <th scope="row">Passgenauigkeit</th>
+              <td class="wir"><span class="ja">✓</span> Millimetergenau gemessen und nach Maß gefertigt – Aufmaß und Montage inklusive</td>
+              <td class="andere">teils Standardgrößen, die angepasst werden</td>
             </tr>
             <tr>
               <th scope="row">Nachrüsten</th>
