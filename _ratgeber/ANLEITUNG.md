@@ -75,6 +75,8 @@ Optional im Kopf: `geaendert: JJJJ-MM-TT` bei späterer Überarbeitung.
 - Keine erfundenen Fakten, Zahlen, Kundenzitate, Studien oder Versprechen.
   Was nicht belegt ist, weglassen.
 - Keine Rückdatierung: `datum` ist immer der echte Tag der Veröffentlichung.
+  Ein Datum in der Zukunft ist erlaubt: Der Artikel erscheint dann automatisch
+  an diesem Tag (GitHub Action `.github/workflows/ratgeber.yml`, jeden Morgen).
 - Keine Bildbearbeitung. Nur vorhandene Bilder aus `images/` verwenden,
   unverändert. Ein Bild möglichst nicht zweimal hintereinander verwenden.
 
@@ -91,12 +93,12 @@ Eigene Fotos von H2 haben Vorrang, sobald welche in `images/ratgeber/` liegen.
 ## Themenliste
 
 - [x] 2026-11-05 Fliegengitter im Winter: abnehmen oder dranlassen?
-- [x] 2026-11-05 Wann sollte man Fliegengitter bestellen?
+- [x] 2026-12-03 (geplant) Wann sollte man Fliegengitter bestellen?
 - [x] 2026-11-05 Spannrahmen, Drehrahmen, Rollo oder Plissee: Welches Fliegengitter passt?
-- [x] 2026-11-05 Fliegengitter richtig reinigen: die Tipps des Herstellers
+- [x] 2026-11-19 (geplant) Fliegengitter richtig reinigen: die Tipps des Herstellers
 - [x] 2026-11-05 Gibt es heute mehr oder weniger Insekten als früher?
-- [x] 2026-11-05 Schützt Insektenschutz auch die Insekten?
-- [x] 2026-11-05 Mücke im Schlafzimmer: Was wirklich hilft
+- [x] 2026-11-12 (geplant) Schützt Insektenschutz auch die Insekten?
+- [x] 2026-11-26 (geplant) Mücke im Schlafzimmer: Was wirklich hilft
 - [ ] Lichtschachtabdeckung: Was sie bringt (Laub, Schmutz, Kleintiere im Keller)
 - [ ] Pollenschutz am Fenster: besser schlafen mit Heuschnupfen
 - [ ] Fliegengitter für Dachfenster: Mücken in der Schräge

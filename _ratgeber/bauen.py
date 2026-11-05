@@ -11,6 +11,11 @@ Ergebnis:
                            <!-- ratgeber:start --> und <!-- ratgeber:end -->
   - sitemap.xml            Einträge zwischen denselben Markern
 
+Geplante Artikel: Ein Artikel mit einem Datum in der Zukunft wird noch nicht
+veröffentlicht. Links aus anderen Artikeln auf ihn werden bis dahin zu normalem
+Text. Die GitHub Action .github/workflows/ratgeber.yml führt dieses Skript jeden
+Morgen aus, damit geplante Artikel am richtigen Tag erscheinen.
+
 Kopf (Header, Navigation, Produkte-Overlay) und Fuß (Footer, WhatsApp, Script)
 werden bei jedem Lauf aus gewebearten.html übernommen. Menüänderungen also
 dort (und in allen anderen Seiten) machen und danach dieses Skript laufen lassen.
@@ -21,9 +26,11 @@ Ordner ist deshalb auf der Website nicht sichtbar.
 import html
 import json
 import math
+import os
 import re
 import sys
-from datetime import date
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -220,6 +227,18 @@ def main():
     slugs = [a["slug"] for a in alle]
     if len(set(slugs)) != len(slugs):
         fehler("ein slug kommt doppelt vor")
+    # Zum Testen: RATGEBER_HEUTE=2026-11-12 python3 _ratgeber/bauen.py
+    heute = (date.fromisoformat(os.environ["RATGEBER_HEUTE"]) if os.environ.get("RATGEBER_HEUTE")
+             else datetime.now(ZoneInfo("Europe/Berlin")).date())
+    geplant = sorted((a for a in alle if a["datum"] > heute), key=lambda a: a["datum"])
+    alle = [a for a in alle if a["datum"] <= heute]
+    if not alle:
+        fehler("noch kein Artikel veröffentlicht (alle Daten liegen in der Zukunft)")
+    slugs = [a["slug"] for a in alle]
+    for g in geplant:
+        muster = re.compile(r'<a href="/ratgeber-' + re.escape(g["slug"]) + r'">(.*?)</a>', re.S)
+        for a in alle:
+            a["inhalt"] = muster.sub(r"\1", a["inhalt"])
     # Neueste zuerst; bei gleichem Datum entscheidet das optionale Feld "reihenfolge" (größer = weiter vorn)
     alle.sort(key=lambda a: (a["datum"], int(a.get("reihenfolge") or 0)), reverse=True)
     header, footer = vorlage_teile()
@@ -252,6 +271,10 @@ def main():
     print(f"{len(alle)} Artikel gebaut:")
     for a in alle:
         print(f"  {a['datum']}  /ratgeber-{a['slug']}  ({a['minuten']} Min.)")
+    if geplant:
+        print("geplant (noch nicht online):")
+        for g in geplant:
+            print(f"  {g['datum']}  /ratgeber-{g['slug']}")
 
 
 if __name__ == "__main__":

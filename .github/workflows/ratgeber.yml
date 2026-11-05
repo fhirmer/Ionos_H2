@@ -1,0 +1,48 @@
+# Baut den Ratgeber jeden Morgen neu, damit geplante Artikel
+# (Datum in der Zukunft) am richtigen Tag erscheinen.
+# Siehe _ratgeber/bauen.py und _ratgeber/ANLEITUNG.md.
+name: Ratgeber täglich bauen
+
+on:
+  schedule:
+    - cron: "15 4 * * *"   # 4:15 UTC = 5:15 Uhr (Winter) / 6:15 Uhr (Sommer)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: ratgeber
+  cancel-in-progress: false
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Ratgeber bauen
+        run: python3 _ratgeber/bauen.py
+
+      - name: Änderungen veröffentlichen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          find _ratgeber -name __pycache__ -prune -exec rm -rf {} +
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Keine Änderung."
+            exit 0
+          fi
+          git config user.name "H2 Ratgeber"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ratgeber.html ratgeber-*.html index.html sitemap.xml
+          git add -u
+          git commit -m "Ratgeber: geplante Artikel veröffentlicht ($(TZ=Europe/Berlin date +%F))"
+          git push
+          # Pages-Build ausdrücklich anstoßen (Push mit github.token löst ihn nicht immer aus)
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || echo "Pages-Build konnte nicht angestoßen werden"

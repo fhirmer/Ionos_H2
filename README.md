@@ -100,5 +100,8 @@ Push_Page_H2/
   aus `gewebearten.html`; nach Menüänderungen das Skript erneut laufen lassen.
   Anleitung, Schreibregeln und Themenliste: `_ratgeber/ANLEITUNG.md`.
   Der Menüpunkt „Ratgeber“ steht in allen Seiten im Header und im Footer.
+  Artikel mit Datum in der Zukunft erscheinen automatisch: Die GitHub Action
+  `.github/workflows/ratgeber.yml` baut jeden Morgen neu und committet auf
+  `main`. **Deshalb vor eigenen Änderungen immer zuerst `git pull`.**
 - Bilder austauschen: gleiche Dateinamen unter `images/...` ablegen.
 - Farben &amp; Look: über CSS-Variablen am Anfang von `css/style.css` zentral steuerbar.
