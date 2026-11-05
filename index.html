@@ -35,6 +35,18 @@
     .video-modal iframe{width:100%;height:100%;border:0;border-radius:10px}
     .video-modal-close{position:absolute;top:-2.5rem;right:0;background:none;border:none;color:#fff;font-size:2rem;line-height:1;cursor:pointer;padding:.25rem .5rem;opacity:.8}
     .video-modal-close:hover{opacity:1}
+    .faq-list{max-width:820px;margin:0 auto;display:grid;gap:.75rem}
+    .faq-item{background:var(--color-bg);border:1px solid var(--color-border);border-radius:12px}
+    .faq-item[open]{border-color:var(--color-primary-light)}
+    .faq-item summary{cursor:pointer;list-style:none;padding:1.1rem 3rem 1.1rem 1.25rem;font-weight:600;color:var(--color-text);position:relative}
+    .faq-item summary::-webkit-details-marker{display:none}
+    .faq-item summary::after{content:'+';position:absolute;right:1.25rem;top:50%;transform:translateY(-50%);font-size:1.5rem;font-weight:400;color:var(--color-primary)}
+    .faq-item[open] summary::after{content:'\2212'}
+    .faq-item summary:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px;border-radius:12px}
+    .faq-answer{padding:0 1.25rem 1.1rem;color:var(--color-text-soft)}
+    .faq-answer p{margin:0 0 .75rem}.faq-answer p:last-child{margin-bottom:0}
+    .faq-answer ul,.faq-answer ol{margin:0 0 .75rem;padding-left:1.25rem}
+    .faq-answer li{margin-bottom:.35rem}
   </style>
   <meta property="og:title" content="H2 | Fliegengitter und Insektenschutz" />
   <meta property="og:description" content="Maßgefertigte Lösungen für Fenster, Türen und Lichtschächte im Raum Weiden, Amberg und der nördlichen Oberpfalz. Beratung, Aufmaß und Montage aus einer Hand." />
@@ -89,6 +101,60 @@
             "@type": "ViewAction",
             "name": "Über uns",
             "target": "https://h2insektenschutz.de/ueber-uns.html"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://h2insektenschutz.de/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Wie lange dauert es von der Bestellung bis zum Einbau?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Jedes Fliegengitter wird nach Ihrem Aufmaß einzeln gefertigt. Von der Bestellung bis zum Einbau vergehen deshalb meist 3 bis 6 Wochen, im Durchschnitt etwa 4 Wochen. Den Montagetermin stimmen wir persönlich mit Ihnen ab."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Kostet das Aufmaß etwas?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nein. Das Aufmaß vor Ort ist kostenlos und unverbindlich. Wir messen Ihre Fenster und Türen millimetergenau aus und schicken Ihnen danach ein kostenloses Angebot. Sie entscheiden in Ruhe, ob Sie bestellen."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Wie setzt sich der Preis für ein Fliegengitter zusammen?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Weil wir jedes Fliegengitter nach Maß fertigen, gibt es keinen Einheitspreis. Vier Dinge bestimmen den Preis: Größe: Breite mal Höhe. Mehr Fläche bedeutet mehr Material. Einbausituation: zum Beispiel ein Rollladen, der ins Fenster hängt, eine Regenschiene oder die Montage innen, außen oder im Rahmen. Funktion: feststehender Spannrahmen, Drehrahmen zum Öffnen, Rollo, Plissee oder Pendeltür. Das macht den größten Unterschied. Gewebe: Fiberglas ist ohne Aufpreis dabei. Spezialgewebe wie Transpatec, Pollenschutz oder Katzengitter kosten je nach Größe mehr. Ihren genauen Preis kennen Sie nach dem Aufmaß. Er steht verbindlich im Angebot."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Gibt es versteckte Kosten?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nein. Im Angebot steht alles, was Sie bezahlen: Ihr Insektenschutz nach Maß und der Einbau. Hinzu kommt nur eine Einbaupauschale von 25 €. Auch sie steht offen im Angebot."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Wie reinige ich mein Fliegengitter richtig?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Zweimal im Jahr reinigen reicht, am besten im Frühjahr und im Herbst. Spannrahmen und Drehrahmen nach Möglichkeit abnehmen. Losen Staub mit einer weichen Bürste oder dem Staubsauger mit Bürstenaufsatz entfernen. Gewebe und Rahmen mit lauwarmem Wasser, etwas mildem Spülmittel und einem weichen Schwamm oder Tuch abwischen. Mit klarem Wasser nachspülen und gut trocknen lassen, bevor Sie das Gitter wieder einsetzen oder ein Rollo aufrollen. Bitte keinen Hochdruckreiniger, keine scharfen oder scheuernden Reiniger und keine Lösungsmittel verwenden. Sie können das Gewebe und die Oberfläche beschädigen. Pollenschutzgewebe und Plissees behandeln Sie besonders sanft. Reinigen Sie den Rahmen möglichst nicht in praller Sonne."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "In welchem Gebiet sind Sie im Einsatz?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Wir beraten, messen und montieren in Weiden in der Oberpfalz, Neustadt an der Waldnaab, Amberg und in der ganzen nördlichen Oberpfalz. Nennen Sie uns in der Anfrage einfach Ihren Wohnort."
+            }
           }
         ]
       }
@@ -876,6 +942,43 @@
 </svg>
           <figcaption><span class="sm-swatch" aria-hidden="true"></span>Hier beraten und montieren wir. Gebiet anklicken für mehr Infos.</figcaption>
         </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================== FAQ ================== -->
+  <!-- Fragen und Antworten stehen zweimal: hier sichtbar und im JSON-LD "FAQPage" im <head>. Bei Änderungen beide Stellen gleich halten. -->
+  <section id="faq" aria-labelledby="faq-heading">
+    <div class="container">
+      <div class="section-heading fade-in">
+        <span class="eyebrow">Häufige Fragen</span>
+        <h2 id="faq-heading">Gut zu wissen, bevor Sie anfragen.</h2>
+      </div>
+      <div class="faq-list fade-in">
+        <details class="faq-item">
+          <summary>Wie lange dauert es von der Bestellung bis zum Einbau?</summary>
+          <div class="faq-answer"><p>Jedes Fliegengitter wird nach Ihrem Aufmaß einzeln gefertigt. Von der Bestellung bis zum Einbau vergehen deshalb meist 3 bis 6 Wochen, im Durchschnitt etwa 4 Wochen. Den Montagetermin stimmen wir persönlich mit Ihnen ab.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Kostet das Aufmaß etwas?</summary>
+          <div class="faq-answer"><p>Nein. Das Aufmaß vor Ort ist kostenlos und unverbindlich. Wir messen Ihre Fenster und Türen millimetergenau aus und schicken Ihnen danach ein kostenloses Angebot. Sie entscheiden in Ruhe, ob Sie bestellen.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Wie setzt sich der Preis für ein Fliegengitter zusammen?</summary>
+          <div class="faq-answer"><p>Weil wir jedes Fliegengitter nach Maß fertigen, gibt es keinen Einheitspreis. Vier Dinge bestimmen den Preis:</p><ul><li><strong>Größe:</strong> Breite mal Höhe. Mehr Fläche bedeutet mehr Material.</li><li><strong>Einbausituation:</strong> zum Beispiel ein Rollladen, der ins Fenster hängt, eine Regenschiene oder die Montage innen, außen oder im Rahmen.</li><li><strong>Funktion:</strong> feststehender Spannrahmen, Drehrahmen zum Öffnen, Rollo, Plissee oder Pendeltür. Das macht den größten Unterschied.</li><li><strong>Gewebe:</strong> Fiberglas ist ohne Aufpreis dabei. Spezialgewebe wie Transpatec, Pollenschutz oder Katzengitter kosten je nach Größe mehr.</li></ul><p>Ihren genauen Preis kennen Sie nach dem Aufmaß. Er steht verbindlich im Angebot.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Gibt es versteckte Kosten?</summary>
+          <div class="faq-answer"><p>Nein. Im Angebot steht alles, was Sie bezahlen: Ihr Insektenschutz nach Maß und der Einbau. Hinzu kommt nur eine Einbaupauschale von 25 €. Auch sie steht offen im Angebot.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Wie reinige ich mein Fliegengitter richtig?</summary>
+          <div class="faq-answer"><p>Zweimal im Jahr reinigen reicht, am besten im Frühjahr und im Herbst.</p><ol><li>Spannrahmen und Drehrahmen nach Möglichkeit abnehmen.</li><li>Losen Staub mit einer weichen Bürste oder dem Staubsauger mit Bürstenaufsatz entfernen.</li><li>Gewebe und Rahmen mit lauwarmem Wasser, etwas mildem Spülmittel und einem weichen Schwamm oder Tuch abwischen.</li><li>Mit klarem Wasser nachspülen und gut trocknen lassen, bevor Sie das Gitter wieder einsetzen oder ein Rollo aufrollen.</li></ol><p>Bitte keinen Hochdruckreiniger, keine scharfen oder scheuernden Reiniger und keine Lösungsmittel verwenden. Sie können das Gewebe und die Oberfläche beschädigen. Pollenschutzgewebe und Plissees behandeln Sie besonders sanft. Reinigen Sie den Rahmen möglichst nicht in praller Sonne.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>In welchem Gebiet sind Sie im Einsatz?</summary>
+          <div class="faq-answer"><p>Wir beraten, messen und montieren in Weiden in der Oberpfalz, Neustadt an der Waldnaab, Amberg und in der ganzen nördlichen Oberpfalz. Nennen Sie uns in der <a href="kontakt.html#anfrage">Anfrage</a> einfach Ihren Wohnort.</p></div>
+        </details>
       </div>
     </div>
   </section>
