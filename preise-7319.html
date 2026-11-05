@@ -89,6 +89,10 @@
     .produkt .ab { margin-top: auto; padding-top: .5rem; font-size: 1.75rem; white-space: nowrap; font-weight: 700; color: var(--color-primary); line-height: 1.1; }
     .produkt .ab small { font-size: .85rem; font-weight: 500; color: var(--color-text-soft); }
 
+    .faktor-inhalt ul.punkte { list-style: none; padding: 0; margin: .1rem 0 .4rem; text-align: left; display: inline-flex; flex-direction: column; gap: .35rem; }
+    .faktor-inhalt ul.punkte li { position: relative; padding-left: 1.2rem; font-size: .88rem; margin: 0; }
+    .faktor-inhalt ul.punkte li::before { content: ""; position: absolute; left: .2rem; top: .5em; width: .45rem; height: .45rem; border-radius: 50%; background: var(--color-primary-light); }
+
     /* ---- Wendekarten mit Preisbeispiel ---- */
     .produkt.flip { background: none; border: 0; overflow: visible; perspective: 1200px; }
     .produkt.flip:hover { box-shadow: none; }
@@ -158,6 +162,24 @@
     .vergleich thead th.andere { font-size: .8rem; font-weight: 500; color: #8a9c9c; }
     .ja { color: var(--color-primary); font-weight: 700; }
     .nein { color: #b04a4a; font-weight: 700; }
+    /* Vergleich am Handy: alles kleiner, damit die Tabelle in die Breite passt */
+    @media (max-width: 640px) {
+      .vergleich-wrap { padding: 5rem 0 .5rem; overflow-x: visible; }
+      .vergleich { table-layout: fixed; }
+      .vergleich td, .vergleich th { overflow-wrap: anywhere; hyphens: auto; }
+      .vergleich th, .vergleich td { padding: .6rem .4rem; }
+      .vergleich tbody th { font-size: .72rem; width: 24%; }
+      .vergleich .wir { width: 48%; font-size: .82rem; border-left-width: 2px; border-right-width: 2px; }
+      .vergleich td.wir { padding-left: 2.1rem; }
+      .vergleich td.wir .ja { left: .5rem; top: calc(.6rem + .05em); width: 1.2rem; height: 1.2rem; font-size: .7rem; }
+      .vergleich thead th.wir { font-size: 1rem; padding: .9rem .6rem; }
+      .vergleich thead th.wir .unterzeile { font-size: .7rem; }
+      .vergleich .andere { width: 28%; font-size: .68rem; }
+      .vergleich tbody tr:last-child td.wir { border-bottom-width: 2px; }
+      .markt-hinweis { transform: translateX(-50%) scale(.78); transform-origin: bottom center; }
+      .vergleich-quelle { font-size: .68rem; }
+    }
+
   </style>
 </head>
 <body>
@@ -275,8 +297,8 @@
           </div>
           <div class="faktor-inhalt">
             <h3>Größe</h3>
-            <p>Wir messen millimetergenau. Mehr Fläche heißt mehr Rahmen und Gewebe.</p>
-            <div class="gewebe-chips"><span>Kellerfenster</span><span>Fenster</span><span>Terrassentür</span></div>
+            <p>Wir messen jedes Fenster und jede Tür millimetergenau aus.</p>
+            <ul class="punkte"><li>Vom Kellerfenster bis zur Terrassentür</li><li>Breite × Höhe in Millimetern</li><li>Mehr Fläche, mehr Material</li></ul>
             <div class="wirkung"><span>Einfluss</span><span class="balken"><i style="width:70%"></i></span></div>
           </div>
         </article>
@@ -289,7 +311,7 @@
           <div class="faktor-inhalt">
             <h3>Einbausituation</h3>
             <p>Wenig Platz? Für jede Situation gibt es die passende Lösung.</p>
-            <div class="gewebe-chips"><span>Rollladen</span><span>Regenschiene</span><span>innen oder außen</span></div>
+            <ul class="punkte"><li>Rollladen hängt ins Fenster</li><li>Regenschiene am Fenster</li><li>Montage innen, außen oder im Rahmen</li></ul>
             <div class="wirkung"><span>Einfluss</span><span class="balken"><i style="width:45%"></i></span></div>
           </div>
         </article>
@@ -302,7 +324,7 @@
           <div class="faktor-inhalt">
             <h3>Funktion</h3>
             <p>Feststehend oder zum Öffnen – das macht den größten Unterschied.</p>
-            <div class="gewebe-chips"><span>Spannrahmen</span><span>Drehrahmen</span><span>Rollo</span><span>Plissee</span><span>Pendel</span><span>Tierklappe</span></div>
+            <ul class="punkte"><li>Spannrahmen – feststehend</li><li>Drehrahmen – zum Öffnen</li><li>Rollo &amp; Plissee – verschwinden</li><li>Pendel – schwingt in beide Richtungen</li><li>Extra: Katzen- oder Hundeklappe</li></ul>
             <div class="wirkung"><span>Einfluss</span><span class="balken"><i style="width:95%"></i></span></div>
           </div>
         </article>
@@ -314,8 +336,8 @@
           </div>
           <div class="faktor-inhalt">
             <h3>Gewebe</h3>
-            <p>Dünnes Fiberglas ohne Aufpreis. Spezialgewebe je nach Größe.</p>
-            <div class="gewebe-chips"><span>Transpatec</span><span>Polltec</span><span>Katzengitter</span></div>
+            <p>Dünnes Fiberglas ist ohne Aufpreis dabei. Spezialgewebe kosten je nach Größe mehr.</p>
+            <ul class="punkte"><li>Transpatec – mehr Durchsicht &amp; Luft</li><li>Polltec – Pollenschutz</li><li>Katzengitter – besonders robust</li></ul>
             <div class="wirkung"><span>Einfluss</span><span class="balken"><i style="width:25%"></i></span></div>
           </div>
         </article>
