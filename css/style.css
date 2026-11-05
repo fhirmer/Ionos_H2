@@ -1577,6 +1577,49 @@ body.produkte-open .nav-toggle {
   color: #ffffff;
 }
 
+.service-area-box.has-map > div > .service-area-list {
+  margin-top: 1.5rem;
+}
+
+/* Karte Einzugsgebiet (Daten: © GeoBasis-DE / BKG, VG250) */
+.service-map-wrap {
+  margin: 0;
+  max-width: 460px;
+  justify-self: center;
+  width: 100%;
+}
+.service-map { width: 100%; height: auto; display: block; }
+.service-map .sm-context path { fill: #eef3f3; stroke: #fff; stroke-width: 1.2; }
+.service-map .sm-partner path { fill: #e3eaea; stroke: #fff; stroke-width: 0.6; }
+.service-map .sm-area path { fill: #bfe0e0; stroke: #fff; stroke-width: 0.6; transition: fill var(--transition); }
+.service-map .sm-area:hover path,
+.service-map .sm-area:focus-visible path { fill: #7fc2c2; }
+.service-map .sm-area:focus { outline: none; }
+.service-map .sm-krs path { fill: none; stroke: var(--color-primary); stroke-width: 1.4; stroke-linejoin: round; pointer-events: none; }
+.service-map .sm-places { pointer-events: none; }
+.service-map .sm-place circle { fill: var(--color-primary-dark); stroke: #fff; stroke-width: 1.5; }
+.service-map .sm-place text { font-size: 12px; font-weight: 600; fill: var(--color-text); paint-order: stroke; stroke: #fff; stroke-width: 3px; stroke-linejoin: round; }
+.service-map .sm-place.big text { font-size: 15px; font-weight: 700; }
+.service-map .sm-place.muted circle { fill: #8aa3a3; }
+.service-map .sm-place.muted text { fill: #6b8484; font-weight: 500; }
+.service-map .sm-copy { font-size: 9px; fill: #8aa3a3; }
+.service-map-wrap figcaption {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--color-text-soft);
+}
+.sm-swatch {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: #bfe0e0;
+  border: 1.5px solid var(--color-primary);
+}
+
 @media (min-width: 850px) {
   .service-area-box {
     grid-template-columns: minmax(0, 1.6fr) minmax(240px, 0.7fr);
@@ -1584,6 +1627,10 @@ body.produkte-open .nav-toggle {
 
   .service-area-list {
     align-content: center;
+  }
+
+  .service-area-box.has-map {
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 1fr);
   }
 }
 
