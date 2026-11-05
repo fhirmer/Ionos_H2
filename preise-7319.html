@@ -162,22 +162,24 @@
     .vergleich thead th.andere { font-size: .8rem; font-weight: 500; color: #8a9c9c; }
     .ja { color: var(--color-primary); font-weight: 700; }
     .nein { color: #b04a4a; font-weight: 700; }
-    /* Vergleich am Handy: alles kleiner, damit die Tabelle in die Breite passt */
+    /* Vergleich am Handy: jede Zeile als eigener Block in unserer Box */
     @media (max-width: 640px) {
-      .vergleich-wrap { padding: 5rem 0 .5rem; overflow-x: visible; }
-      .vergleich { table-layout: fixed; }
-      .vergleich td, .vergleich th { overflow-wrap: anywhere; hyphens: auto; }
-      .vergleich th, .vergleich td { padding: .6rem .4rem; }
-      .vergleich tbody th { font-size: .72rem; width: 24%; }
-      .vergleich .wir { width: 48%; font-size: .82rem; border-left-width: 2px; border-right-width: 2px; }
-      .vergleich td.wir { padding-left: 2.1rem; }
-      .vergleich td.wir .ja { left: .5rem; top: calc(.6rem + .05em); width: 1.2rem; height: 1.2rem; font-size: .7rem; }
-      .vergleich thead th.wir { font-size: 1rem; padding: .9rem .6rem; }
-      .vergleich thead th.wir .unterzeile { font-size: .7rem; }
-      .vergleich .andere { width: 28%; font-size: .68rem; }
-      .vergleich tbody tr:last-child td.wir { border-bottom-width: 2px; }
-      .markt-hinweis { transform: translateX(-50%) scale(.78); transform-origin: bottom center; }
-      .vergleich-quelle { font-size: .68rem; }
+      .vergleich-wrap { padding: 4.5rem 0 .5rem; overflow-x: visible; }
+      .vergleich, .vergleich thead, .vergleich tbody, .vergleich tr { display: block; width: 100%; }
+      .vergleich thead th:not(.wir) { display: none; }
+      .vergleich thead th.wir { display: block; width: auto; text-align: center; font-size: 1.15rem; padding: 1rem; }
+      .vergleich tbody { border: 2px solid var(--color-primary); border-top: 0; border-radius: 0 0 var(--radius-lg) var(--radius-lg); background: #fff; }
+      .vergleich tbody tr { padding: .9rem 1rem; border-bottom: 1px solid var(--color-border); }
+      .vergleich tbody tr:last-child { border-bottom: 0; }
+      .vergleich tbody th, .vergleich td { display: block; width: auto !important; padding: 0; border: 0 !important; border-radius: 0 !important; text-align: left; }
+      .vergleich tbody th { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--color-primary); margin-bottom: .35rem; }
+      .vergleich td.wir { font-size: .95rem; padding-left: 1.9rem; }
+      .vergleich td.wir .ja { left: 0; top: .1em; width: 1.3rem; height: 1.3rem; font-size: .72rem; }
+      .vergleich td.andere { font-size: .78rem; margin-top: .35rem; padding-left: 1.9rem; }
+      .vergleich td.andere::before { content: "Andere: "; font-weight: 600; }
+      .markt-hinweis { transform: translateX(-50%) scale(.85); transform-origin: bottom center; }
+      .markt-hinweis .pfeil { display: none; }
+      .vergleich-quelle { font-size: .7rem; padding: 0 .5rem; }
     }
 
   </style>
