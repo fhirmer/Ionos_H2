@@ -142,6 +142,7 @@
     .markt-hinweis .pfeil { position: absolute; left: calc(100% - .3rem); top: 1.2rem; width: 58px; height: 50px; color: var(--color-accent); filter: drop-shadow(0 2px 2px rgba(0,0,0,.12)); }
     @keyframes sticker-wippen { 0%, 100% { transform: rotate(-3deg) translateY(0); } 50% { transform: rotate(-2deg) translateY(-3px); } }
     @media (prefers-reduced-motion: reduce) { .sticker { animation: none; } }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     .vergleich-quelle { max-width: 920px; margin: 1.25rem auto 0; font-size: .78rem; color: #8a9c9c; text-align: center; }
     .vergleich tbody tr:last-child td.wir { border-bottom: 3px solid var(--color-primary); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
     .vergleich td.wir { position: relative; padding-left: 3.6rem; }
@@ -392,7 +393,7 @@
         <table class="vergleich">
           <thead>
             <tr>
-              <th scope="col">Leistung</th>
+              <th scope="col"><span class="sr-only">Leistung</span></th>
               <th scope="col" class="wir">
                 <div class="markt-hinweis" aria-hidden="true">
                   <span class="sticker"><img src="images/marken/neher-logo.svg" alt="" width="46" height="46" /><span class="sticker-text"><small>Technologie vom</small><strong>Marktführer</strong></span></span>
@@ -401,7 +402,7 @@
                 H2 Insektenschutz
                 <span class="unterzeile">Neher-Fachbetrieb</span>
               </th>
-              <th scope="col" class="andere">Standard-Zubehör<span class="unterzeile">z. B. beim Fensterkauf</span></th>
+              <th scope="col" class="andere"><span class="sr-only">Standard-Zubehör</span></th>
             </tr>
           </thead>
           <tbody>
