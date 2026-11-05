@@ -94,12 +94,15 @@ Eigene Fotos von H2 haben Vorrang, sobald welche in `images/ratgeber/` liegen.
 - [x] 2026-11-05 Wann sollte man Fliegengitter bestellen?
 - [x] 2026-11-05 Spannrahmen, Drehrahmen, Rollo oder Plissee: Welches Fliegengitter passt?
 - [x] 2026-11-05 Fliegengitter richtig reinigen: die Tipps des Herstellers
+- [x] 2026-11-05 Gibt es heute mehr oder weniger Insekten als früher?
+- [x] 2026-11-05 Schützt Insektenschutz auch die Insekten?
+- [x] 2026-11-05 Mücke im Schlafzimmer: Was wirklich hilft
 - [ ] Lichtschachtabdeckung: Was sie bringt (Laub, Schmutz, Kleintiere im Keller)
 - [ ] Pollenschutz am Fenster: besser schlafen mit Heuschnupfen
 - [ ] Fliegengitter für Dachfenster: Mücken in der Schräge
 - [ ] Fliegengitter und Katze: Katzengewebe und Katzenklappe
 - [ ] Fliegengitter ohne Bohren: Was geht, was nicht
-- [ ] Tigermücke in Bayern: Was Hausbesitzer wissen sollten
+- [ ] Tigermücke in Bayern: Was Hausbesitzer wissen sollten (kurz erwähnt in /ratgeber-gibt-es-mehr-insekten, dort verlinken)
 - [ ] Insektenschutz für die Terrassentür: Drehtür, Pendeltür, Schiebeanlage oder Plissee
 - [ ] Lüften bei Hitze: nachts frische Luft ohne Mücken
 - [ ] Wespen am Haus: Wie ein Fliegengitter hilft
