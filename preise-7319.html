@@ -500,10 +500,20 @@
   </a>
 
   <script>
-    // Wendekarten: „Preisbeispiel“ dreht die Karte um, „Zurück“ dreht sie zurück
+    // Wendekarten: „Preisbeispiel“ dreht um, „Zurück“ dreht zurück.
+    // Von selbst zurück: 3 Sekunden, nachdem die Maus die Karte verlassen hat
+    // (solange man darauf zeigt, bleibt sie offen; ohne Maus nach 3 s ab dem Antippen woanders).
     document.querySelectorAll('.produkt.flip').forEach(function (karte) {
-      karte.querySelector('.beispiel-knopf').addEventListener('click', function () { karte.classList.add('gedreht'); });
-      karte.querySelector('.zurueck-knopf').addEventListener('click', function () { karte.classList.remove('gedreht'); });
+      var uhr = null;
+      function zurueck() { clearTimeout(uhr); karte.classList.remove('gedreht'); }
+      function spaeter() { clearTimeout(uhr); uhr = setTimeout(zurueck, 3000); }
+      karte.querySelector('.beispiel-knopf').addEventListener('click', function () {
+        karte.classList.add('gedreht');
+        if (!karte.matches(':hover')) spaeter();
+      });
+      karte.querySelector('.zurueck-knopf').addEventListener('click', zurueck);
+      karte.addEventListener('mouseenter', function () { clearTimeout(uhr); });
+      karte.addEventListener('mouseleave', function () { if (karte.classList.contains('gedreht')) spaeter(); });
     });
   </script>
   <script src="js/script.js?v=20260904-nav3" defer></script>
