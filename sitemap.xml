@@ -72,4 +72,36 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- ratgeber:start -->
+  <url>
+    <loc>https://h2insektenschutz.de/ratgeber</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://h2insektenschutz.de/ratgeber-fliegengitter-im-winter</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://h2insektenschutz.de/ratgeber-wann-fliegengitter-bestellen</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://h2insektenschutz.de/ratgeber-welches-fliegengitter-passt</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://h2insektenschutz.de/ratgeber-fliegengitter-richtig-reinigen</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- ratgeber:end -->
 </urlset>

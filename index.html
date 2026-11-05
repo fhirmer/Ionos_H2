@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" />
-  <link rel="stylesheet" href="css/style.css?v=20261105-bewertungen2" />
+  <link rel="stylesheet" href="css/style.css?v=20261105-ratgeber" />
   <style>
     @keyframes gallery-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}.gallery-ticker-wrap{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(to right,transparent,black 6%,black 94%,transparent);mask-image:linear-gradient(to right,transparent,black 6%,black 94%,transparent)}.gallery-ticker{display:flex;gap:1rem;width:max-content;animation:gallery-scroll 32s linear infinite}.gallery-ticker:hover{animation-play-state:paused}.gallery-ticker img{width:300px;height:225px;object-fit:cover;border-radius:var(--radius,8px);flex-shrink:0}@media(max-width:599px){.gallery-ticker img{width:220px;height:165px}}
     @keyframes hero-fade-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -181,6 +181,7 @@
            aria-haspopup="dialog" aria-expanded="false"
            aria-controls="produkte-overlay">Produkte</a>
         <a href="ueber-uns.html">Über uns</a>
+        <a href="/ratgeber">Ratgeber</a>
         <a href="kontakt.html">Kontakt</a>
         <a href="kontakt.html#anfrage" class="btn-cta">Angebot anfragen</a>
       </nav>
@@ -946,6 +947,48 @@
     </div>
   </section>
 
+  <!-- ================== RATGEBER-TEASER (automatisch, _ratgeber/bauen.py) ================== -->
+  <!-- ratgeber:start -->
+  <section aria-labelledby="ratgeber-heading">
+    <div class="container">
+      <div class="section-heading fade-in">
+        <span class="eyebrow">Ratgeber</span>
+        <h2 id="ratgeber-heading">Wissen rund um Ihren Insektenschutz.</h2>
+      </div>
+      <div class="ratgeber-grid fade-in">
+        <a class="ratgeber-karte" href="/ratgeber-fliegengitter-im-winter">
+          <img src="images/produkte/lichtschacht_v20260516.jpg" alt="Lichtschachtabdeckung mit Edelstahlgewebe, auf der Herbstlaub liegt" loading="lazy" />
+          <span class="ratgeber-karte-text">
+            <time datetime="2026-11-05">5. November 2026</time>
+            <h3>Fliegengitter im Winter: abnehmen oder dranlassen?</h3>
+            <p>Spannrahmen, Rollo, Tür und Lichtschacht: Was im Winter am Fenster bleiben kann und worauf Sie bei Frost, Laub und Schnee achten sollten.</p>
+            <span class="ratgeber-weiter">Weiterlesen →</span>
+          </span>
+        </a>
+        <a class="ratgeber-karte" href="/ratgeber-wann-fliegengitter-bestellen">
+          <img src="images/ablauf/aufmass-v3.webp" alt="Monteur misst ein Fenster mit einem Teleskop-Messstab für ein Fliegengitter nach Maß aus" loading="lazy" />
+          <span class="ratgeber-karte-text">
+            <time datetime="2026-11-05">5. November 2026</time>
+            <h3>Wann sollte man Fliegengitter bestellen?</h3>
+            <p>Maßanfertigung braucht Zeit. So planen Sie, damit Ihr Fliegengitter vor den ersten Mücken am Fenster ist.</p>
+            <span class="ratgeber-weiter">Weiterlesen →</span>
+          </span>
+        </a>
+        <a class="ratgeber-karte" href="/ratgeber-welches-fliegengitter-passt">
+          <img src="images/produkte/drehfenster_v20260516.jpg" alt="Frau öffnet einen Drehrahmen mit Fliegengitter an einem Fenster mit Kräutern auf der Fensterbank" loading="lazy" />
+          <span class="ratgeber-karte-text">
+            <time datetime="2026-11-05">5. November 2026</time>
+            <h3>Spannrahmen, Drehrahmen, Rollo oder Plissee: Welches Fliegengitter passt?</h3>
+            <p>Vom Klassiker für das Küchenfenster bis zur Lösung für die breite Terrassentür: ein Überblick über die wichtigsten Systeme.</p>
+            <span class="ratgeber-weiter">Weiterlesen →</span>
+          </span>
+        </a>
+      </div>
+      <div class="text-center mt-2"><a href="/ratgeber" class="btn btn-primary">Alle Artikel ansehen</a></div>
+    </div>
+  </section>
+  <!-- ratgeber:end -->
+
   <!-- ================== FAQ ================== -->
   <!-- Fragen und Antworten stehen zweimal: hier sichtbar und im JSON-LD "FAQPage" im <head>. Bei Änderungen beide Stellen gleich halten. -->
   <section id="faq" aria-labelledby="faq-heading">
@@ -1058,7 +1101,7 @@
           <ul>
             <li><a href="index.html">Start</a></li>
             <li><a href="leistungen.html">Produkte</a></li>
-            <li><a href="ueber-uns.html">Über uns</a></li>
+            <li><a href="ueber-uns.html">Über uns</a></li><li><a href="/ratgeber">Ratgeber</a></li>
             <li><a href="/insektenschutz-oberpfalz">Einzugsgebiet</a></li><li><a href="kontakt.html">Kontakt</a></li>
           </ul>
         </div><div><h4>Produkte</h4><ul><li><a href="/fliegengitter-fenster">Fliegengitter für Fenster</a></li><li><a href="/insektenschutztueren">Insektenschutztüren</a></li><li><a href="/lichtschachtabdeckungen">Lichtschachtabdeckungen</a></li><li><a href="/gewebearten">Gewebearten</a></li></ul></div>

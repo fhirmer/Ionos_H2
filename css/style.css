@@ -2163,3 +2163,50 @@ body.produkte-open .nav-toggle {
 .review-who { display: flex; flex-direction: column; gap: .15rem; }
 .review-card figcaption .review-avatar { color: #fff; font-size: .95rem; }
 .review-card figcaption .review-who { font-size: 1rem; color: var(--color-text); }
+
+/* ===================== Ratgeber (Blog) =====================
+   Seiten werden von _ratgeber/bauen.py erzeugt: ratgeber.html,
+   ratgeber-*.html und der Teaser-Block auf index.html. */
+.site-nav a[aria-current="page"] { background: rgba(255, 255, 255, 0.12); }
+.page-hero .ratgeber-kicker { display: inline-block; font-size: .85rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.85); margin-bottom: .75rem; }
+.page-hero .ratgeber-meta { font-size: .95rem; color: rgba(255,255,255,.85); margin-top: .25rem; }
+.ratgeber-artikel { max-width: 760px; margin: 0 auto; }
+.ratgeber-artikel .ratgeber-bild { margin: 0 0 2rem; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); }
+.ratgeber-artikel .ratgeber-bild img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.ratgeber-artikel h2 { font-size: clamp(1.35rem, 2.6vw, 1.7rem); margin: 2.25rem 0 .75rem; }
+.ratgeber-artikel h3 { font-size: 1.15rem; margin: 1.5rem 0 .5rem; }
+.ratgeber-artikel p, .ratgeber-artikel li { color: var(--color-text); line-height: 1.75; }
+.ratgeber-artikel p { margin: 0 0 1rem; }
+.ratgeber-artikel ul, .ratgeber-artikel ol { margin: 0 0 1.25rem; padding-left: 1.4rem; }
+.ratgeber-artikel li { margin-bottom: .4rem; }
+.ratgeber-artikel a { text-decoration: underline; text-underline-offset: 2px; }
+.ratgeber-kurz { background: var(--color-bg-soft); border-left: 4px solid var(--color-primary); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin: 0 0 2rem; }
+.ratgeber-kurz strong:first-child { display: block; color: var(--color-primary-dark); margin-bottom: .4rem; }
+.ratgeber-kurz p:last-child, .ratgeber-kurz ul:last-child { margin-bottom: 0; }
+.ratgeber-hinweis { background: #fff8e1; border: 1px solid #f5d77a; border-radius: var(--radius); padding: 1rem 1.25rem; margin: 1.5rem 0; }
+.ratgeber-hinweis p:last-child { margin-bottom: 0; }
+.ratgeber-grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+@media (min-width: 700px) { .ratgeber-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .ratgeber-grid { grid-template-columns: repeat(3, 1fr); } }
+.ratgeber-karte { display: flex; flex-direction: column; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; color: var(--color-text); transition: box-shadow var(--transition), transform var(--transition); }
+.ratgeber-karte:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); color: var(--color-text); }
+.ratgeber-karte img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.ratgeber-karte-text { padding: 1.25rem 1.25rem 1.5rem; display: flex; flex-direction: column; gap: .5rem; flex: 1; }
+.ratgeber-karte time { font-size: .85rem; color: var(--color-text-soft); }
+.ratgeber-karte h2, .ratgeber-karte h3 { font-size: 1.15rem; margin: 0; line-height: 1.35; }
+.ratgeber-karte p { font-size: .95rem; color: var(--color-text-soft); margin: 0; }
+.ratgeber-karte .ratgeber-weiter { margin-top: auto; padding-top: .5rem; font-weight: 600; color: var(--color-primary); }
+.ratgeber-mehr { margin-top: 3rem; }
+.ratgeber-mehr h2 { font-size: 1.4rem; margin-bottom: 1.25rem; }
+/* Menü mit 5 Punkten: zwischen 900 und 1149 px enger setzen, damit nichts umbricht */
+@media (min-width: 900px) { .site-nav a { white-space: nowrap; } }
+@media (min-width: 900px) and (max-width: 1149px) {
+  .site-nav a { padding: 0.5rem 0.6rem; }
+  .site-nav .btn-cta { margin-left: 0.25rem; padding: 0.6rem 0.9rem; }
+  .site-logo img { height: 46px; }
+}
+@media (min-width: 900px) and (max-width: 999px) {
+  .site-nav a { padding: 0.5rem 0.45rem; font-size: 0.95rem; }
+  .site-nav .btn-cta { padding: 0.55rem 0.8rem; }
+  .site-logo img { height: 42px; }
+}

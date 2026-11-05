@@ -92,5 +92,13 @@ Push_Page_H2/
 - Produkttexte der Landingpages stammen aus `leistungen.html`; die
   Gewebetexte stammen aus `index.html`. Bei Inhaltsänderungen immer Quellseite
   und zugehörige Landingpage gemeinsam prüfen.
+- **Ratgeber (Blog):** `ratgeber.html`, alle `ratgeber-*.html`, der Block
+  „Aus dem Ratgeber“ in `index.html` und die Ratgeber-Einträge in
+  `sitemap.xml` werden von `_ratgeber/bauen.py` erzeugt. Nie direkt ändern,
+  sondern die Quelle in `_ratgeber/artikel/` bearbeiten und
+  `python3 _ratgeber/bauen.py` ausführen. Kopf und Fuß übernimmt das Skript
+  aus `gewebearten.html`; nach Menüänderungen das Skript erneut laufen lassen.
+  Anleitung, Schreibregeln und Themenliste: `_ratgeber/ANLEITUNG.md`.
+  Der Menüpunkt „Ratgeber“ steht in allen Seiten im Header und im Footer.
 - Bilder austauschen: gleiche Dateinamen unter `images/...` ablegen.
 - Farben &amp; Look: über CSS-Variablen am Anfang von `css/style.css` zentral steuerbar.
