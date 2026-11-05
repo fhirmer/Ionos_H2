@@ -1590,7 +1590,7 @@ body.produkte-open .nav-toggle {
 }
 .service-map { width: 100%; height: auto; display: block; }
 .service-map .sm-context path { fill: #eef3f3; stroke: #fff; stroke-width: 1.2; }
-.service-map .sm-partner path { fill: #e3eaea; stroke: #fff; stroke-width: 0.6; }
+.service-map .sm-partner path { fill: #eef3f3; stroke: #fff; stroke-width: 0.6; }
 .service-map .sm-area path { fill: #bfe0e0; stroke: #fff; stroke-width: 0.6; transition: fill var(--transition); }
 .service-map .sm-area:hover path,
 .service-map .sm-area:focus-visible path { fill: #7fc2c2; }
