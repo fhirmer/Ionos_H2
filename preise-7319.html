@@ -89,6 +89,28 @@
     .produkt .ab { margin-top: auto; padding-top: .5rem; font-size: 1.6rem; font-weight: 700; color: var(--color-primary); line-height: 1.1; }
     .produkt .ab small { font-size: .85rem; font-weight: 500; color: var(--color-text-soft); }
 
+    /* ---- Wendekarten mit Preisbeispiel ---- */
+    .produkt.flip { background: none; border: 0; overflow: visible; perspective: 1200px; }
+    .produkt.flip:hover { box-shadow: none; }
+    .flip-innen { position: relative; flex: 1; display: flex; transition: transform .6s cubic-bezier(.3,.7,.3,1); transform-style: preserve-3d; }
+    .produkt.flip.gedreht .flip-innen { transform: rotateY(180deg); }
+    .flip-vorne, .flip-hinten { backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--radius-lg); border: 1px solid var(--color-border); overflow: hidden; background: #fff; }
+    .flip-vorne { flex: 1; display: flex; flex-direction: column; }
+    .flip-hinten { position: absolute; inset: 0; transform: rotateY(180deg); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: .45rem; padding: 1.25rem; background: linear-gradient(160deg, var(--color-primary), var(--color-primary-dark)); color: #fff; border-color: transparent; }
+    .ab-zeile { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; gap: .5rem; }
+    .ab-zeile .ab { margin-top: 0; }
+    .beispiel-knopf { font: inherit; font-size: .78rem; font-weight: 600; color: var(--color-primary); background: rgba(0,128,128,.08); border: 1px solid rgba(0,128,128,.25); border-radius: 999px; padding: .35rem .75rem; cursor: pointer; white-space: nowrap; transition: background var(--transition); }
+    .beispiel-knopf:hover { background: rgba(0,128,128,.16); }
+    .beispiel-marke { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: var(--color-accent); color: #1a2e2e; padding: .25rem .7rem; border-radius: 999px; }
+    .flip-hinten h4 { color: #fff; font-size: 1.1rem; margin-top: .25rem; }
+    .beispiel-ort { font-weight: 600; font-size: .95rem; color: #fff; }
+    .beispiel-was { font-size: .85rem; color: rgba(255,255,255,.85); line-height: 1.45; }
+    .beispiel-preis { font-size: 2.2rem; font-weight: 800; line-height: 1; margin: .35rem 0 0; color: #fff; }
+    .beispiel-fuss { font-size: .72rem; color: rgba(255,255,255,.7); }
+    .zurueck-knopf { font: inherit; font-size: .8rem; font-weight: 600; color: #fff; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.35); border-radius: 999px; padding: .35rem .9rem; cursor: pointer; margin-top: .3rem; }
+    .zurueck-knopf:hover { background: rgba(255,255,255,.24); }
+    @media (prefers-reduced-motion: reduce) { .flip-innen { transition: none; } }
+
     .zusatz-funktion { font-size: .85rem !important; background: var(--color-bg-soft); border-radius: var(--radius); padding: .5rem .7rem; }
     .zusatz-funktion b { color: var(--color-primary); white-space: nowrap; }
 
@@ -321,28 +343,28 @@
       <div class="preis-gruppe">
         <h3>Fenster <small>Fliegengitter nach Maß</small></h3>
         <div class="produkt-grid">
-          <div class="produkt"><img src="images/produkte/spannrahmen_v20260516.jpg" alt="Spannrahmen am Fenster" loading="lazy" /><div class="produkt-text"><h4>Spannrahmen</h4><p>Der Klassiker – feststehend, innen oder außen, auch bei Regenschiene</p><div class="ab"><small>ab</small> 150 €</div></div></div>
+          <div class="produkt flip"><div class="flip-innen"><div class="flip-vorne"><img src="images/produkte/spannrahmen_v20260516.jpg" alt="Spannrahmen am Fenster" loading="lazy" /><div class="produkt-text"><h4>Spannrahmen</h4><p>Der Klassiker – feststehend, innen oder außen, auch bei Regenschiene</p><div class="ab-zeile"><div class="ab"><small>ab</small> 150 €</div><button type="button" class="beispiel-knopf" aria-label="Preisbeispiel ansehen">Preisbeispiel</button></div></div></div><div class="flip-hinten"><span class="beispiel-marke">Preisbeispiel</span><h4>Spannrahmen</h4><p class="beispiel-ort">Küchenfenster</p><p class="beispiel-was">Spannrahmen in Weiß mit Transpatec-Gewebe, feste Winkellaschen</p><div class="beispiel-preis">175 €</div><p class="beispiel-fuss">aus einem echten Angebot</p><button type="button" class="zurueck-knopf" aria-label="Karte zurückdrehen">↺ Zurück</button></div></div></div>
           <div class="produkt"><img src="images/produkte/drehfenster_v20260516.jpg" alt="Drehrahmen am Fenster" loading="lazy" /><div class="produkt-text"><h4>Drehrahmen</h4><p>Zum Öffnen wie ein Fensterflügel</p><div class="ab"><small>ab</small> 250 €</div></div></div>
-          <div class="produkt"><img src="images/produkte/rollo_v20260516.jpg" alt="Insektenschutz-Rollo am Fenster" loading="lazy" /><div class="produkt-text"><h4>Rollo</h4><p>Bei Bedarf herunterziehen, sonst unsichtbar</p><div class="ab"><small>ab</small> 310 €</div></div></div>
-          <div class="produkt"><img src="images/produkte/pendelfenster_v20260516.jpg" alt="Pendelfenster" loading="lazy" /><div class="produkt-text"><h4>Pendelfenster</h4><p>Öffnet in beide Richtungen, schließt von selbst</p><div class="ab"><small>ab</small> 400 €</div></div></div>
+          <div class="produkt flip"><div class="flip-innen"><div class="flip-vorne"><img src="images/produkte/rollo_v20260516.jpg" alt="Insektenschutz-Rollo am Fenster" loading="lazy" /><div class="produkt-text"><h4>Rollo</h4><p>Bei Bedarf herunterziehen, sonst unsichtbar</p><div class="ab-zeile"><div class="ab"><small>ab</small> 310 €</div><button type="button" class="beispiel-knopf" aria-label="Preisbeispiel ansehen">Preisbeispiel</button></div></div></div><div class="flip-hinten"><span class="beispiel-marke">Preisbeispiel</span><h4>Rollo</h4><p class="beispiel-ort">Wohnzimmerfenster</p><p class="beispiel-was">Rollo in Weiß, unten geschlossen, mit Außenbedienung</p><div class="beispiel-preis">343 €</div><p class="beispiel-fuss">aus einem echten Angebot</p><button type="button" class="zurueck-knopf" aria-label="Karte zurückdrehen">↺ Zurück</button></div></div></div>
+          <div class="produkt flip"><div class="flip-innen"><div class="flip-vorne"><img src="images/produkte/pendelfenster_v20260516.jpg" alt="Pendelfenster" loading="lazy" /><div class="produkt-text"><h4>Pendelfenster</h4><p>Öffnet in beide Richtungen, schließt von selbst</p><div class="ab-zeile"><div class="ab"><small>ab</small> 400 €</div><button type="button" class="beispiel-knopf" aria-label="Preisbeispiel ansehen">Preisbeispiel</button></div></div></div><div class="flip-hinten"><span class="beispiel-marke">Preisbeispiel</span><h4>Pendelfenster</h4><p class="beispiel-ort">Schlafzimmerfenster</p><p class="beispiel-was">Pendelfenster in Weiß mit Montagerahmen und Transpatec-Gewebe</p><div class="beispiel-preis">520 €</div><p class="beispiel-fuss">aus einem echten Angebot</p><button type="button" class="zurueck-knopf" aria-label="Karte zurückdrehen">↺ Zurück</button></div></div></div>
         </div>
       </div>
 
       <div class="preis-gruppe">
         <h3>Türen <small>für Terrasse und Balkon</small></h3>
         <div class="produkt-grid">
-          <div class="produkt"><img src="images/produkte/drehtuer_v20260516.jpg" alt="Insektenschutz-Drehtür" loading="lazy" /><div class="produkt-text"><h4>Drehtür</h4><p>Ohne Rahmen ab 400 €, mit Rahmen ab 520 €</p><div class="ab"><small>ab</small> 400 €</div></div></div>
-          <div class="produkt"><img src="images/produkte/pendeltuer_v20260516.jpg" alt="Insektenschutz-Pendeltür" loading="lazy" /><div class="produkt-text"><h4>Pendeltür</h4><p>Schwingt in beide Richtungen – ideal mit vollen Händen</p><div class="ab"><small>ca.</small> 650 €</div></div></div>
+          <div class="produkt flip"><div class="flip-innen"><div class="flip-vorne"><img src="images/produkte/drehtuer_v20260516.jpg" alt="Insektenschutz-Drehtür" loading="lazy" /><div class="produkt-text"><h4>Drehtür</h4><p>Ohne Rahmen ab 400 €, mit Rahmen ab 520 €</p><div class="ab-zeile"><div class="ab"><small>ab</small> 400 €</div><button type="button" class="beispiel-knopf" aria-label="Preisbeispiel ansehen">Preisbeispiel</button></div></div></div><div class="flip-hinten"><span class="beispiel-marke">Preisbeispiel</span><h4>Drehtür</h4><p class="beispiel-ort">Küchentür ins Freie</p><p class="beispiel-was">Drehrahmen in Weiß mit Türschließer, ohne Montagerahmen</p><div class="beispiel-preis">540 €</div><p class="beispiel-fuss">aus einem echten Angebot</p><button type="button" class="zurueck-knopf" aria-label="Karte zurückdrehen">↺ Zurück</button></div></div></div>
+          <div class="produkt flip"><div class="flip-innen"><div class="flip-vorne"><img src="images/produkte/pendeltuer_v20260516.jpg" alt="Insektenschutz-Pendeltür" loading="lazy" /><div class="produkt-text"><h4>Pendeltür</h4><p>Schwingt in beide Richtungen – ideal mit vollen Händen</p><div class="ab-zeile"><div class="ab"><small>ca.</small> 650 €</div><button type="button" class="beispiel-knopf" aria-label="Preisbeispiel ansehen">Preisbeispiel</button></div></div></div><div class="flip-hinten"><span class="beispiel-marke">Preisbeispiel</span><h4>Pendeltür</h4><p class="beispiel-ort">Terrassentür</p><p class="beispiel-was">Pendeltür in Anthrazit mit Montagerahmen, Sockelblech und Transpatec-Gewebe</p><div class="beispiel-preis">815 €</div><p class="beispiel-fuss">aus einem echten Angebot</p><button type="button" class="zurueck-knopf" aria-label="Karte zurückdrehen">↺ Zurück</button></div></div></div>
           <div class="produkt"><img src="images/produkte/schiebeanlage_v20260516.jpg" alt="Insektenschutz-Schiebetür" loading="lazy" /><div class="produkt-text"><h4>Schiebetür</h4><p>Für breite Terrassentüren, doppelt ab 1.000 €</p><div class="ab"><small>ab</small> 650 €</div></div></div>
-          <div class="produkt"><img src="images/produkte/plissee_v20260516.jpg" alt="Insektenschutz-Plissee an der Tür" loading="lazy" /><div class="produkt-text"><h4>Plissee</h4><p>Faltet sich platzsparend zusammen</p><div class="ab"><small>ab</small> 700 €</div></div></div>
+          <div class="produkt flip"><div class="flip-innen"><div class="flip-vorne"><img src="images/produkte/plissee_v20260516.jpg" alt="Insektenschutz-Plissee an der Tür" loading="lazy" /><div class="produkt-text"><h4>Plissee</h4><p>Faltet sich platzsparend zusammen</p><div class="ab-zeile"><div class="ab"><small>ab</small> 600 €</div><button type="button" class="beispiel-knopf" aria-label="Preisbeispiel ansehen">Preisbeispiel</button></div></div></div><div class="flip-hinten"><span class="beispiel-marke">Preisbeispiel</span><h4>Plissee</h4><p class="beispiel-ort">Terrassentür</p><p class="beispiel-was">Plissee in Anthrazit mit Montagerahmen, unten offen</p><div class="beispiel-preis">612 €</div><p class="beispiel-fuss">aus einem echten Angebot</p><button type="button" class="zurueck-knopf" aria-label="Karte zurückdrehen">↺ Zurück</button></div></div></div>
         </div>
       </div>
 
       <div class="preis-gruppe">
         <h3>Dachfenster &amp; Lichtschacht</h3>
         <div class="produkt-grid">
-          <div class="produkt"><img src="images/produkte/dachfenster_v20260516.jpg" alt="Insektenschutz-Rollo am Dachfenster" loading="lazy" /><div class="produkt-text"><h4>Dachfenster-Rollo</h4><p>Mit zusätzlichem Verdunkelungsrollo 500 €</p><div class="ab"><small>ab</small> 320 €</div></div></div>
-          <div class="produkt"><img src="images/produkte/lichtschacht_v20260516.jpg" alt="Lichtschachtabdeckung" loading="lazy" /><div class="produkt-text"><h4>Lichtschachtabdeckung</h4><p>Gegen Laub, Insekten und Kleintiere</p><div class="ab"><small>ab</small> 190 €</div></div></div>
+          <div class="produkt flip"><div class="flip-innen"><div class="flip-vorne"><img src="images/produkte/dachfenster_v20260516.jpg" alt="Insektenschutz-Rollo am Dachfenster" loading="lazy" /><div class="produkt-text"><h4>Dachfenster-Rollo</h4><p>Mit zusätzlichem Verdunkelungsrollo 500 €</p><div class="ab-zeile"><div class="ab"><small>ab</small> 320 €</div><button type="button" class="beispiel-knopf" aria-label="Preisbeispiel ansehen">Preisbeispiel</button></div></div></div><div class="flip-hinten"><span class="beispiel-marke">Preisbeispiel</span><h4>Dachfenster-Rollo</h4><p class="beispiel-ort">Dachfenster im Kinderzimmer</p><p class="beispiel-was">Rollo in Weiß, unten geschlossen</p><div class="beispiel-preis">353 €</div><p class="beispiel-fuss">aus einem echten Angebot</p><button type="button" class="zurueck-knopf" aria-label="Karte zurückdrehen">↺ Zurück</button></div></div></div>
+          <div class="produkt flip"><div class="flip-innen"><div class="flip-vorne"><img src="images/produkte/lichtschacht_v20260516.jpg" alt="Lichtschachtabdeckung" loading="lazy" /><div class="produkt-text"><h4>Lichtschachtabdeckung</h4><p>Gegen Laub, Insekten und Kleintiere</p><div class="ab-zeile"><div class="ab"><small>ab</small> 190 €</div><button type="button" class="beispiel-knopf" aria-label="Preisbeispiel ansehen">Preisbeispiel</button></div></div></div><div class="flip-hinten"><span class="beispiel-marke">Preisbeispiel</span><h4>Lichtschachtabdeckung</h4><p class="beispiel-ort">Lichtschacht an der Terrasse</p><p class="beispiel-was">Abdeckung mit 3-seitiger Auflage und begehbarem Robustec-Gitter</p><div class="beispiel-preis">220 €</div><p class="beispiel-fuss">aus einem echten Angebot</p><button type="button" class="zurueck-knopf" aria-label="Karte zurückdrehen">↺ Zurück</button></div></div></div>
         </div>
       </div>
     </div>
@@ -463,6 +485,13 @@
     <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.001 2.667C8.638 2.667 2.667 8.637 2.667 16c0 2.353.616 4.658 1.788 6.69L2.667 29.333l6.83-1.778A13.275 13.275 0 0016.001 29.333C23.364 29.333 29.334 23.363 29.334 16S23.364 2.667 16.001 2.667zm0 24.222a10.86 10.86 0 01-5.531-1.514l-.397-.236-4.05 1.054 1.08-3.95-.258-.408a10.892 10.892 0 01-1.668-5.835c0-6.022 4.901-10.923 10.924-10.923 6.022 0 10.923 4.901 10.923 10.923 0 6.023-4.901 10.889-10.923 10.889z"/></svg>
   </a>
 
+  <script>
+    // Wendekarten: „Preisbeispiel“ dreht die Karte um, „Zurück“ dreht sie zurück
+    document.querySelectorAll('.produkt.flip').forEach(function (karte) {
+      karte.querySelector('.beispiel-knopf').addEventListener('click', function () { karte.classList.add('gedreht'); });
+      karte.querySelector('.zurueck-knopf').addEventListener('click', function () { karte.classList.remove('gedreht'); });
+    });
+  </script>
   <script src="js/script.js?v=20260904-nav3" defer></script>
 </body>
 </html>
