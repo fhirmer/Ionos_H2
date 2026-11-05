@@ -88,7 +88,7 @@
     .zusatz-funktion b { color: var(--color-primary); white-space: nowrap; }
 
     /* ---- Vergleich: unsere Spalte groß, die der anderen klein ---- */
-    .vergleich-wrap { overflow-x: auto; max-width: 980px; margin: 0 auto; padding: 5.5rem 1.25rem .5rem; }
+    .vergleich-wrap { overflow-x: auto; max-width: 980px; margin: 0 auto; padding: 6.5rem 1.25rem .5rem; }
     .vergleich { width: 100%; border-collapse: separate; border-spacing: 0; }
     .vergleich th, .vergleich td { padding: 1rem 1.1rem; text-align: left; vertical-align: middle; border-bottom: 1px solid var(--color-border); }
     .vergleich tbody tr:last-child th, .vergleich tbody tr:last-child td { border-bottom: 0; }
@@ -99,10 +99,15 @@
     .vergleich .wir { width: 44%; background: #fff; font-size: 1.12rem; font-weight: 600; color: var(--color-text); border-left: 3px solid var(--color-primary); border-right: 3px solid var(--color-primary); box-shadow: 0 0 0 0 transparent; }
     .vergleich thead th.wir { position: relative; background: var(--color-primary); color: #fff; font-size: 1.35rem; font-weight: 700; padding: 1.3rem 1.1rem; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
     .vergleich thead th.wir .unterzeile, .vergleich thead th.andere .unterzeile { display: block; font-size: .8rem; font-weight: 500; opacity: .85; margin-top: .15rem; }
-    .markt-hinweis { position: absolute; z-index: 3; bottom: calc(100% + .2rem); left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: .1rem; color: var(--color-primary-dark); font-size: 1rem; font-weight: 700; white-space: nowrap; }
-    .markt-hinweis .zeile { display: flex; align-items: center; gap: .55rem; }
-    .markt-hinweis img { width: 40px; height: 40px; border-radius: 6px; box-shadow: var(--shadow-sm); }
-    .markt-hinweis .pfeil { display: block; width: 22px; height: 26px; color: var(--color-accent); }
+    .markt-hinweis { position: absolute; z-index: 3; bottom: calc(100% - .6rem); left: 50%; transform: translateX(-50%); width: max-content; display: flex; align-items: flex-start; white-space: nowrap; }
+    .sticker { display: flex; align-items: center; gap: .7rem; background: #fff; border: 2px solid #8bbd3c; border-radius: 14px; padding: .45rem 1.1rem .45rem .5rem; box-shadow: 0 10px 28px rgba(0,60,40,.18); transform: rotate(-3deg); animation: sticker-wippen 3.2s ease-in-out infinite; }
+    .sticker img { width: 46px; height: 46px; border-radius: 8px; }
+    .sticker-text { display: flex; flex-direction: column; line-height: 1.05; text-align: left; }
+    .sticker-text small { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-soft); }
+    .sticker-text strong { font-size: 1.45rem; font-weight: 800; color: #5d8f1f; letter-spacing: -.01em; }
+    .markt-hinweis .pfeil { position: absolute; left: calc(100% - .3rem); top: 1.2rem; width: 58px; height: 50px; color: var(--color-accent); filter: drop-shadow(0 2px 2px rgba(0,0,0,.12)); }
+    @keyframes sticker-wippen { 0%, 100% { transform: rotate(-3deg) translateY(0); } 50% { transform: rotate(-2deg) translateY(-3px); } }
+    @media (prefers-reduced-motion: reduce) { .sticker { animation: none; } }
     .vergleich-quelle { max-width: 920px; margin: 1.25rem auto 0; font-size: .78rem; color: #8a9c9c; text-align: center; }
     .vergleich tbody tr:last-child td.wir { border-bottom: 3px solid var(--color-primary); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
     .vergleich td.wir { position: relative; padding-left: 3.6rem; }
@@ -357,8 +362,8 @@
               <th scope="col">Leistung</th>
               <th scope="col" class="wir">
                 <div class="markt-hinweis" aria-hidden="true">
-                  <span class="zeile"><img src="images/marken/neher-logo.svg" alt="" width="40" height="40" /><span>Technologie vom Marktführer</span></span>
-                  <svg class="pfeil" viewBox="0 0 22 26" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2v20"/><path d="M3 14l8 9 8-9"/></svg>
+                  <span class="sticker"><img src="images/marken/neher-logo.svg" alt="" width="46" height="46" /><span class="sticker-text"><small>Technologie vom</small><strong>Marktführer</strong></span></span>
+                  <svg class="pfeil" viewBox="0 0 70 60" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6c26-2 46 12 50 40"/><path d="M45 38l11 11 9-14"/></svg>
                 </div>
                 H2 Insektenschutz
                 <span class="unterzeile">Neher-Fachbetrieb</span>
@@ -373,9 +378,9 @@
               <td class="andere">Insektenschutz als Nebenprodukt zum Fenster</td>
             </tr>
             <tr>
-              <th scope="row">Öffnungsarten</th>
-              <td class="wir"><span class="ja">✓</span> Spannrahmen, Drehrahmen, Pendel, Rollo, Plissee, Schiebeanlage</td>
-              <td class="andere">meist nur Spannrahmen</td>
+              <th scope="row">Funktionsvielfalt</th>
+              <td class="wir"><span class="ja">✓</span> Über 50 Ausführungen – vom Spannrahmen über Pendeltür und Plissee bis zur Schiebeanlage</td>
+              <td class="andere">kleinere Auswahl an Standardsystemen</td>
             </tr>
             <tr>
               <th scope="row">Schwierige Einbausituation</th>
@@ -388,9 +393,9 @@
               <td class="andere">meist Standardgewebe</td>
             </tr>
             <tr>
-              <th scope="row">Rahmen</th>
-              <td class="wir"><span class="ja">✓</span> Stranggepresstes Aluminium mit langlebiger Pulverbeschichtung*</td>
-              <td class="andere">Ausführung je nach Hersteller</td>
+              <th scope="row">Rahmen &amp; Farbe</th>
+              <td class="wir"><span class="ja">✓</span> Neher-Systemprofile aus Aluminium, pulverbeschichtet* – passend zu Ihrem Fenster in vielen Farben</td>
+              <td class="andere">meist wenige Standardfarben</td>
             </tr>
             <tr>
               <th scope="row">Passgenauigkeit</th>
