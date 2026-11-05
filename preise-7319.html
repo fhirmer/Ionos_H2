@@ -33,6 +33,10 @@
     .preis-hinweis { max-width: 820px; margin: 0 auto 2.5rem; padding: 1rem 1.25rem; background: var(--color-bg-soft); border-left: 4px solid var(--color-primary); border-radius: var(--radius); font-size: .95rem; color: var(--color-text-soft); }
     .preis-hinweis strong { color: var(--color-text); }
 
+    .page-hero .hero-lead { max-width: 760px; font-size: 1.28rem; font-weight: 600; line-height: 1.6; color: #fff; letter-spacing: -.005em; }
+    .page-hero .hero-knopf { margin-top: 1.8rem; box-shadow: 0 10px 26px rgba(0,40,40,.25); }
+    @media (max-width: 600px) { .page-hero .hero-lead { font-size: 1.1rem; } }
+
     /* ---- So entsteht Ihr Preis ---- */
     .formel { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .6rem; max-width: 980px; margin: 0 auto 2.5rem; }
     .formel span { background: #fff; border: 1px solid var(--color-border); border-radius: 999px; padding: .5rem 1rem; font-weight: 600; font-size: .95rem; box-shadow: var(--shadow-sm); }
@@ -202,7 +206,8 @@
   <section class="page-hero">
     <div class="container">
       <h1>Preise</h1>
-      <p>Was kostet Insektenschutz nach Maß? Hier sehen Sie, wie sich Ihr Preis zusammensetzt – und ab welchem Betrag es losgeht.</p>
+      <p class="hero-lead">Wir möchten bei unseren Preisen so offen wie möglich sein. Doch jedes Fenster ist anders – erst die Einbausituation vor Ort entscheidet über den genauen Betrag. Damit keine falschen Erwartungen entstehen, kommen wir gerne zum Aufmaß zu Ihnen. Danach kennen Sie Ihren Preis ganz genau.</p>
+      <a href="kontakt.html#anfrage" class="btn btn-light btn-large hero-knopf">Aufmaßtermin vereinbaren</a>
     </div>
   </section>
 
