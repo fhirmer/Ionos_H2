@@ -88,18 +88,23 @@
     .zusatz-funktion b { color: var(--color-primary); white-space: nowrap; }
 
     /* ---- Vergleich: unsere Spalte groß, die der anderen klein ---- */
-    .vergleich-wrap { overflow-x: auto; max-width: 920px; margin: 0 auto; padding: 1.5rem .25rem .5rem; }
+    .vergleich-wrap { overflow-x: auto; max-width: 920px; margin: 0 auto; padding: 4.5rem 1.25rem .5rem; }
     .vergleich { width: 100%; border-collapse: separate; border-spacing: 0; }
     .vergleich th, .vergleich td { padding: 1rem 1.1rem; text-align: left; vertical-align: middle; border-bottom: 1px solid var(--color-border); }
     .vergleich tbody tr:last-child th, .vergleich tbody tr:last-child td { border-bottom: 0; }
     .vergleich thead th { border-bottom: 0; font-size: .85rem; font-weight: 600; color: var(--color-text-soft); }
-    .vergleich tbody th { font-weight: 600; font-size: .98rem; width: 30%; }
+    .vergleich tbody th { font-weight: 600; font-size: .95rem; width: 26%; }
     /* Unsere Spalte: hervorgehobene Karte */
-    .vergleich .wir { width: 42%; background: #fff; font-size: 1.12rem; font-weight: 600; color: var(--color-text); border-left: 3px solid var(--color-primary); border-right: 3px solid var(--color-primary); box-shadow: 0 0 0 0 transparent; }
+    .vergleich .wir { width: 44%; background: #fff; font-size: 1.12rem; font-weight: 600; color: var(--color-text); border-left: 3px solid var(--color-primary); border-right: 3px solid var(--color-primary); box-shadow: 0 0 0 0 transparent; }
     .vergleich thead th.wir { position: relative; background: var(--color-primary); color: #fff; font-size: 1.35rem; font-weight: 700; padding: 1.3rem 1.1rem; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
-    .vergleich thead th.wir .siegel { position: absolute; top: -.85rem; left: 50%; transform: translateX(-50%); background: var(--color-accent); color: #1a2e2e; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: .3rem .8rem; border-radius: 999px; white-space: nowrap; box-shadow: var(--shadow-sm); }
+    .vergleich thead th.wir .unterzeile, .vergleich thead th.andere .unterzeile { display: block; font-size: .8rem; font-weight: 500; opacity: .85; margin-top: .15rem; }
+    .markt-hinweis { position: absolute; bottom: calc(100% + .4rem); left: -1rem; display: flex; align-items: center; gap: .55rem; color: var(--color-primary-dark); font-size: 1rem; font-weight: 700; white-space: nowrap; }
+    .markt-hinweis img { width: 40px; height: 40px; border-radius: 6px; box-shadow: var(--shadow-sm); }
+    .markt-hinweis .pfeil { width: 46px; height: 40px; margin-left: -.1rem; transform: translateY(18px); color: var(--color-accent); }
+    .vergleich-quelle { max-width: 920px; margin: 1.25rem auto 0; font-size: .78rem; color: #8a9c9c; text-align: center; }
     .vergleich tbody tr:last-child td.wir { border-bottom: 3px solid var(--color-primary); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
-    .vergleich td.wir .ja { display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: .9rem; margin-right: .45rem; vertical-align: middle; }
+    .vergleich td.wir { padding-left: 3rem; text-indent: -2rem; }
+    .vergleich td.wir .ja { text-indent: 0; display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: .9rem; margin-right: .45rem; vertical-align: middle; }
     /* Spalte der anderen: klein und zurückgenommen */
     .vergleich .andere { width: 28%; font-size: .82rem; color: #8a9c9c; }
     .vergleich thead th.andere { font-size: .8rem; font-weight: 500; color: #8a9c9c; }
@@ -341,50 +346,70 @@
         <p>Ein günstiger Preis allein sagt wenig. Entscheidend ist, was darin enthalten ist.</p>
       </div>
 
-      <!-- Vergleichspunkte sind ein Vorschlag – nur Aussagen aufnehmen, die belegbar sind -->
+      <!-- Vergleich gegen Insektenschutz als Fenster-Zubehör. Nur belegbare, allgemein gehaltene Aussagen (UWG §6):
+           keine Firmen nennen, „oft/meist“ statt absolut. Neher-Angaben: neher.de/ueber-neher (Stand 05.11.2026). -->
       <div class="vergleich-wrap">
         <table class="vergleich">
           <thead>
             <tr>
               <th scope="col">Leistung</th>
-              <th scope="col" class="wir"><span class="siegel">Beste Qualität</span>H2 Insektenschutz</th>
-              <th scope="col" class="andere"><span class="ph">Andere Anbieter</span></th>
+              <th scope="col" class="wir">
+                <div class="markt-hinweis" aria-hidden="true">
+                  <img src="images/marken/neher-logo.svg" alt="" width="40" height="40" />
+                  <span>Technologie vom Marktführer</span>
+                  <svg class="pfeil" viewBox="0 0 60 50" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4c18 2 34 14 38 36"/><path d="M37 33l9 9 7-11"/></svg>
+                </div>
+                H2 Insektenschutz
+                <span class="unterzeile">Neher-Fachbetrieb</span>
+              </th>
+              <th scope="col" class="andere">Standard-Zubehör<span class="unterzeile">z. B. beim Fensterkauf</span></th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">Aufmaß vor Ort</th>
-              <td class="wir"><span class="ja">✓</span> inklusive</td>
-              <td class="andere"><span class="ph">oft selbst messen</span></td>
+              <th scope="row">Spezialisierung</th>
+              <td class="wir"><span class="ja">✓</span> Wir machen nur Insektenschutz</td>
+              <td class="andere">Insektenschutz als Nebenprodukt zum Fenster</td>
             </tr>
             <tr>
-              <th scope="row">Montage durch Fachbetrieb</th>
-              <td class="wir"><span class="ja">✓</span> inklusive</td>
-              <td class="andere"><span class="ph">meist Selbstmontage</span></td>
+              <th scope="row">Öffnungsarten</th>
+              <td class="wir"><span class="ja">✓</span> Spannrahmen, Drehrahmen, Pendel, Rollo, Plissee, Schiebeanlage</td>
+              <td class="andere">meist nur Spannrahmen</td>
             </tr>
             <tr>
-              <th scope="row">Maßanfertigung</th>
-              <td class="wir"><span class="ja">✓</span> Neher, millimetergenau</td>
-              <td class="andere"><span class="ph">oft Standardgrößen zum Kürzen</span></td>
+              <th scope="row">Schwierige Einbausituation</th>
+              <td class="wir"><span class="ja">✓</span> Lösungen für Rollladen, Regenschiene und flächenversetzte Fenster</td>
+              <td class="andere">oft nur Standard-Befestigung</td>
             </tr>
             <tr>
               <th scope="row">Gewebe-Auswahl</th>
-              <td class="wir"><span class="ja">✓</span> <span class="ph">verschiedene Gewebearten</span></td>
-              <td class="andere"><span class="ph">meist Standardgewebe</span></td>
+              <td class="wir"><span class="ja">✓</span> Über 15 Gewebe, z. B. Transpatec: reißfest, ca. 140 % mehr Luftdurchlass* – oder Polltec mit bis zu 99 % Pollenschutz*</td>
+              <td class="andere">meist Standardgewebe</td>
             </tr>
             <tr>
-              <th scope="row">Persönliche Beratung</th>
-              <td class="wir"><span class="ja">✓</span> vor Ort in der Oberpfalz</td>
-              <td class="andere"><span class="ph">Hotline / keine</span></td>
+              <th scope="row">Rahmen</th>
+              <td class="wir"><span class="ja">✓</span> Stranggepresstes Aluminium mit langlebiger Pulverbeschichtung*</td>
+              <td class="andere">Ausführung je nach Hersteller</td>
             </tr>
             <tr>
-              <th scope="row">Garantie</th>
-              <td class="wir"><span class="ph">ergänzen</span></td>
-              <td class="andere"><span class="ph">ergänzen</span></td>
+              <th scope="row">Aufmaß und Montage</th>
+              <td class="wir"><span class="ja">✓</span> Inklusive, millimetergenau durch uns</td>
+              <td class="andere">oft lose mitgeliefert oder Selbstmontage</td>
+            </tr>
+            <tr>
+              <th scope="row">Nachrüsten</th>
+              <td class="wir"><span class="ja">✓</span> Jederzeit, an jedem bestehenden Fenster</td>
+              <td class="andere">meist nur zusammen mit neuen Fenstern</td>
+            </tr>
+            <tr>
+              <th scope="row">Beratung</th>
+              <td class="wir"><span class="ja">✓</span> Persönlich vor Ort in der Oberpfalz</td>
+              <td class="andere">Beratung zum Fenster, Insektenschutz am Rande</td>
             </tr>
           </tbody>
         </table>
       </div>
+      <p class="vergleich-quelle">Neher Systeme bezeichnet sich selbst als Marktführer für maßgefertigte Insektenschutzgitter in Deutschland und hält über 30 Patente und Gebrauchsmuster. * Herstellerangaben Neher; Luftdurchlass im Vergleich zu herkömmlichem Standardgewebe, Pollenschutz je nach Wind und Pollengröße. Die rechte Spalte beschreibt typisches Zubehör, nicht einzelne Anbieter.</p>
     </div>
   </section>
 
