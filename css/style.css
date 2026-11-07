@@ -2218,3 +2218,7 @@ body.produkte-open .nav-toggle {
 /* Textlinks im Kopfbereich: weiß und unterstrichen statt Türkis auf Türkis */
 .page-hero p a { color: #ffffff; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .page-hero p a:hover { color: #ffffff; text-decoration-thickness: 2px; }
+/* Ungerade Kartenzahl: letzte Karte allein in der Reihe → mittig */
+@media (min-width: 700px) {
+  .product-grid > .product-block:last-child:nth-child(odd):not(:first-child) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 0.5rem); }
+}
