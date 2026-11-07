@@ -51,9 +51,3 @@
   from = "/datenschutz"
   to = "/datenschutz.html"
   status = 200
-
-# Alter Entwurfs-Link der Preisseite
-[[redirects]]
-  from = "/preise-7319"
-  to = "/preisgestaltung"
-  status = 301
