@@ -2222,3 +2222,6 @@ body.produkte-open .nav-toggle {
 @media (min-width: 700px) {
   .product-grid > .product-block:last-child:nth-child(odd):not(:first-child) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 0.5rem); }
 }
+/* Produktbereiche: Überschrift mittig, einzelne Karte mittig */
+.product-category-header { justify-content: center; }
+.product-grid:has(> .product-block:only-child) { grid-template-columns: minmax(0, 560px) !important; justify-content: center; max-width: none !important; }

@@ -37,7 +37,7 @@ ROOT = Path(__file__).resolve().parent.parent
 QUELLE = ROOT / "_ratgeber" / "artikel"
 VORLAGE = ROOT / "gewebearten.html"
 DOMAIN = "https://h2insektenschutz.de"
-CSS_VERSION = "20261105-ratgeber"
+CSS_VERSION = "20261107-zentriert"
 PFLICHT = ["titel", "slug", "datum", "beschreibung", "teaser", "bild", "bild_alt"]
 MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli",
           "August", "September", "Oktober", "November", "Dezember"]
