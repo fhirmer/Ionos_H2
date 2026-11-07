@@ -29,6 +29,15 @@
     .hero-actions{animation:hero-fade .50s cubic-bezier(.22,1,.36,1) .40s both}
     @media(prefers-reduced-motion:reduce){.hero-schild,.hero::before,.hero h1,.hero p.lead,.hero ul,.hero-actions{animation:none}}
     @media(max-width:599px){.hero::before{animation:none}}
+    /* WINTERRABATT-STICKER – zum Entfernen diesen Block + den Link im Hero löschen */
+    @keyframes sticker-pop{0%{opacity:0;transform:rotate(-12deg) scale(.6)}70%{opacity:1;transform:rotate(-12deg) scale(1.06)}100%{opacity:1;transform:rotate(-12deg) scale(1)}}
+    .rabatt-sticker{display:flex;flex-direction:column;align-items:center;justify-content:center;width:118px;height:118px;margin:0 auto 1.5rem;border-radius:50%;background:var(--color-accent,#f5b800);color:#004646;text-align:center;text-decoration:none;line-height:1.05;box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 0 0 4px rgba(255,255,255,.55),inset 0 0 0 6px var(--color-accent,#f5b800),inset 0 0 0 7px rgba(0,70,70,.35);transform:rotate(-12deg);animation:sticker-pop .6s cubic-bezier(.22,1,.36,1) .7s backwards;transition:transform .2s}
+    .rabatt-sticker:hover{transform:rotate(-6deg) scale(1.05);color:#004646}
+    .rabatt-sticker .r-klein{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+    .rabatt-sticker .r-gross{font-size:2.3rem;font-weight:800;letter-spacing:-.02em;margin:.1rem 0}
+    @media(max-width:899px){.rabatt-sticker{position:absolute;top:-5.5rem;right:1.25rem;width:104px;height:104px;margin:0}.rabatt-sticker .r-klein{font-size:.56rem;letter-spacing:.03em}.rabatt-sticker .r-gross{font-size:1.85rem}}
+    @media(min-width:900px){.rabatt-sticker{position:absolute;top:-1rem;right:2rem;width:150px;height:150px;margin:0}.rabatt-sticker .r-klein{font-size:.82rem}.rabatt-sticker .r-gross{font-size:3rem}}
+    @media(prefers-reduced-motion:reduce){.rabatt-sticker{animation:none}}
     .video-modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.82);align-items:center;justify-content:center}
     .video-modal-overlay.is-open{display:flex}
     .video-modal{position:relative;width:90%;max-width:860px;aspect-ratio:16/9}
@@ -246,6 +255,7 @@
   <!-- ================== HERO ================== -->
   <section class="hero">
     <div class="container">
+      <a href="kontakt.html#anfrage" class="rabatt-sticker" aria-label="Aktuell 10 Prozent Winterrabatt – jetzt Angebot anfragen"><span class="r-klein">Winter&shy;rabatt</span><span class="r-gross">10&nbsp;%</span><span class="r-klein">jetzt sichern</span></a>
       <img src="images/logo-schild-weiss.svg" alt="" class="hero-schild" width="96" height="117" />
       <h1>Fliegengitter nach Maß in Weiden und der Oberpfalz</h1>
       <p class="lead">Persönliche Beratung, exaktes Aufmaß und fachgerechte Montage für Ihr Zuhause.</p>
