@@ -259,6 +259,7 @@ section {
   }
 }
 
+
 @media (min-width: 900px) {
   /* Gehört zur Screenreader-Korrektur: aria-hidden="false" würde sonst
      transform: translateX(0) aktivieren und einen Stapelkontext erzeugen. */
@@ -2198,15 +2199,16 @@ body.produkte-open .nav-toggle {
 .ratgeber-karte .ratgeber-weiter { margin-top: auto; padding-top: .5rem; font-weight: 600; color: var(--color-primary); }
 .ratgeber-mehr { margin-top: 3rem; }
 .ratgeber-mehr h2 { font-size: 1.4rem; margin-bottom: 1.25rem; }
-/* Menü mit 5 Punkten: zwischen 900 und 1149 px enger setzen, damit nichts umbricht */
+/* Menü mit 6 Punkten (+ Knopf): zwischen 900 und 1199 px enger setzen, damit nichts umbricht */
 @media (min-width: 900px) { .site-nav a { white-space: nowrap; } }
-@media (min-width: 900px) and (max-width: 1149px) {
+@media (min-width: 900px) and (max-width: 1199px) {
+  .site-header .container { gap: 1rem; }
   .site-nav a { padding: 0.5rem 0.6rem; }
   .site-nav .btn-cta { margin-left: 0.25rem; padding: 0.6rem 0.9rem; }
   .site-logo img { height: 46px; }
 }
-@media (min-width: 900px) and (max-width: 999px) {
-  .site-nav a { padding: 0.5rem 0.45rem; font-size: 0.95rem; }
-  .site-nav .btn-cta { padding: 0.55rem 0.8rem; }
-  .site-logo img { height: 42px; }
+@media (min-width: 900px) and (max-width: 1079px) {
+  .site-nav a { padding: 0.5rem 0.35rem; font-size: 0.9rem; }
+  .site-nav .btn-cta { margin-left: 0.2rem; padding: 0.5rem 0.7rem; }
+  .site-logo img { height: 38px; }
 }
