@@ -2212,3 +2212,9 @@ body.produkte-open .nav-toggle {
   .site-nav .btn-cta { margin-left: 0.2rem; padding: 0.5rem 0.7rem; }
   .site-logo img { height: 38px; }
 }
+
+/* Einzelproduktseiten: Knopf „Alle Produkte“ im Kopfbereich */
+.page-hero .alle-produkte-knopf { display: inline-block; margin-top: 1.25rem; }
+/* Textlinks im Kopfbereich: weiß und unterstrichen statt Türkis auf Türkis */
+.page-hero p a { color: #ffffff; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.page-hero p a:hover { color: #ffffff; text-decoration-thickness: 2px; }
