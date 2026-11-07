@@ -42,10 +42,10 @@
     });
   }
 
-  // Ab 900 px ist die Navigation dauerhaft sichtbar und darf für
+  // Ab 1024 px ist die Navigation dauerhaft sichtbar und darf für
   // Screenreader nicht ausgeblendet sein.
   if (navToggle && siteNav) {
-    const desktopNav = window.matchMedia('(min-width: 900px)');
+    const desktopNav = window.matchMedia('(min-width: 1024px)');
     const syncNavHidden = function () {
       if (desktopNav.matches) {
         siteNav.setAttribute('aria-hidden', 'false');
@@ -55,7 +55,7 @@
     };
     syncNavHidden();
     desktopNav.addEventListener('change', syncNavHidden);
-    // Der bestehende Toggle-Handler setzt aria-hidden unbedingt; ab 900 px
+    // Der bestehende Toggle-Handler setzt aria-hidden unbedingt; ab 1024 px
     // wird der Wert danach wieder korrigiert.
     navToggle.addEventListener('click', syncNavHidden);
   }

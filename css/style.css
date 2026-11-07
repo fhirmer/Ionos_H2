@@ -230,7 +230,7 @@ section {
   color: var(--color-primary-dark);
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .nav-toggle {
     display: none;
   }
@@ -260,7 +260,7 @@ section {
 }
 
 
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   /* Gehört zur Screenreader-Korrektur: aria-hidden="false" würde sonst
      transform: translateX(0) aktivieren und einen Stapelkontext erzeugen. */
   .site-nav[aria-hidden="false"] { transform: none; }
@@ -2199,18 +2199,22 @@ body.produkte-open .nav-toggle {
 .ratgeber-karte .ratgeber-weiter { margin-top: auto; padding-top: .5rem; font-weight: 600; color: var(--color-primary); }
 .ratgeber-mehr { margin-top: 3rem; }
 .ratgeber-mehr h2 { font-size: 1.4rem; margin-bottom: 1.25rem; }
-/* Menü mit 6 Punkten (+ Knopf): zwischen 900 und 1199 px enger setzen, damit nichts umbricht */
-@media (min-width: 900px) { .site-nav a { white-space: nowrap; } }
-@media (min-width: 900px) and (max-width: 1199px) {
+/* Kopfleiste je nach Breite
+   unter 1024 px: Handy-Menü (☰)
+   1024–1199 px:  kompakte Leiste, kleineres Logo
+   ab 1200 px:    volle Leiste, Abstände so, dass der Knopf sauber Platz hat */
+@media (min-width: 1024px) { .site-nav a { white-space: nowrap; } }
+@media (min-width: 1024px) and (max-width: 1199px) {
   .site-header .container { gap: 1rem; }
-  .site-nav a { padding: 0.5rem 0.6rem; }
-  .site-nav .btn-cta { margin-left: 0.25rem; padding: 0.6rem 0.9rem; }
-  .site-logo img { height: 46px; }
+  .site-nav { gap: 0.1rem; }
+  .site-nav a { padding: 0.5rem 0.55rem; font-size: 0.95rem; }
+  .site-nav .btn-cta { margin-left: 0.4rem; padding: 0.55rem 1rem; }
+  .site-logo img { height: 44px; }
 }
-@media (min-width: 900px) and (max-width: 1079px) {
-  .site-nav a { padding: 0.5rem 0.35rem; font-size: 0.9rem; }
-  .site-nav .btn-cta { margin-left: 0.2rem; padding: 0.5rem 0.7rem; }
-  .site-logo img { height: 38px; }
+@media (min-width: 1200px) {
+  .site-header .container { gap: 1.5rem; }
+  .site-nav a { padding: 0.5rem 0.8rem; }
+  .site-nav .btn-cta { margin-left: 0.6rem; }
 }
 
 /* Einzelproduktseiten: Knopf „Alle Produkte“ im Kopfbereich */
