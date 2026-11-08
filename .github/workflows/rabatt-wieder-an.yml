@@ -1,0 +1,39 @@
+# Einmalig: blendet den 10-%-Winterrabatt-Sticker auf der Startseite
+# am Mittwoch, 11.11.2026, wieder ein und löscht sich danach selbst.
+name: Winterrabatt wieder einblenden
+
+on:
+  schedule:
+    - cron: "0 5 11 11 *"   # 5:00 UTC = 6:00 Uhr am 11. November
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  einblenden:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sticker wieder aktivieren
+        run: |
+          python3 - <<'PY'
+          p = "index.html"
+          s = open(p, encoding="utf-8").read()
+          s = s.replace("<!-- RABATT-PAUSE ", "").replace(" RABATT-PAUSE -->", "")
+          open(p, "w", encoding="utf-8").write(s)
+          PY
+          git rm -q .github/workflows/rabatt-wieder-an.yml
+
+      - name: Veröffentlichen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "H2 Website"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Winterrabatt-Sticker wieder eingeblendet"
+          git push
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || echo "Pages-Build konnte nicht angestoßen werden"
