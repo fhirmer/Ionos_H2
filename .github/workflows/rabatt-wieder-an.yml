@@ -1,10 +1,10 @@
 # Einmalig: blendet den 10-%-Winterrabatt-Sticker auf der Startseite
-# am Mittwoch, 11.11.2026, wieder ein und löscht sich danach selbst.
+# am Dienstag, 17.11.2026, wieder ein (bis einschl. 16.11. ausgeblendet) und löscht sich danach selbst.
 name: Winterrabatt wieder einblenden
 
 on:
   schedule:
-    - cron: "0 5 11 11 *"   # 5:00 UTC = 6:00 Uhr am 11. November
+    - cron: "0 5 17 11 *"   # 5:00 UTC = 6:00 Uhr am 17. November
   workflow_dispatch:
 
 permissions:
