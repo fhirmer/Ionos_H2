@@ -87,9 +87,15 @@
   <!-- ratgeber:start -->
   <url>
     <loc>https://h2insektenschutz.de/ratgeber</loc>
-    <lastmod>2026-11-05</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://h2insektenschutz.de/ratgeber-schuetzt-insektenschutz-insekten</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://h2insektenschutz.de/ratgeber-fliegengitter-im-winter</loc>
