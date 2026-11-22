@@ -3,32 +3,97 @@
 Diese Anleitung ist in Leichter Sprache.
 Sie erklärt: Was können wir tun, damit mehr Menschen uns bei Google finden?
 
-Stand: 23. September 2026
+Stand: 22. November 2026
+(Erste Fassung: 23. September 2026)
 
 ---
 
 ## Wie ist die Lage gerade?
 
 Wir haben die Zahlen von Google angeschaut.
+Die Zahlen sind von den letzten 3 Monaten.
 Das ist dabei herausgekommen:
 
 **Das ist gut:**
 
-- Alle 8 Seiten sind bei Google eingetragen.
 - Es gibt keine Fehler auf der Internet-Seite.
-- Bei manchen Such-Wörtern stehen wir schon weit oben.
-- Zum Beispiel bei dem Wort **Fliegengitter**. Da sind wir auf Platz 2.
+- Alle Seiten sind erreichbar.
+- Die Zahl der Klicks wird mehr.
+  Im September waren es 20 Klicks.
+  Im Oktober waren es 51 Klicks.
+  Im November waren es bis zum 20. schon 32 Klicks.
+- Seit Ende Oktober suchen Menschen nach unserem Namen.
+  **h2 insektenschutz** wurde 35-mal gesucht.
+  23-mal hat dann jemand auf unsere Seite geklickt.
+- Bei vielen Such-Wörtern stehen wir weit oben.
+  Zum Beispiel bei **fliegengitter**. Da sind wir auf Platz 2.
+  Oder bei **fliegengitter anfertigen lassen**. Da sind wir auch auf Platz 2.
 
-**Das ist das Problem:**
+**Das ist noch nicht gut:**
 
-- Nur wenige Menschen sehen unsere Seite.
-- In 1 Monat waren es ungefähr 250 Menschen.
-- Davon haben nur 20 Menschen auf unsere Seite geklickt.
-- Fast niemand sucht nach unserem Namen **H2 Insektenschutz**.
+- Bei manchen Such-Wörtern stehen wir oben.
+  Trotzdem klickt fast niemand.
+  Zum Beispiel bei **fliegengitter**: 49-mal gezeigt, 0 Klicks.
+  Das liegt oft an Anzeigen und an der Land-Karte.
+  Die stehen bei Google noch über uns.
+  Darum ist das Google-Profil so wichtig. Siehe Punkt 1.
+- Am **Handy** stehen wir im Schnitt auf Platz 4.
+  Am **Computer** stehen wir im Schnitt nur auf Platz 19.
+- Bei **fliegengitter amberg** zeigt Google noch die Start-Seite.
+  Die eigene Amberg-Seite zeigt Google noch nicht.
+- Mitte Oktober waren wir 2 Wochen lang viel weiter unten.
+  Das ist von selbst wieder weg gegangen.
+  Wir müssen nichts tun.
+  So etwas passiert bei neuen Seiten öfter.
 
-Das ist der wichtigste Punkt.
-Die Internet-Seite ist in Ordnung.
-Aber zu wenige Menschen kennen uns.
+---
+
+## Welche Seiten kennt Google?
+
+Unsere Internet-Seite hat **19 Seiten**.
+Alle 19 stehen in der Seiten-Liste für Google.
+Die Seiten-Liste heißt **Sitemap**.
+
+Stand bei Google am 16. November:
+
+- **12 Seiten** sind bei Google aufgenommen.
+  Das heißt: **indexiert**.
+  Man kann sie bei Google finden.
+- **8 Seiten** sind nicht aufgenommen.
+
+Bei den 8 Seiten stehen in der Search Console 3 Gründe.
+Das sieht aus wie Fehler.
+**Es sind aber keine Fehler.**
+
+| Seiten | Was steht da? | Was heißt das? | Müssen wir etwas tun? |
+|---|---|---|---|
+| 1 | Seite mit Weiterleitung | Eine alte Adresse, zum Beispiel mit `www`. Sie führt richtig zur neuen Adresse. | Nein |
+| 1 | Alternative Seite mit richtigem kanonischen Tag | Die gleiche Seite unter 2 Adressen. Google nimmt die richtige. | Nein |
+| 6 | Gefunden – zurzeit nicht indexiert | Google kennt die Seite. Aber Google hat sie noch nicht angeschaut. | Nur warten |
+
+Die 6 Seiten sind die neuesten Seiten.
+Zum Beispiel die Ratgeber-Seiten.
+Sie sind erst seit Anfang November online.
+
+**So lange dauert es bei uns:**
+Eine neue Seite braucht ungefähr **3 bis 5 Wochen**.
+Dann ist sie bei Google aufgenommen.
+Das war bisher immer so:
+
+| Wann? | Aufgenommene Seiten |
+|---|---|
+| Ende August | 4 |
+| September | 8 |
+| Ende Oktober | 10 |
+| Mitte November | 12 |
+
+Am 22. November haben wir für alle neuen Seiten **Indexierung beantragt**.
+Das macht es oft schneller.
+
+**Wichtig:**
+Die Search Console zeigt die Zahlen immer mit ein paar Tagen Verspätung.
+Bitte nicht jeden Tag nachschauen.
+Einmal in 2 Wochen reicht.
 
 ---
 
@@ -36,9 +101,13 @@ Aber zu wenige Menschen kennen uns.
 
 Diese Dinge sind schon gemacht:
 
-- Es gibt eine neue Seite nur für **Amberg**.
-- Im unteren Teil der Internet-Seite gibt es jetzt eine Liste mit allen Produkten.
-- Die Amberg-Seite ist bei Google angemeldet.
+- Es gibt eigene Seiten für **Amberg**, **Weiden**, **Neustadt an der Waldnaab** und die **Oberpfalz**.
+- Es gibt einen **Ratgeber** mit Artikeln. Jeden Monat kommt ein neuer Artikel dazu.
+- Es gibt Seiten für **Dachfenster** und für die **Preise**.
+- Im unteren Teil der Internet-Seite gibt es eine Liste mit allen Produkten.
+- Auf der Internet-Seite gibt es einen Link zum Google-Profil.
+- Auf der Internet-Seite stehen echte Google-Bewertungen.
+- Alle neuen Seiten sind bei Google angemeldet (22. November).
 
 ---
 
@@ -163,13 +232,15 @@ Google sieht: Diese Firma gibt es wirklich.
 
 ### 6. Mehr Seiten für einzelne Orte
 
-Die Seite für Amberg ist fertig.
+Die Seiten für Amberg, Weiden und Neustadt an der Waldnaab sind fertig.
 Später können wir mehr solche Seiten machen.
 Zum Beispiel für:
 
-- Neustadt an der Waldnaab
 - Sulzbach-Rosenberg
 - Grafenwöhr
+- Tirschenreuth
+
+Aber erst, wenn die Amberg-Seite bei Google gut läuft.
 
 **Aber Achtung:**
 Jede Seite braucht einen eigenen Text.
@@ -256,25 +327,28 @@ Fangen Sie oben an.
 Das sind kleine Aufgaben.
 Jede dauert nur ein paar Minuten.
 
-- [ ] **Die neue Amberg-Seite bei Google anmelden**
+- [x] **Die neuen Seiten bei Google anmelden** (erledigt am 22. November)
 
+  So geht das bei jeder neuen Seite:
   Gehen Sie zur Google Search Console.
   Das ist ein Werkzeug von Google für Internet-Seiten.
   Oben ist ein Such-Feld.
-  Tippen Sie dort ein: `https://h2insektenschutz.de/fliegengitter-amberg`
+  Tippen Sie dort die Adresse ein.
+  Zum Beispiel: `https://h2insektenschutz.de/fliegengitter-amberg`
   Warten Sie kurz.
   Klicken Sie dann auf **Indexierung beantragen**.
 
   Das bedeutet: Google soll sich die neue Seite anschauen.
-  Ohne diesen Schritt dauert es 1 bis 3 Wochen länger.
+  Google erlaubt das nur ungefähr 10-mal am Tag.
 
-- [ ] **Die Seiten-Liste neu abschicken**
+- [ ] **Anfang Dezember nachschauen**
 
-  In der Search Console links auf **Sitemaps** klicken.
-  Dort `sitemap.xml` eintragen und abschicken.
-
-  Eine Sitemap ist eine Liste von allen Seiten.
-  Google weiß dann: Es gibt eine neue Seite.
+  In der Search Console links auf **Seiten** klicken.
+  Sind es jetzt mehr als 12 aufgenommene Seiten?
+  Dann hat es geklappt.
+  Steht bei einer Seite **Gecrawlt – zurzeit nicht indexiert**?
+  Dann bitte melden. Dann hat Google die Seite angeschaut, aber nicht genommen.
+  Dann müssen wir den Text besser machen.
 
 - [ ] **Den Bericht aus dem Google-Profil holen**
 
@@ -349,9 +423,9 @@ Sie brauchen mehr Zeit.
 Diese Aufgaben macht der Computer-Teil.
 Sie gehen erst, wenn die 5 Angaben da sind.
 
-- [ ] Den Firmen-Namen auf allen 13 Seiten ändern
+- [ ] Den Firmen-Namen auf allen Seiten ändern
 - [ ] Die Adresse in die Seite einbauen
-- [ ] Den Link zum Google-Profil einbauen
+- [x] Den Link zum Google-Profil einbauen
 
 ---
 
@@ -366,12 +440,7 @@ Jedes Zeichen muss stimmen.
 | 1 | Die genaue Adresse | Im Google-Profil |
 | 2 | Die Telefon-Nummer | Im Google-Profil |
 | 3 | Die Öffnungs-Zeiten | Im Google-Profil |
-| 4 | Der Link zum Profil | In Google Maps auf *Teilen* klicken |
+| 4 | Der Link zum Profil | Schon erledigt |
 | 5 | Der richtige Firmen-Name | Das müssen wir entscheiden |
-
-**Wichtig bei Nummer 4:**
-Wir brauchen den langen Link.
-Er fängt so an: `https://www.google.com/maps/place/...`
-Der kurze Link reicht nicht.
 
 Ohne diese Angaben können wir die Aufgaben am Computer nicht machen.
