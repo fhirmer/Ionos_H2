@@ -178,23 +178,24 @@ Dann wird unser Profil gesperrt.
 
 ### 3. Überall den gleichen Namen benutzen
 
-Wir schreiben unseren Namen gerade unterschiedlich.
+**Entschieden am 22. November 2026:**
+Wir heißen überall **H2 Fliegengitter & Insektenschutz**.
 
-| Wo? | Welcher Name? |
-|---|---|
-| Google-Profil | H2 Fliegengitter & Insektenschutz |
-| Internet-Seite | H2 Insektenschutz |
+Auf der Internet-Seite ist der Name schon geändert.
+Nur im Impressum steht weiter der Name der Firma beim Amt:
+*H2 Insektenschutz GbR*.
+Das ist richtig so.
 
-Das ist nicht gut.
-Google weiß dann nicht sicher: Ist das die gleiche Firma?
-
-**Was zu tun ist:**
-Wir einigen uns auf einen Namen.
-Dann ändern wir alles andere.
-
-Am besten passt: **H2 Fliegengitter & Insektenschutz**
-Denn in diesem Namen steht das Wort *Fliegengitter*.
+Warum dieser Name?
+In diesem Namen steht das Wort *Fliegengitter*.
 Danach suchen die Menschen.
+Und so heißen wir auch im Google-Profil.
+Dann weiß Google sicher: Das ist die gleiche Firma.
+
+**Was noch zu tun ist:**
+Überall sonst muss auch dieser Name stehen.
+Zum Beispiel auf Rechnungen, im Briefkopf, auf dem Auto
+und in der E-Mail-Signatur.
 
 Der Buchstabe **H2** allein ist schwierig.
 Denn H2 bedeutet auch Wasserstoff.
@@ -388,10 +389,8 @@ Sie brauchen mehr Zeit.
   Adresse, Telefon, Zeiten, Beschreibung.
   Siehe Punkt 1 weiter oben.
 
-- [ ] **Einen Namen festlegen**
-  Heißen wir *H2 Insektenschutz*?
-  Oder *H2 Fliegengitter & Insektenschutz*?
-  Das müssen Rudolf und Florian gemeinsam entscheiden.
+- [x] **Einen Namen festlegen**
+  Entschieden: *H2 Fliegengitter & Insektenschutz*.
 
 - [ ] **Die 5 Angaben sammeln**
   Welche Angaben das sind, steht unten.
@@ -423,7 +422,7 @@ Sie brauchen mehr Zeit.
 Diese Aufgaben macht der Computer-Teil.
 Sie gehen erst, wenn die 5 Angaben da sind.
 
-- [ ] Den Firmen-Namen auf allen Seiten ändern
+- [x] Den Firmen-Namen auf allen Seiten ändern (22. November)
 - [ ] Die Adresse in die Seite einbauen
 - [x] Den Link zum Google-Profil einbauen
 
@@ -441,6 +440,6 @@ Jedes Zeichen muss stimmen.
 | 2 | Die Telefon-Nummer | Im Google-Profil |
 | 3 | Die Öffnungs-Zeiten | Im Google-Profil |
 | 4 | Der Link zum Profil | Schon erledigt |
-| 5 | Der richtige Firmen-Name | Das müssen wir entscheiden |
+| 5 | Der richtige Firmen-Name | Schon erledigt |
 
 Ohne diese Angaben können wir die Aufgaben am Computer nicht machen.

@@ -151,7 +151,7 @@ def artikel_seite(a, alle, header, footer):
          "inLanguage": "de-DE", "author": org, "publisher": org,
          "mainEntityOfPage": a["url"], "isPartOf": {"@id": f"{DOMAIN}/ratgeber#blog"}},
         {"@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "H2 Insektenschutz", "item": DOMAIN + "/"},
+            {"@type": "ListItem", "position": 1, "name": "H2 Fliegengitter & Insektenschutz", "item": DOMAIN + "/"},
             {"@type": "ListItem", "position": 2, "name": "Ratgeber", "item": DOMAIN + "/ratgeber"},
             {"@type": "ListItem", "position": 3, "name": a["titel"]}]}]}
     andere = [x for x in alle if x["slug"] != a["slug"]][:3]
@@ -161,13 +161,13 @@ def artikel_seite(a, alle, header, footer):
                 '        <div class="ratgeber-grid">\n'
                 + "\n".join(karte(x) for x in andere)
                 + "\n        </div>\n      </div>\n")
-    return (kopf(f"{a['titel']} | H2 Insektenschutz", a["beschreibung"], a["url"], a["bild"], "article", ld)
+    return (kopf(f"{a['titel']} | H2 Fliegengitter & Insektenschutz", a["beschreibung"], a["url"], a["bild"], "article", ld)
             + "  " + header_aktiv(header) + f"""
 
   <section class="page-hero"><div class="container">
     <span class="ratgeber-kicker">Ratgeber</span>
     <h1>{esc(a['titel'])}</h1>
-    <p class="ratgeber-meta"><time datetime="{a['datum'].isoformat()}">{datum_de(a['datum'])}</time> · H2 Insektenschutz · {a['minuten']} Min. Lesezeit</p>
+    <p class="ratgeber-meta"><time datetime="{a['datum'].isoformat()}">{datum_de(a['datum'])}</time> · H2 Fliegengitter &amp; Insektenschutz · {a['minuten']} Min. Lesezeit</p>
   </div></section>
 
   <section><div class="container">
@@ -188,15 +188,15 @@ def uebersicht(alle, header, footer):
     beschreibung = ("Tipps rund um Fliegengitter und Insektenschutz: Pflege, Planung und die passende "
                     "Lösung für Fenster und Türen – vom Fachbetrieb aus der Oberpfalz.")
     ld = {"@context": "https://schema.org", "@graph": [
-        {"@type": "Blog", "@id": url + "#blog", "url": url, "name": "Ratgeber von H2 Insektenschutz",
+        {"@type": "Blog", "@id": url + "#blog", "url": url, "name": "Ratgeber von H2 Fliegengitter & Insektenschutz",
          "description": beschreibung, "inLanguage": "de-DE",
          "publisher": {"@id": f"{DOMAIN}/#business"},
          "blogPost": [{"@id": a["url"] + "#artikel"} for a in alle]},
         {"@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "H2 Insektenschutz", "item": DOMAIN + "/"},
+            {"@type": "ListItem", "position": 1, "name": "H2 Fliegengitter & Insektenschutz", "item": DOMAIN + "/"},
             {"@type": "ListItem", "position": 2, "name": "Ratgeber"}]}]}
     bild = alle[0]["bild"] if alle else "images/stimmung/hero_v20260516.jpg"
-    return (kopf("Ratgeber rund um Fliegengitter | H2 Insektenschutz", beschreibung, url, bild, "website", ld)
+    return (kopf("Ratgeber rund um Fliegengitter | H2 Fliegengitter & Insektenschutz", beschreibung, url, bild, "website", ld)
             + "  " + header_aktiv(header) + """
 
   <section class="page-hero"><div class="container">

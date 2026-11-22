@@ -1,4 +1,4 @@
-# Netlify-Konfiguration für H2 Insektenschutz
+# Netlify-Konfiguration für H2 Fliegengitter & Insektenschutz
 
 [build]
   publish = "."

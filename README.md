@@ -1,6 +1,6 @@
-# H2 Insektenschutz – Website (GitHub Pages)
+# H2 Fliegengitter & Insektenschutz – Website (GitHub Pages)
 
-Statische, responsive Website für H2 Insektenschutz. Die Live-Domain
+Statische, responsive Website für H2 Fliegengitter & Insektenschutz. Die Live-Domain
 `https://h2insektenschutz.de` wird über GitHub Pages ausgeliefert.
 
 ## Veröffentlichung über GitHub Pages

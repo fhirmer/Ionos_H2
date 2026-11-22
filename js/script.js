@@ -1,5 +1,5 @@
 /* ==========================================================================
-   H2 Insektenschutz – Website JavaScript
+   H2 Fliegengitter & Insektenschutz – Website JavaScript
    ========================================================================== */
 
 (function () {
