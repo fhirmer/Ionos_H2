@@ -423,7 +423,7 @@ Diese Aufgaben macht der Computer-Teil.
 Sie gehen erst, wenn die 5 Angaben da sind.
 
 - [x] Den Firmen-Namen auf allen Seiten ändern (22. November)
-- [ ] Die Adresse in die Seite einbauen
+- [x] Die Adresse in die Seite einbauen (22. November: Marderweg 9, 92699 Irchenrieth)
 - [x] Den Link zum Google-Profil einbauen
 
 ---
@@ -436,8 +436,8 @@ Jedes Zeichen muss stimmen.
 
 | Nummer | Was? | Wo steht das? |
 |---|---|---|
-| 1 | Die genaue Adresse | Im Google-Profil |
-| 2 | Die Telefon-Nummer | Im Google-Profil |
+| 1 | Die genaue Adresse | Schon erledigt |
+| 2 | Die Telefon-Nummer | Schon erledigt |
 | 3 | Die Öffnungs-Zeiten | Im Google-Profil |
 | 4 | Der Link zum Profil | Schon erledigt |
 | 5 | Der richtige Firmen-Name | Schon erledigt |
